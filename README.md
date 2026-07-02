@@ -13,7 +13,7 @@ LandingPoint helps immigrants, international students, and long-term movers deci
 
 ## Routes
 
-- `/` - search form with Monthly Budget, Passport, Visa Status, Sponsorship Need, Work Field, Lifestyle, and Moving Timeline.
+- `/` - search form with Monthly Budget, Passport, Primary Goal, conditional Sponsorship Need, Lifestyle priorities, and Moving Timeline.
 - `/recommendations` - migration-friendly matches with New York City, Seattle, and Boston.
 - `/city/[slug]` - city profile, Migration Signals, City Signals, Real Experiences, Local Signals, People Like You.
 - `/compare` - two-city comparison across sponsor density, visa fit, jobs, community, transit, rent, safety, and schools.

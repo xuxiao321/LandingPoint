@@ -6,6 +6,17 @@ import { ScoreBar } from "@/components/score-bar";
 import type { City } from "@/lib/data";
 
 export function CityCard({ city }: { city: City }) {
+  const categoryScores = [
+    { label: "Sponsors", score: city.scores.sponsor, accent: "#be4960" },
+    { label: "Visa Fit", score: city.scores.visa, accent: "#008a7a" },
+    { label: "Job Market", score: city.scores.job, accent: "#2563eb" },
+    { label: "Community", score: city.scores.community, accent: "#917e1c" },
+    { label: "Transit", score: city.scores.transit, accent: "#0f766e" },
+    { label: "Rent", score: city.scores.rent, accent: "#f97316" },
+    { label: "Food Cost", score: city.scores.food, accent: "#7c3aed" },
+    { label: "Safety", score: city.scores.safety, accent: "#2563eb" },
+  ];
+
   return (
     <article className="rounded-lg border border-[#d7ded4] bg-white p-5 shadow-sm">
       <div className="flex flex-wrap items-start justify-between gap-4">
@@ -38,18 +49,17 @@ export function CityCard({ city }: { city: City }) {
       </div>
 
       <div className="mt-5 grid gap-3">
-        <ScoreBar
-          label="Sponsor Density"
-          score={city.scores.sponsor}
-          accent="#be4960"
-        />
-        <ScoreBar
-          label="Immigrant Community"
-          score={city.scores.community}
-          accent="#917e1c"
-        />
-        <ScoreBar label="Food Cost" score={city.scores.food} />
-        <ScoreBar label="Safety" score={city.scores.safety} accent="#2563eb" />
+        <p className="text-xs font-black uppercase text-[#6d7872]">
+          Fit Breakdown
+        </p>
+        {categoryScores.map((category) => (
+          <ScoreBar
+            key={category.label}
+            label={category.label}
+            score={category.score}
+            accent={category.accent}
+          />
+        ))}
       </div>
 
       <div className="mt-5 grid grid-cols-2 gap-3 text-sm text-[#57635d]">
