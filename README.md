@@ -1,40 +1,63 @@
 # LandingPoint
 
-LandingPoint helps immigrants, international students, and long-term movers compare a reviewed starter catalog of cities across multiple countries. Source-backed observations, derived scores, and unavailable fields are kept visibly separate.
+LandingPoint is a full-stack city discovery and relocation-planning product for immigrants, international students, and long-term movers. It combines a weighted city matcher with evidence-backed city profiles, events, resident reviews, saved cities, and authenticated accounts.
+
+The catalog currently covers **32 cities** across North America, South America, Europe, and Asia-Pacific. Public observations, LandingPoint-derived scores, and unavailable data are presented separately.
+
+## What users can do
+
+- choose a passport, goal, budget, and lifestyle priorities;
+- assign each selected priority a personal importance level;
+- receive a ranked shortlist with per-city match explanations and coverage;
+- browse city-card-style profiles with population, living-cost affordability, connectivity, relocation context, events, and resident reviews;
+- compare two cities using the same displayed signals;
+- register or sign in, save cities, manage preferences, and contribute local reviews.
+
+## Data policy
+
+The primary cost indicator is **Living Cost Affordability (0–10)**. A higher score means relatively more affordable within the LandingPoint catalog. It is a comparative model signal—not a quoted rent, guaranteed monthly budget, or personal affordability decision.
+
+Unmatched housing references are not promoted as comparable one-bedroom rents and do not contribute a hidden rent score. Source, period, geography, calculation notes, and known limitations remain available in the data layer and source panels.
+
+The catalog also includes:
+
+- reviewed population observations and boundary definitions;
+- city internet measurements for all 32 cities;
+- fixed-radius OpenStreetMap access signals;
+- NASA POWER climate observations;
+- country-level World Bank context;
+- official immigration pathway links;
+- selected city-level employment and immigrant-community observations;
+- live Ticketmaster events when configured, with curated fallback records;
+- public resident reviews backed by Supabase and Row Level Security.
+
+See [DATA_SOURCES.md](DATA_SOURCES.md) for methodology, licensing, limitations, and refresh notes.
 
 ## Stack
 
-- Next.js 15
-- TypeScript
-- TailwindCSS
-- shadcn/ui-style local components
-- Supabase-ready PostgreSQL schema
-- PostHog and MapLibre environment slots
-- Supabase Auth, Postgres, Row Level Security, and REST endpoints
+- Next.js 15 App Router, React 19, and TypeScript
+- Tailwind CSS and local accessible UI components
+- Supabase Auth and PostgreSQL with Row Level Security
+- Ticketmaster Discovery API for upcoming events
+- optional PostHog analytics and MapLibre map styling
+- Census ACS and other public-data synchronization scripts
 
 ## Routes
 
-- `/` - search form with Monthly Budget, Passport, Primary Goal, conditional Sponsorship Need, Lifestyle priorities, and Moving Timeline.
-- `/recommendations` - profile-aware matches across the curated US and global catalog.
-- `/city/[slug]` - city profile, Migration Signals, City Signals, Real Experiences, Local Signals, People Like You.
-- `/compare` - two-city comparison across sponsor density, visa fit, jobs, community, transit, rent, safety, and schools.
-- `/profile/[username]` - saved cities and contribution summary.
-
-## Product Focus
-
-The MVP is intentionally sharper than a generic city ranking site. It prioritizes:
-
-- H-1B sponsor density and visa path fit
-- international student and immigrant community strength
-- job market fit by field
-- rent pressure and cost of living
-- no-car viability and local safety
-- programmatic SEO pages backed by differentiated city data
+- `/` — personalized city search and weighted priorities
+- `/recommendations` — ranked matches and fit explanations
+- `/city/[slug]` — city profile, events, sources, and resident reviews
+- `/compare` — side-by-side city comparison
+- `/account` — authentication, preferences, saved cities, and contributions
+- `/profile/[username]` — public contribution profile
+- `/api/cities/[slug]/events` — normalized upcoming events
+- `/api/cities/[slug]/reviews` — public review reads and authenticated writes
 
 ## Local development
 
 ```bash
 npm install
+copy .env.example .env.local
 npm run dev
 ```
 
@@ -42,33 +65,45 @@ Open `http://localhost:3000`.
 
 ## Supabase setup
 
-1. Copy `.env.example` to `.env.local`.
-2. Add Supabase project values.
-3. Run `supabase/schema.sql` in the Supabase SQL editor.
+1. Create a Supabase project.
+2. Run `supabase/schema.sql` in the Supabase SQL editor.
+3. Add the project URL and publishable key to `.env.local`.
+4. Keep secret or service-role keys server-only; never use a `NEXT_PUBLIC_` prefix for them.
 
-The app clearly labels its bundled city content as prototype estimates. To
-replace the supported metrics with official Census ACS estimates:
+The app accepts the current Supabase publishable key and retains legacy anon-key compatibility:
 
-1. Request a free Census API key at
-   `https://api.census.gov/data/key_signup.html`.
-2. Add `CENSUS_API_KEY` to `.env.local`.
-3. Run `npm run data:sync` to refresh both the US and global snapshots.
+```dotenv
+NEXT_PUBLIC_SUPABASE_URL=https://YOUR_PROJECT_REF.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+```
 
-The catalog currently contains 32 reviewed cities across North America, South
-America, Europe, and Asia-Pacific. Run npm run data:sync:global to refresh the
-global snapshot; it requires no API key.
+Optional integrations:
 
-The US snapshot includes population, foreign-born share, median gross rent,
-median household income, unemployment, and commute-mode metrics. The global
-snapshot includes reviewed city identity, population, coordinates, population
-cross-checks, NASA POWER climate observations, OSM amenity and transit
-densities, employment signals, internet context, and source metadata. See
-DATA_SOURCES.md for methodology, attribution, and limitations.
+```dotenv
+TICKETMASTER_API_KEY=
+NEXT_PUBLIC_POSTHOG_KEY=
+NEXT_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com
+NEXT_PUBLIC_MAP_STYLE_URL=
+CENSUS_API_KEY=
+CENSUS_ACS_YEAR=2024
+```
 
-## Quality checks
+## Data refresh
 
-Run npm run lint, npm test, and npm run build before shipping. Keep .env.local
-private; never commit a service-role key or an API provider secret.
-## What it does
+```bash
+npm run data:sync
+npm run data:sync:images
+```
 
-LandingPoint is a transparent city-matching tool for people planning work, study, or long-term relocation. Users choose what matters most, receive a weighted shortlist, and can inspect the evidence behind each score.
+`data:sync` refreshes the US and global public-data snapshots. Review generated changes and geographic boundaries before publishing them.
+
+## Quality checks and deployment
+
+```bash
+npm test
+npm run lint
+npm run build
+```
+
+Deploy the repository to Vercel, add the same production environment variables, and configure the deployed URL in Supabase Authentication URL settings. Keep `.env.local`, database passwords, and provider secrets out of Git.

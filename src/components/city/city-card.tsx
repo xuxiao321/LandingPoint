@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { ScoreBar } from "@/components/score-bar";
 import { DataProvenance } from "@/components/city/data-provenance";
 import { LocalFactContent } from "@/components/city/local-fact";
+import { LivingCostFact } from "@/components/city/living-cost-fact";
 import type { City, SignalKey } from "@/lib/data";
 
 export function CityCard({ city }: { city: City }) {
@@ -22,7 +23,7 @@ export function CityCard({ city }: { city: City }) {
     { key: "career", label: "Employment scale", score: city.scores.career },
     { key: "community", label: "Foreign-born share", score: city.scores.community },
     { key: "transit", label: "Transit", score: city.scores.transit },
-    { key: "rent", label: "Rent affordability", score: city.scores.rent },
+    { key: "costOfLiving", label: "Living cost", score: city.scores.costOfLiving },
     { key: "food", label: "Dining Access", score: city.scores.food },
     { key: "safety", label: "Safety", score: city.scores.safety },
     { key: "weather", label: "Mild Weather", score: city.scores.weather },
@@ -96,7 +97,7 @@ export function CityCard({ city }: { city: City }) {
       <div className="mt-5 grid flex-1 grid-cols-2 content-start gap-3 text-sm text-[#57635d]">
         <div className="min-h-56 rounded-md bg-[var(--surface-soft)] p-3">
           <WalletCards className="mb-2 h-4 w-4 text-[var(--accent)]" />
-          {city.localFacts ? <LocalFactContent fact={city.localFacts.rent} monthly compact /> : <><p className="font-semibold text-[#17201d]">{city.monthlyCost}</p><p>{city.costMetricLabel.toLowerCase()}</p></>}
+          <LivingCostFact city={city} compact />
         </div>
         <div className="min-h-56 rounded-md bg-[var(--surface-soft)] p-3">
           <Users className="mb-2 h-4 w-4 text-[var(--accent)]" />

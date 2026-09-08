@@ -6,13 +6,12 @@ import localFactsSnapshot from "@/data/city-local-facts.json";
 import rentDefinitions from "@/data/rent-definitions.json";
 import { communityScore } from "@/lib/community-score";
 import { employmentByCity, employmentScore } from "@/lib/employment-score";
-import { rentBurdenByCity, rentAffordabilityScore } from "@/lib/rent-burden";
 
 export const lifestyleOptionGroups = [
   {
-    label: "Budget & Housing",
+    label: "Budget & Daily Costs",
     options: [
-      "Lower Rent",
+      "Lower Living Costs",
       "Roommate Friendly",
       "High Savings Potential",
       "Predictable Utilities",
@@ -523,7 +522,7 @@ export const signalLabels: Record<SignalKey, string> = {
   career: "Career",
   weather: "Weather",
   internet: "Internet",
-  costOfLiving: "Cost Of Living",
+  costOfLiving: "Living Cost Affordability",
 };
 
 const citySeedData: Array<
@@ -1923,10 +1922,6 @@ function removeRelocationScores(city: City): City {
   const sourceBackedScoreKeys = city.sourceBackedScoreKeys.filter((key) => !unscoredRelocationKeys.has(key) && key !== "rent");
   const localCommunityScore = communityScore(city.localFacts?.migration);
   const scores = { ...city.scores };
-  const burden = rentBurdenByCity[city.slug];
-  const rentScore = burden ? rentAffordabilityScore(burden.share) : undefined;
-  scores.rent = rentScore ?? 0;
-  if (rentScore !== undefined) sourceBackedScoreKeys.push("rent");
   const careerScore = employmentScore(employmentByCity[city.slug]);
   if (careerScore !== undefined) {
     sourceBackedScoreKeys.push("career");
@@ -1945,23 +1940,14 @@ function removeRelocationScores(city: City): City {
     sponsorDensity: "Eligibility check required",
     dataProvenance: {
       ...city.dataProvenance,
-      sources: burden ? [...city.dataProvenance.sources, { name: "Census ACS — rent as a share of household income", url: burden.sourceUrl, period: burden.period, retrievedAt: "2026-09-07", metrics: ["Median gross rent as a percentage of household income", burden.geography] }] : city.dataProvenance.sources,
+      sources: city.dataProvenance.sources,
     },
     sourceBackedScoreKeys,
     overallScore,
     migrationFit: overallScore,
     matchScore: Math.round(overallScore * 10),
     recommendationCoverage: sourceBackedScoreKeys.length / 14,
-    signals: city.signals.filter((signal) => !unscoredRelocationKeys.has(signal.key) && signal.key !== "rent").concat(burden && rentScore !== undefined ? [{
-      key: "rent", label: "Rent affordability", score: rentScore,
-      detailRows: [
-        { label: "Median rent share of household income", value: `${burden.share}%` },
-        { label: "Geography & period", value: `${burden.geography} · ${burden.period}` },
-        { label: "What this measures", value: "Official median of renter household gross-rent-to-income ratios. Includes utilities; household income is before tax. Not a ratio of separate medians or your personal budget." },
-        { label: "Score method", value: "Lower burden means a higher score. 20% or less = 10; 50% or more = 0; linear between. LandingPoint scale, not an official rating." },
-        { label: "Source", value: burden.sourceUrl },
-      ],
-    }] : []),
+    signals: city.signals.filter((signal) => !unscoredRelocationKeys.has(signal.key) && signal.key !== "rent"),
   };
 }
 
@@ -1999,7 +1985,6 @@ export const topMatches = ["toronto", "london", "singapore"]
 
 export const compareMetricKeys: SignalKey[] = [
   "transit",
-  "rent",
   "costOfLiving",
   "safety",
   "schools",

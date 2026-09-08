@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowUpRight, GitCompare } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { LocalFactContent } from "@/components/city/local-fact";
+import { LivingCostFact } from "@/components/city/living-cost-fact";
 import { Label, Select } from "@/components/ui/field";
 import {
   cities,
@@ -81,11 +81,7 @@ export function CompareTool({
                 {city.name}
               </h2>
               <div className="mt-3 flex flex-wrap gap-2 text-sm font-semibold text-[#57635d]">
-                {city.localFacts ? <LocalFactContent fact={city.localFacts.rent} monthly /> : <span>
-                  {city.monthlyCost}
-                  {city.costMetric === "median-gross-rent" || city.costMetric === "estimated-monthly-cost" ? "/mo" : ""}{" "}
-                  {city.costMetricLabel.toLowerCase()}
-                </span>}
+                <LivingCostFact city={city} />
                 <span>{city.sponsorDensity}</span>
                 <span>
                   {Math.round(city.recommendationCoverage * 100)}% profile coverage

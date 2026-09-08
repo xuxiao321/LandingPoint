@@ -10,8 +10,9 @@ export type RecommendationProfile = {
 };
 
 const lifestyleKeys = new Map<string, SignalKey[]>([
-  ["Lower Rent", ["rent", "costOfLiving"]],
-  ["Roommate Friendly", ["rent", "social"]],
+  ["Lower Living Costs", ["costOfLiving"]],
+  ["Lower Rent", ["costOfLiving"]],
+  ["Roommate Friendly", ["costOfLiving", "social"]],
   ["High Savings Potential", ["career", "costOfLiving"]],
   ["Predictable Utilities", ["costOfLiving", "internet"]],
   ["Career Growth", ["career"]],
@@ -21,7 +22,7 @@ const lifestyleKeys = new Map<string, SignalKey[]>([
   ["Immigrant Community", ["community"]],
   ["Food Diversity", ["food", "community"]],
   ["Family Friendly", ["schools", "safety"]],
-  ["Quiet Neighborhoods", ["safety", "rent"]],
+  ["Quiet Neighborhoods", ["safety"]],
   ["No-car Lifestyle", ["transit"]],
   ["Short Commute", ["transit"]],
   ["Mild Weather", ["weather"]],
@@ -30,7 +31,7 @@ const lifestyleKeys = new Map<string, SignalKey[]>([
 
 const goalKeys = new Map<string, SignalKey[]>([
   ["Travel / Short Stay", ["transit", "social", "food"]],
-  ["Study", ["schools", "rent", "transit"]],
+  ["Study", ["schools", "costOfLiving", "transit"]],
   ["Settle / Family", ["safety", "schools", "costOfLiving"]],
   ["Work / Career", ["job", "career", "sponsor"]],
   ["Start a Business", ["career", "job", "social"]],
@@ -40,7 +41,7 @@ const goalKeys = new Map<string, SignalKey[]>([
 const baselineKeys: SignalKey[] = [
   "job",
   "community",
-  "rent",
+  "costOfLiving",
   "safety",
   "transit",
 ];

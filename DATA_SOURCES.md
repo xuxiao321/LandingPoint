@@ -1,20 +1,21 @@
 # LandingPoint data policy
 
-## Rent affordability (supersedes previous rent scoring)
+## Living-cost affordability (supersedes the headline rent display)
 
-Rent scores now use ACS B25071 median gross rent as a percentage of household
-income for five US cities, period 2024 ACS 5-year. This is a published household
-ratio median, not median rent divided by all-household median income. The product
-scale gives 10 at <=20%, 0 at >=50%, interpolating linearly. Other cities' rent
-scores are excluded until compatible local evidence is available; national price
-levels and population do not supply a rent score. Local asking-rent references
-and personal budget compatibility remain distinct. Refresh with
-`node scripts/sync-rent-burden.mjs` using the existing Census API key.
+Every catalog city exposes a Living Cost Affordability signal on a 0–10 product
+scale; higher means relatively more affordable in this catalog. The interface no
+longer promotes incomplete or differently defined housing observations as a
+comparable one-bedroom rent, and rent is excluded from recommendation scoring.
 
-The remaining global rent references are shown as reference-only when their
-definition is a student guide, shared room, two-bedroom listing, square-metre
-benchmark, historic household rent, or accommodation-specific quote. They are
-not compared with one-bedroom city rent values and do not generate a rent score.
+For global cities, the signal is normalized from the World Bank national price-
+level ratio shown in the calculation details. For the five US cities, it uses the
+ACS rent-and-income affordability context shown in those details. These inputs are
+not identical city-level consumer baskets, so the result is a directional product
+signal rather than a quoted monthly budget, a rent listing, or an official rating.
+
+Legacy local housing observations and `src/data/rent-definitions.json` remain in
+the data layer for traceability and future methodology work, but are no longer a
+headline city-card fact or a ranking input.
 
 ## Career and community scoring update
 
@@ -60,7 +61,7 @@ government ratings.
 
 ## Recommendation methodology v1
 
-- Every city starts with baseline weights for jobs, community, affordability,
+- Every city starts with baseline weights for jobs, community, living-cost affordability,
   safety, and transit.
 - The selected primary goal adds `2.2` weight to its related metrics.
 - Each selected lifestyle priority adds `1.8` weight to its related metrics.
@@ -75,9 +76,10 @@ When an ACS snapshot is present, the first source-backed normalizations are:
 - transit: transit, bicycle, and walking commute share scaled from 0% to 40%;
 - job: unemployment rate transformed from approximately 2% (score 10)
   downward by 1.3 points per percentage point;
-- rent: median gross rent scaled from approximately $700 (score 10) to $3,000
-  (score 0);
-- affordability: median gross rent divided by monthly median household income.
+- living-cost affordability: a source-labelled comparative input; global cities
+  use the national price-level ratio and US cities use ACS rent-and-income context;
+- rent: excluded from recommendations because the catalog does not yet have a
+  comparable city-level housing observation for every destination.
 
 These thresholds are product choices, not Census Bureau methodology. They must
 be versioned and reviewed before production use.

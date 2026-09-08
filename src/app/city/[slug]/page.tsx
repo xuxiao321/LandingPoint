@@ -14,6 +14,7 @@ import {
 import { SignalList } from "@/components/city/signal-list";
 import { RelocationContext } from "@/components/city/relocation-context";
 import { LocalFactContent } from "@/components/city/local-fact";
+import { LivingCostFact } from "@/components/city/living-cost-fact";
 import { InternetFact } from "@/components/city/internet-fact";
 import { DataProvenance } from "@/components/city/data-provenance";
 import { SaveCityButton } from "@/components/city/save-city-button";
@@ -56,7 +57,6 @@ export default async function CityPage({
   }
 
   const compareRight = city.slug === "new-york-city" ? "seattle" : "new-york-city";
-  const cityRentSource = city.dataProvenance.sources.find((source) => source.metrics.includes("Median gross rent"));
   const cityMigrationSource = city.dataProvenance.sources.find((source) => source.metrics.includes("Foreign-born share"));
 
   return (
@@ -79,15 +79,13 @@ export default async function CityPage({
       </section>
       <section id="overview" className="city-overview scroll-mt-24" aria-label="City at a glance">
         <div className="min-w-0 bg-white p-5 sm:p-6"><Users className="mb-3 h-5 w-5 text-[var(--accent)]" aria-hidden="true" /><PopulationFact city={city} /></div>
-        {city.localFacts ? <div className="min-w-0 bg-white p-5 sm:p-6"><WalletCards className="mb-3 h-5 w-5 text-[var(--accent)]" aria-hidden="true" /><LocalFactContent fact={city.localFacts.rent} monthly /></div> : <Metric icon={WalletCards} label={city.costMetricLabel} value={city.monthlyCost} note={cityRentSource?.period} />}
+        <div className="min-w-0 bg-white p-5 sm:p-6"><WalletCards className="mb-3 h-5 w-5 text-[var(--accent)]" aria-hidden="true" /><LivingCostFact city={city} /></div>
         <InternetFact slug={city.slug} context={city.internetQuality} />
         <Metric icon={Landmark} label="Work permission" value="Check eligibility" note="Depends on your status and route" />
         {city.localFacts ? <div className="min-w-0 bg-white p-5 sm:p-6"><ShieldCheck className="mb-3 h-5 w-5 text-[var(--accent)]" aria-hidden="true" /><LocalFactContent fact={city.localFacts.migration} /></div> : <Metric icon={ShieldCheck} label="Residents born abroad" value={city.foreignBornShare} note={cityMigrationSource?.period} />}
         <Metric icon={Building2} label="Profile coverage" value={`${Math.round(city.recommendationCoverage * 100)}%`} />
       </section>
       <div id="city-data" className="scroll-mt-24"><DataProvenance provenance={city.dataProvenance} /></div>
-      {!city.sourceBackedScoreKeys.includes("rent") && <p className="text-sm text-[var(--muted)]">Rent affordability: matching local rent and income data is not yet available. Rent references are shown above, but no rent affordability score is included in rankings.</p>}
-
       {city.migrationSignals.length > 0 ? (
         <section className="grid gap-4">
           <SectionHeader
