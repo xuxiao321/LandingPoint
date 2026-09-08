@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowUpRight, GitCompare } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { LocalFactContent } from "@/components/city/local-fact";
 import { Label, Select } from "@/components/ui/field";
 import {
   cities,
@@ -33,7 +34,7 @@ export function CompareTool({
 
   return (
     <div className="grid gap-6">
-      <div className="grid gap-4 rounded-lg border border-[#d7ded4] bg-white p-4 shadow-sm sm:grid-cols-[1fr_auto_1fr] sm:items-end">
+      <div className="grid gap-4 rounded-lg border border-[var(--border)] bg-white p-4 shadow-sm sm:grid-cols-[1fr_auto_1fr] sm:items-end">
         <div className="grid gap-2">
           <Label htmlFor="leftCity">First City</Label>
           <Select
@@ -49,7 +50,7 @@ export function CompareTool({
           </Select>
         </div>
 
-        <div className="hidden h-11 w-11 place-items-center rounded-md bg-[#eef3ef] text-[#008a7a] sm:grid">
+        <div className="hidden h-11 w-11 place-items-center rounded-md bg-[#eef3ef] text-[var(--accent)] sm:grid">
           <GitCompare className="h-5 w-5" aria-hidden="true" />
         </div>
 
@@ -69,7 +70,7 @@ export function CompareTool({
         </div>
       </div>
 
-      <section className="rounded-lg border border-[#d7ded4] bg-white p-4 shadow-sm lg:p-6">
+      <section className="rounded-lg border border-[var(--border)] bg-white p-4 shadow-sm lg:p-6">
         <div className="grid gap-4 border-b border-[#e4e9e1] pb-5 sm:grid-cols-2">
           {[leftCity, rightCity].map((city) => (
             <div key={city.slug}>
@@ -80,10 +81,21 @@ export function CompareTool({
                 {city.name}
               </h2>
               <div className="mt-3 flex flex-wrap gap-2 text-sm font-semibold text-[#57635d]">
-                <span>{city.monthlyCost}/mo</span>
-                <span>{city.sponsorDensity} sponsors</span>
-                <span>{city.migrationFit.toFixed(1)} migration fit</span>
+                {city.localFacts ? <LocalFactContent fact={city.localFacts.rent} monthly /> : <span>
+                  {city.monthlyCost}
+                  {city.costMetric === "median-gross-rent" || city.costMetric === "estimated-monthly-cost" ? "/mo" : ""}{" "}
+                  {city.costMetricLabel.toLowerCase()}
+                </span>}
+                <span>{city.sponsorDensity}</span>
+                <span>
+                  {Math.round(city.recommendationCoverage * 100)}% profile coverage
+                </span>
               </div>
+              <p className="mt-2 text-xs font-semibold text-[#917e1c]">
+                {city.dataProvenance.status === "demo"
+                  ? "Prototype estimates"
+                  : "Official observations + LandingPoint-derived scores"}
+              </p>
             </div>
           ))}
         </div>
@@ -92,6 +104,8 @@ export function CompareTool({
           {compareMetricKeys.map((key) => {
             const leftScore = leftCity.scores[key];
             const rightScore = rightCity.scores[key];
+            const leftAvailable = leftCity.sourceBackedScoreKeys.includes(key);
+            const rightAvailable = rightCity.sourceBackedScoreKeys.includes(key);
 
             return (
               <div key={key} className="grid gap-3">
@@ -100,20 +114,21 @@ export function CompareTool({
                     {signalLabels[key]}
                   </p>
                   <p className="text-sm font-semibold text-[#57635d]">
-                    {leftScore.toFixed(1)} vs {rightScore.toFixed(1)}
+                    {leftAvailable ? leftScore.toFixed(1) : "N/A"} vs{" "}
+                    {rightAvailable ? rightScore.toFixed(1) : "N/A"}
                   </p>
                 </div>
                 <div className="grid gap-2 sm:grid-cols-2">
-                  <div className="h-3 overflow-hidden rounded-md bg-[#dfe6dc]">
+                  <div className="h-3 overflow-hidden rounded-md bg-[var(--surface-soft)]">
                     <div
-                      className="h-full rounded-md bg-[#008a7a]"
-                      style={{ width: scoreToPercent(leftScore) }}
+                      className="h-full rounded-md bg-[var(--accent)]"
+                      style={{ width: leftAvailable ? scoreToPercent(leftScore) : "0%" }}
                     />
                   </div>
-                  <div className="h-3 overflow-hidden rounded-md bg-[#dfe6dc]">
+                  <div className="h-3 overflow-hidden rounded-md bg-[var(--surface-soft)]">
                     <div
-                      className="h-full rounded-md bg-[#f97316]"
-                      style={{ width: scoreToPercent(rightScore) }}
+                      className="h-full rounded-md bg-[#526782]"
+                      style={{ width: rightAvailable ? scoreToPercent(rightScore) : "0%" }}
                     />
                   </div>
                 </div>

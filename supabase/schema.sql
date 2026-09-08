@@ -33,6 +33,9 @@ create table if not exists public.cities (
   internet_score numeric(3, 1) not null check (internet_score between 0 and 10),
   cost_of_living_score numeric(3, 1) not null check (cost_of_living_score between 0 and 10),
   data_confidence text not null check (data_confidence in ('Low', 'Medium', 'Medium High', 'High')),
+  data_status text not null default 'demo' check (data_status in ('demo', 'mixed', 'verified')),
+  data_updated_at timestamptz,
+  methodology_version text not null default 'prototype',
   created_at timestamptz not null default now()
 );
 
@@ -41,13 +44,49 @@ create table if not exists public.city_data_sources (
   city_id uuid not null references public.cities (id) on delete cascade,
   source_name text not null,
   source_kind text not null check (
-    source_kind in ('USCIS', 'Census', 'BLS', 'FBI', 'Zillow', 'Open-Meteo', 'NCES', 'Community')
+    source_kind in ('USCIS', 'DOL', 'Census', 'BLS', 'HUD', 'FBI', 'NOAA', 'FTA', 'FCC', 'BEA', 'NCES', 'Community')
   ),
   metric_name text not null,
+  source_url text,
+  terms_url text,
+  dataset_period text,
+  geography_level text,
+  methodology_version text,
+  attribution text,
   last_synced_at timestamptz,
   notes text,
   created_at timestamptz not null default now()
 );
+
+-- Migration-safe additions for projects that ran an earlier version of this file.
+alter table public.cities
+  add column if not exists data_status text not null default 'demo',
+  add column if not exists data_updated_at timestamptz,
+  add column if not exists methodology_version text not null default 'prototype';
+
+alter table public.cities
+  drop constraint if exists cities_data_status_check;
+
+alter table public.cities
+  add constraint cities_data_status_check check (
+    data_status in ('demo', 'mixed', 'verified')
+  );
+
+alter table public.city_data_sources
+  add column if not exists source_url text,
+  add column if not exists terms_url text,
+  add column if not exists dataset_period text,
+  add column if not exists geography_level text,
+  add column if not exists methodology_version text,
+  add column if not exists attribution text;
+
+alter table public.city_data_sources
+  drop constraint if exists city_data_sources_source_kind_check;
+
+alter table public.city_data_sources
+  add constraint city_data_sources_source_kind_check check (
+    source_kind in ('USCIS', 'DOL', 'Census', 'BLS', 'HUD', 'FBI', 'NOAA', 'FTA', 'FCC', 'BEA', 'NCES', 'Community')
+  );
 
 create table if not exists public.experiences (
   id uuid primary key default gen_random_uuid(),

@@ -1,0 +1,13 @@
+{
+  "/_not-found/page": "/_not-found",
+  "/favicon.ico/route": "/favicon.ico",
+  "/api/account/route": "/api/account",
+  "/api/cities/[slug]/reviews/route": "/api/cities/[slug]/reviews",
+  "/api/cities/[slug]/events/route": "/api/cities/[slug]/events",
+  "/page": "/",
+  "/profile/[username]/page": "/profile/[username]",
+  "/account/page": "/account",
+  "/compare/page": "/compare",
+  "/city/[slug]/page": "/city/[slug]",
+  "/recommendations/page": "/recommendations"
+}

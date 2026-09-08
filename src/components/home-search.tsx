@@ -1,20 +1,31 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowRight, Search } from "lucide-react";
+import { ArrowRight, Check, LoaderCircle, Search, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Field, Input, Label, Select } from "@/components/ui/field";
 import {
   isSponsorshipRelevantGoal,
   lifestyleOptionGroups,
-  movingTimelineOptionGroups,
+  lifestyleOptions,
   passportCountries,
   type PassportCountry,
   workTypes,
 } from "@/lib/data";
+import { cn } from "@/lib/utils";
+import { useAccount } from "@/components/account-provider";
+import { normalizePriorities, priorityLabels, priorityWeight } from "@/lib/priority-weights";
 
 const commonPassportCountryCodes = ["US", "CN", "CA", "GB", "IN", "AU"];
+const goalCtaLabels: Record<string, string> = {
+  "Travel / Short Stay": "Find my next short-stay city",
+  Study: "Find cities for my studies",
+  "Settle / Family": "Find cities to settle in",
+  "Work / Career": "Find cities for my career",
+  "Start a Business": "Find founder-friendly cities",
+  "Remote Work Base": "Find my remote-work base",
+};
 const searchablePassportCountries = passportCountries.map((country) => ({
   country,
   tokens: [country.name, country.code, ...country.aliases].map(
@@ -154,6 +165,10 @@ function resolvePassportCountry(query: string) {
 }
 
 export function HomeSearch() {
+  const account = useAccount();
+  const [saveMessage, setSaveMessage] = useState("");
+  const [savingPreferences, setSavingPreferences] = useState(false);
+  const [priorities, setPriorities] = useState<Record<string, number>>({});
   const router = useRouter();
   const [budget, setBudget] = useState("3000");
   const [passportQuery, setPassportQuery] = useState("United States");
@@ -165,8 +180,26 @@ export function HomeSearch() {
     "Career Growth",
     "Immigrant Community",
   ]);
-  const [timeline, setTimeline] = useState("3-6 Months");
+  const [isNavigating, setIsNavigating] = useState(false);
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (!params.has("workType")) return;
+    const amount = Number(params.get("budget"));
+    if (Number.isFinite(amount) && amount > 0 && amount <= 1000000) setBudget(String(amount));
+    const passport = resolvePassportCountry(params.get("passport") ?? "");
+    if (passport) setPassportQuery(passport.name);
+    const goal = params.get("workType") ?? "";
+    if ((workTypes as readonly string[]).includes(goal)) setWorkType(goal);
+    if (["Yes", "No", "Maybe Later"].includes(params.get("needsSponsorship") ?? "")) setNeedsSponsorship(params.get("needsSponsorship")!);
+    const selected = [...new Set(params.getAll("lifestyle"))].filter(v => (lifestyleOptions as readonly string[]).includes(v));
+    setLifestyles(selected);
+    setPriorities(normalizePriorities(Object.fromEntries(selected.map(v => [v, Number(params.get(`priority:${v}`))])), selected));
+  }, []);
   const shouldAskSponsorship = isSponsorshipRelevantGoal(workType);
+  const ctaLabel = goalCtaLabels[workType] ?? "See my city matches";
+  const priorityCountLabel = `${lifestyles.length} priorit${
+    lifestyles.length === 1 ? "y" : "ies"
+  } selected`;
   const passportSuggestions = useMemo(
     () => getPassportCountrySuggestions(passportQuery),
     [passportQuery],
@@ -218,7 +251,6 @@ export function HomeSearch() {
       budget,
       passport: submittedPassportCountry.name,
       workType,
-      timeline,
     });
 
     if (shouldAskSponsorship) {
@@ -227,26 +259,61 @@ export function HomeSearch() {
 
     lifestyles.forEach((lifestyle) => {
       params.append("lifestyle", lifestyle);
+      params.set(`priority:${lifestyle}`, String(priorityWeight(priorities, lifestyle)));
     });
 
+    setIsNavigating(true);
     router.push(`/recommendations?${params.toString()}`);
   }
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="grid gap-4 rounded-lg border border-[#d7ded4] bg-white p-4 shadow-sm sm:grid-cols-2 lg:p-5"
+      className="grid gap-5 overflow-hidden rounded-2xl border border-[var(--border)] bg-white p-4 shadow-[0_18px_50px_rgba(23,32,29,0.08)] sm:grid-cols-2 sm:p-5"
     >
+      <div className="flex items-start justify-between gap-4 border-b border-[#e3e8df] pb-5 sm:col-span-2">
+        <div>
+          <p className="flex items-center gap-1.5 text-xs font-black uppercase tracking-[0.12em] text-[var(--accent)]">
+            <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
+            Personalized search
+          </p>
+          <h2 className="mt-1 text-xl font-black tracking-[-0.02em] text-[#17201d]">Build your city shortlist</h2>
+          <p className="mt-1 text-sm leading-6 text-[#6d7872]">Tell us what matters most. You can change every filter later.</p>
+        </div>
+        <span className="hidden shrink-0 rounded-full bg-[var(--accent-soft)] px-3 py-1 text-xs font-bold text-[var(--ink)] sm:inline-flex">About 1 min</span>
+      </div>
+
+      {account.user && <div className="flex flex-wrap items-center gap-3 sm:col-span-2">
+        <Button type="button" variant="outline" size="sm" disabled={savingPreferences || account.loading} onClick={async () => {
+          setSavingPreferences(true); setSaveMessage("");
+          try { await account.mutate({ action: "preferences", preferences: { budget: Number(budget), passport: resolvedPassportCountry?.name ?? passportQuery, workType, needsSponsorship, lifestyles, priorities: normalizePriorities(priorities, lifestyles) } }); setSaveMessage("Preferences saved to your account."); }
+          catch (error) { setSaveMessage(error instanceof Error ? error.message : "Could not save preferences."); }
+          finally { setSavingPreferences(false); }
+        }}>{savingPreferences ? "Saving…" : "Save preferences"}</Button>
+        {account.data?.preferences && <Button type="button" variant="ghost" size="sm" onClick={() => { const p = account.data!.preferences!; setBudget(String(p.budget)); setPassportQuery(p.passport); setWorkType(p.workType); setNeedsSponsorship(p.needsSponsorship); setLifestyles(p.lifestyles); setPriorities(normalizePriorities(p.priorities, p.lifestyles)); setPassportError(""); setSaveMessage("Saved preferences restored."); }}>Restore saved preferences</Button>}
+        {saveMessage && <p role="status" className="text-xs">{saveMessage}</p>}
+      </div>}
       <Field>
-        <Label htmlFor="budget">Monthly Budget</Label>
-        <Input
-          id="budget"
-          inputMode="numeric"
-          min="0"
-          type="number"
-          value={budget}
-          onChange={(event) => setBudget(event.target.value)}
-        />
+        <Label htmlFor="budget">Monthly budget</Label>
+        <div className="relative">
+          <span
+            className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-sm font-bold text-[#6d7872]"
+            aria-hidden="true"
+          >
+            $
+          </span>
+          <Input
+            id="budget"
+            inputMode="numeric"
+            min="1"
+            max="1000000"
+            required
+            type="number"
+            value={budget}
+            onChange={(event) => setBudget(event.target.value)}
+            className="pl-7"
+          />
+        </div>
       </Field>
 
       <Field>
@@ -289,7 +356,7 @@ export function HomeSearch() {
             <div
               id="passport-suggestions"
               role="listbox"
-              className="absolute z-20 mt-2 max-h-64 w-full overflow-auto rounded-md border border-[#d7ded4] bg-white p-1 shadow-lg"
+              className="absolute z-20 mt-2 max-h-64 w-full overflow-auto rounded-md border border-[var(--border)] bg-white p-1 shadow-lg"
             >
               {passportSuggestions.length > 0 ? (
                 passportSuggestions.map((country) => (
@@ -322,7 +389,7 @@ export function HomeSearch() {
       </Field>
 
       <Field>
-        <Label htmlFor="workType">Primary Goal</Label>
+        <Label htmlFor="workType">Primary goal</Label>
         <Select
           id="workType"
           value={workType}
@@ -336,7 +403,7 @@ export function HomeSearch() {
 
       {shouldAskSponsorship ? (
         <Field>
-          <Label htmlFor="needsSponsorship">Need Sponsorship</Label>
+          <Label htmlFor="needsSponsorship">Need sponsorship</Label>
           <Select
             id="needsSponsorship"
             value={needsSponsorship}
@@ -349,57 +416,94 @@ export function HomeSearch() {
         </Field>
       ) : null}
 
-      <Field className="sm:col-span-2">
-        <Label>Lifestyle Priorities</Label>
-        <div className="grid gap-4 sm:grid-cols-2">
+      <details className="rounded-xl border border-[var(--border)] p-4 sm:col-span-2">
+        <summary className="cursor-pointer text-sm font-semibold text-[var(--foreground)]">What matters to you <span className="ml-2 font-normal text-[var(--muted)]" aria-live="polite">{priorityCountLabel}</span></summary>
+      <fieldset className="mt-4 grid gap-3">
+        <legend className="sr-only">Lifestyle priorities</legend>
+        <p className="text-xs leading-5 text-[var(--muted)]">Choose what matters most in your next city.</p>
+        <div className="grid gap-x-5 gap-y-5 sm:grid-cols-2">
           {lifestyleOptionGroups.map((group) => (
-            <div key={group.label} className="grid gap-2">
-              <p className="text-xs font-black uppercase text-[#6d7872]">
+            <div
+              key={group.label}
+              className="grid content-start gap-2"
+            >
+              <p className="border-b border-[var(--border)] pb-2 text-xs font-semibold text-[#526b62]">
                 {group.label}
               </p>
-              <div className="grid gap-2">
-                {group.options.map((option) => (
-                  <label
-                    key={option}
-                    className="flex min-h-10 cursor-pointer items-center gap-2 rounded-md border border-[#d7ded4] bg-[#f7f8f3] px-3 py-2 text-sm font-semibold text-[#17201d] transition hover:border-[#008a7a]"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={lifestyles.includes(option)}
-                      onChange={() => toggleLifestyle(option)}
-                      className="h-4 w-4 rounded border-[#aeb9aa] accent-[#008a7a]"
-                    />
-                    <span>{option}</span>
-                  </label>
-                ))}
+              <div className="grid gap-1">
+                {group.options.map((option) => {
+                  const isSelected = lifestyles.includes(option);
+
+                  return (
+                    <label
+                      key={option}
+                      className={cn(
+                        "flex min-h-11 cursor-pointer items-center gap-2.5 rounded-lg border px-2.5 py-2 text-sm font-medium transition-colors focus-within:ring-2 focus-within:ring-[var(--accent)] focus-within:ring-offset-2",
+                        isSelected
+                          ? "border-[#b8d8cb] bg-[var(--accent-soft)] text-[var(--ink)]"
+                          : "border-transparent text-[#2d3934] hover:bg-[var(--surface-soft)]",
+                      )}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={isSelected}
+                        onChange={() => toggleLifestyle(option)}
+                        className="sr-only"
+                      />
+                      <span
+                        className={cn(
+                          "flex h-4 w-4 shrink-0 items-center justify-center rounded border transition",
+                          isSelected
+                            ? "border-[var(--accent)] bg-[var(--accent)] text-white"
+                            : "border-[#aeb9aa] bg-white text-transparent",
+                        )}
+                        aria-hidden="true"
+                      >
+                        <Check className="h-3 w-3" strokeWidth={3} />
+                      </span>
+                      <span>{option}{option === "Career Growth" && <span className="block text-xs font-normal text-[var(--muted)]">Local jobs · limited coverage</span>}{option === "Immigrant Community" && <span className="block text-xs font-normal text-[var(--muted)]">Foreign-born population · where comparable</span>}</span>
+                    </label>
+                  );
+                })}
               </div>
             </div>
           ))}
         </div>
-      </Field>
+      </fieldset>
+      </details>
+      {lifestyles.length > 0 && <fieldset className="grid gap-3 rounded-xl border border-[var(--border)] p-4 sm:col-span-2"><legend className="px-1 text-sm font-semibold">Put your priorities in order</legend><p className="text-xs text-[var(--muted)]">Choose the importance of each preference. Higher importance gives it more influence, not a guaranteed match.</p>{lifestyles.map(option => <div key={option} className="flex flex-wrap items-center justify-between gap-2"><Label htmlFor={`importance-${option}`}>{option}</Label><Select id={`importance-${option}`} className="h-9 w-auto max-w-full text-xs" value={priorityWeight(priorities, option)} onChange={event => setPriorities(current => ({ ...current, [option]: Number(event.target.value) }))}>{[1, 2, 3].map(weight => <option key={weight} value={weight}>{priorityLabels[weight]}</option>)}</Select></div>)}</fieldset>}
 
-      <Field>
-        <Label htmlFor="timeline">Moving Timeline</Label>
-        <Select
-          id="timeline"
-          value={timeline}
-          onChange={(event) => setTimeline(event.target.value)}
+      <div className="sm:col-span-2">
+        <p className="text-xs font-medium text-[#6d7872]">
+          No sign-up needed · Results are instant
+        </p>
+      </div>
+
+      <div className="grid gap-2 border-t border-[#e3e8df] pt-5 sm:col-span-2 sm:grid-cols-[1fr_auto] sm:items-center">
+        <div>
+          <p className="text-sm font-bold text-[#17201d]">Ready to explore?</p>
+          <p className="text-xs leading-5 text-[#6d7872]">
+            We’ll rank cities around your budget and {priorityCountLabel}.
+          </p>
+        </div>
+        <Button
+          type="submit"
+          size="lg"
+          variant="accent"
+          disabled={isNavigating}
+          className="mt-1 min-w-64 rounded-lg shadow-[0_8px_20px_rgba(0,138,122,0.2)] sm:mt-0"
         >
-          {movingTimelineOptionGroups.map((group) => (
-            <optgroup key={group.label} label={group.label}>
-              {group.options.map((option) => (
-                <option key={option}>{option}</option>
-              ))}
-            </optgroup>
-          ))}
-        </Select>
-      </Field>
-
-      <Button type="submit" size="lg" className="sm:col-span-2">
-        <Search className="h-4 w-4" aria-hidden="true" />
-        Find Migration-Friendly Cities
-        <ArrowRight className="h-4 w-4" aria-hidden="true" />
-      </Button>
+          {isNavigating ? (
+            <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" />
+          ) : (
+            <Search className="h-4 w-4" aria-hidden="true" />
+          )}
+          {isNavigating ? "Building your matches…" : ctaLabel}
+          {!isNavigating ? (
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          ) : null}
+        </Button>
+      </div>
     </form>
   );
 }

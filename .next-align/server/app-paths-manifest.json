@@ -1,0 +1,13 @@
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/api/account/route": "app/api/account/route.js",
+  "/api/cities/[slug]/reviews/route": "app/api/cities/[slug]/reviews/route.js",
+  "/api/cities/[slug]/events/route": "app/api/cities/[slug]/events/route.js",
+  "/page": "app/page.js",
+  "/profile/[username]/page": "app/profile/[username]/page.js",
+  "/account/page": "app/account/page.js",
+  "/compare/page": "app/compare/page.js",
+  "/city/[slug]/page": "app/city/[slug]/page.js",
+  "/recommendations/page": "app/recommendations/page.js"
+}

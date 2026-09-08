@@ -1,6 +1,5 @@
-import Image from "next/image";
+import Link from "next/link";
 import {
-  Clock,
   Heart,
   Landmark,
   SlidersHorizontal,
@@ -9,7 +8,9 @@ import {
 } from "lucide-react";
 import { CityCard } from "@/components/city/city-card";
 import { Badge } from "@/components/ui/badge";
-import { isSponsorshipRelevantGoal, topMatches } from "@/lib/data";
+import { cities, isSponsorshipRelevantGoal, lifestyleOptions } from "@/lib/data";
+import { normalizePriorities, priorityLabels } from "@/lib/priority-weights";
+import { getRecommendations } from "@/lib/recommendations";
 
 type SearchParams = Record<string, string | string[] | undefined>;
 
@@ -38,13 +39,16 @@ export default async function RecommendationsPage({
 }) {
   const params = (await searchParams) ?? {};
   const budget = readParam(params, "budget") ?? "3000";
-  const lifestyles = readParams(params, "lifestyle");
+  const lifestyles = [...new Set(readParams(params, "lifestyle"))].filter(value => (lifestyleOptions as readonly string[]).includes(value));
+  const priorities = normalizePriorities(Object.fromEntries(lifestyles.map(option => [option, Number(readParam(params, `priority:${option}`))])), lifestyles);
+  const editParams = new URLSearchParams();
+  for (const key of ["budget", "passport", "workType", "needsSponsorship"]) { const value = readParam(params, key); if (value) editParams.set(key, value); }
+  lifestyles.forEach(option => { editParams.append("lifestyle", option); editParams.set(`priority:${option}`, String(priorities[option])); });
   const lifestyleLabel =
-    lifestyles.length > 0 ? lifestyles.join(", ") : "Open to all";
+    lifestyles.length > 0 ? lifestyles.map(option => `${option} (${priorityLabels[priorities[option]]})`).join(", ") : "Open to all";
   const workType = readParam(params, "workType") ?? "Work / Career";
   const needsSponsorship = readParam(params, "needsSponsorship");
   const shouldShowSponsorship = isSponsorshipRelevantGoal(workType);
-  const timeline = readParam(params, "timeline") ?? "3-6 Months";
   const parsedBudget = Number(budget);
   const budgetLabel =
     budget && Number.isFinite(parsedBudget)
@@ -62,16 +66,20 @@ export default async function RecommendationsPage({
         ]
       : []),
     { label: "Budget", value: budgetLabel, icon: WalletCards },
-    { label: "Timeline", value: timeline, icon: Clock },
     { label: "Lifestyle", value: lifestyleLabel, icon: Heart },
   ];
-  const rankingCopy = shouldShowSponsorship
-    ? "Ranked by your moving goal, sponsorship needs, lifestyle, transit, housing, community, and relocation signals."
-    : "Ranked by your moving goal, lifestyle, transit, housing, community, and relocation signals.";
+  const rankingCopy = "Your shortlist is weighted by the priorities you selected. Open any city to see which signals helped, which risks lowered its fit, and where evidence is still missing.";
+  const recommendations = getRecommendations(cities, {
+    budget: Number.isFinite(parsedBudget) ? parsedBudget : undefined,
+    lifestyles,
+    priorities,
+    workType,
+    needsSponsorship,
+  });
 
   return (
     <main className="mx-auto grid w-full max-w-7xl gap-8 px-4 py-8 sm:px-6 lg:px-8">
-      <section className="grid gap-6 lg:grid-cols-[0.85fr_1.15fr] lg:items-end">
+      <section className="rounded-3xl border border-[#dce5e0] bg-white/80 p-6 sm:p-8">
         <div className="grid gap-4">
           <div className="flex flex-wrap gap-2">
             <Badge className="gap-1.5">
@@ -91,7 +99,7 @@ export default async function RecommendationsPage({
           </div>
           <div>
             <h1 className="text-4xl font-black text-[#17201d] sm:text-5xl">
-              Migration-Friendly Matches
+              Find your next city
             </h1>
             <p className="mt-3 max-w-2xl text-lg leading-8 text-[#57635d]">
               {rankingCopy}
@@ -99,20 +107,27 @@ export default async function RecommendationsPage({
           </div>
         </div>
 
-        <div className="overflow-hidden rounded-lg border border-[#d7ded4] bg-white shadow-sm">
-          <Image
-            src="/landingpoint-map.png"
-            alt="LandingPoint recommendation map"
-            width={1600}
-            height={1000}
-            className="h-64 w-full object-cover"
-          />
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-[#e2eae5] pt-5">
+          <p className="text-sm text-[#52685d]"><strong>{recommendations.length} cities</strong> · Ordered by your preferences</p>
+          <Link href={`/?${editParams}`} className="edit-preferences rounded-xl px-5 py-3 text-sm font-semibold transition-colors">Edit preferences</Link>
         </div>
       </section>
 
-      <section className="grid gap-4 lg:grid-cols-3">
-        {topMatches.map((city) => (
-          <CityCard key={city.slug} city={city} />
+      <div className="rounded-lg border border-[#b9ddd3] bg-[#eef9f5] p-4 text-sm leading-6 text-[#075e54]">
+        Your priorities change the weights; they do not change the underlying city data.
+        Open a city for the sources, calculation method, and known limitations.
+        {(lifestyles.includes("Career Growth") || workType === "Work / Career") && <p className="mt-2">Career Growth currently uses existing jobs and jobs per 1,000 working-age residents for {cities.filter(c => c.sourceBackedScoreKeys.includes("career")).length} of {cities.length} cities. It is an employment-scale proxy, not current vacancies or measured growth. Missing evidence lowers profile coverage; it does not mean fewer jobs.</p>}
+        {lifestyles.includes("Immigrant Community") && <p className="mt-2">Immigrant Community uses local foreign-born population share for {cities.filter(c => c.sourceBackedScoreKeys.includes("community")).length} of {cities.length} cities. Other population definitions remain context only. Visa policies are not part of this score.</p>}
+      </div>
+
+      <section aria-label="City matches" className="grid items-stretch gap-6 sm:grid-cols-2 xl:grid-cols-3">
+        {recommendations.map((city) => (
+          <div key={city.slug} className="flex min-w-0 flex-col">
+            <CityCard city={city} />
+            {city.preferenceMatches.length > 0 && <details className="mt-3 rounded-xl border border-[var(--border)] bg-white p-3 text-sm"><summary className="cursor-pointer font-semibold text-[var(--accent)]">How this matches your priorities</summary><p className="mt-2 text-xs text-[var(--muted)]">Preference importance uses 1× / 2× / 3× weights. Goal, budget and evidence coverage also affect ranking. These are model signals, not guarantees.</p><ul className="mt-3 grid gap-2">{city.preferenceMatches.map(match => <li key={match.option}><span className="font-medium">{match.option}</span><span className="block text-xs text-[var(--muted)]">{priorityLabels[match.importance]} · {match.score === null ? "Comparable evidence missing" : `${match.score.toFixed(1)}/10 model signal${match.partial ? " · partial evidence" : ""}`}</span></li>)}</ul></details>}
+            {lifestyles.includes("Career Growth") && !city.sourceBackedScoreKeys.includes("career") && <p className="mt-2 px-3 text-xs text-[var(--muted)]">Career Growth: comparable local job data not yet available.</p>}
+            {lifestyles.includes("Immigrant Community") && !city.sourceBackedScoreKeys.includes("community") && <p className="mt-2 px-3 text-xs text-[var(--muted)]">Immigrant Community: population definition is not comparable for scoring.</p>}
+          </div>
         ))}
       </section>
     </main>

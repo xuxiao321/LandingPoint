@@ -1,3 +1,13 @@
+import publicMetricsSnapshot from "@/data/city-public-metrics.json";
+import { populationByCity, populationLabel, type PopulationObservation } from "@/lib/population";
+import globalMetricsSnapshot from "@/data/global-city-metrics.json";
+import cityImageAssets from "@/data/city-images.json";
+import localFactsSnapshot from "@/data/city-local-facts.json";
+import rentDefinitions from "@/data/rent-definitions.json";
+import { communityScore } from "@/lib/community-score";
+import { employmentByCity, employmentScore } from "@/lib/employment-score";
+import { rentBurdenByCity, rentAffordabilityScore } from "@/lib/rent-burden";
+
 export const lifestyleOptionGroups = [
   {
     label: "Budget & Housing",
@@ -420,13 +430,61 @@ export type LocalSignals = {
   submittedBy: number;
 };
 
+export type CityDataSource = {
+  name: string;
+  url: string;
+  period: string;
+  retrievedAt: string;
+  metrics: string[];
+  license?: string;
+};
+
+export type CityDataProvenance = {
+  status: "demo" | "mixed" | "verified";
+  methodologyVersion: string;
+  notice: string;
+  sources: CityDataSource[];
+};
+
+export type CityHeroImage = {
+  url: string;
+  sourcePageUrl: string;
+  title: string;
+  creator: string;
+  license: string;
+  licenseUrl: string;
+  remoteUrl?: string;
+  reviewedAt?: string;
+  attributionRequired?: boolean;
+};
+
+export type LocalFact = {
+  rentDefinition?: { primary: boolean; category: string; evidence: string };
+  label: string;
+  value: string;
+  geography: string;
+  note: string;
+  sourceUrl: string;
+  period: string;
+};
+
 export type City = {
+  populationObservation?: PopulationObservation;
+  localFacts?: { rent: LocalFact; migration: LocalFact };
   slug: string;
   name: string;
   state: string;
   country: string;
+  heroImage?: CityHeroImage;
   population: string;
   monthlyCost: string;
+  costMetric:
+    | "estimated-monthly-cost"
+    | "median-gross-rent"
+    | "housing-cost-proxy"
+    | "local-rent-reference"
+    | "not-available";
+  costMetricLabel: string;
   internetQuality: string;
   overallScore: number;
   matchScore: number;
@@ -437,9 +495,11 @@ export type City = {
   summary: string;
   bestFor: string[];
   scores: Record<SignalKey, number>;
+  sourceBackedScoreKeys: SignalKey[];
+  recommendationCoverage: number;
   migrationSignals: SignalMetric[];
   signals: SignalMetric[];
-  dataSources: string[];
+  dataProvenance: CityDataProvenance;
   experiences: Experience[];
   localSignals: LocalSignals;
   peopleLikeYou: {
@@ -450,15 +510,15 @@ export type City = {
 };
 
 export const signalLabels: Record<SignalKey, string> = {
-  sponsor: "Sponsor Density",
-  visa: "Visa Friendliness",
+  sponsor: "Work Pathways",
+  visa: "Visa Path Breadth",
   job: "Job Market Fit",
   community: "Immigrant Community",
   transit: "No-car Transit",
-  rent: "Rent Pressure",
-  schools: "School Quality",
-  food: "Food Cost",
-  social: "Social Life",
+  rent: "Rent affordability",
+  schools: "Higher Education Access",
+  food: "Dining Access",
+  social: "Social & Cultural Access",
   safety: "Safety",
   career: "Career",
   weather: "Weather",
@@ -466,7 +526,16 @@ export const signalLabels: Record<SignalKey, string> = {
   costOfLiving: "Cost Of Living",
 };
 
-export const cities: City[] = [
+const citySeedData: Array<
+  Omit<
+    City,
+    | "costMetric"
+    | "costMetricLabel"
+    | "dataProvenance"
+    | "sourceBackedScoreKeys"
+    | "recommendationCoverage"
+  >
+> = [
   {
     slug: "new-york-city",
     name: "New York City",
@@ -581,7 +650,6 @@ export const cities: City[] = [
         ],
       },
     ],
-    dataSources: ["USCIS H-1B", "Census ACS", "BLS LAUS", "FBI CDE", "Zillow"],
     experiences: [
       {
         user: "Aarav",
@@ -727,7 +795,6 @@ export const cities: City[] = [
         ],
       },
     ],
-    dataSources: ["USCIS H-1B", "BLS LAUS", "Zillow", "Open-Meteo"],
     experiences: [
       {
         user: "Mei",
@@ -873,7 +940,6 @@ export const cities: City[] = [
         ],
       },
     ],
-    dataSources: ["NCES", "USCIS H-1B", "Census ACS", "BLS LAUS", "Zillow"],
     experiences: [
       {
         user: "Nora",
@@ -1019,7 +1085,6 @@ export const cities: City[] = [
         ],
       },
     ],
-    dataSources: ["USCIS H-1B", "BLS LAUS", "Zillow", "Open-Meteo"],
     experiences: [
       {
         user: "Sara",
@@ -1165,7 +1230,6 @@ export const cities: City[] = [
         ],
       },
     ],
-    dataSources: ["BLS LAUS", "Zillow", "FBI CDE", "NCES", "USCIS H-1B"],
     experiences: [
       {
         user: "Jin",
@@ -1199,18 +1263,747 @@ export const cities: City[] = [
   },
 ];
 
-export const topMatches = cities.slice(0, 3);
+type PublicCityMetrics = {
+  slug: string;
+  geographyName: string;
+  geography: {
+    type: "place";
+    stateFips: string;
+    placeFips: string;
+  };
+  population: number;
+  foreignBornShare: number;
+  medianGrossRent: number;
+  medianHouseholdIncome: number;
+  unemploymentRate: number;
+  publicTransitShare: number;
+  noCarCommuteShare: number;
+};
+
+type PublicMetricsSnapshot = {
+  generatedAt: string | null;
+  dataset: string;
+  datasetYear: string | null;
+  sourceUrl?: string;
+  cities: PublicCityMetrics[];
+};
+
+const syncedMetrics = publicMetricsSnapshot as PublicMetricsSnapshot;
+const syncedMetricsBySlug = new Map(
+  syncedMetrics.cities.map((city) => [city.slug, city]),
+);
+
+function clampScore(value: number) {
+  return Number(Math.min(10, Math.max(0, value)).toFixed(1));
+}
+
+function formatCompactNumber(value: number) {
+  return new Intl.NumberFormat("en-US", {
+    notation: "compact",
+    maximumFractionDigits: 1,
+  }).format(value);
+}
+
+function formatCurrency(value: number) {
+  return `$${value.toLocaleString("en-US")}`;
+}
+
+function hydrateSignals(
+  signals: SignalMetric[],
+  scores: Record<SignalKey, number>,
+  metric: PublicCityMetrics,
+) {
+  const detailRows: Partial<Record<SignalKey, SignalMetric["detailRows"]>> = {
+    community: [
+      { label: "Foreign-born share", value: `${metric.foreignBornShare}%` },
+      { label: "Geography", value: metric.geographyName },
+      { label: "Primary source", value: `${syncedMetrics.dataset} ${syncedMetrics.datasetYear}` },
+    ],
+    job: [
+      { label: "Unemployment rate", value: `${metric.unemploymentRate}%` },
+      {
+        label: "Median household income",
+        value: formatCurrency(metric.medianHouseholdIncome),
+      },
+      { label: "Primary source", value: `${syncedMetrics.dataset} ${syncedMetrics.datasetYear}` },
+    ],
+    transit: [
+      { label: "Public-transit commute", value: `${metric.publicTransitShare}%` },
+      { label: "Transit, bike, or walk", value: `${metric.noCarCommuteShare}%` },
+      { label: "Primary source", value: `${syncedMetrics.dataset} ${syncedMetrics.datasetYear}` },
+    ],
+    rent: [
+      { label: "Median gross rent", value: `${formatCurrency(metric.medianGrossRent)}/mo` },
+      { label: "Geography", value: metric.geographyName },
+      { label: "Primary source", value: `${syncedMetrics.dataset} ${syncedMetrics.datasetYear}` },
+    ],
+    costOfLiving: [
+      { label: "Median gross rent", value: `${formatCurrency(metric.medianGrossRent)}/mo` },
+      {
+        label: "Median household income",
+        value: formatCurrency(metric.medianHouseholdIncome),
+      },
+      { label: "Primary source", value: `${syncedMetrics.dataset} ${syncedMetrics.datasetYear}` },
+    ],
+  };
+
+  return signals.map((signal) => ({
+    ...signal,
+    score: scores[signal.key],
+    detailRows: detailRows[signal.key] ?? signal.detailRows,
+  }));
+}
+
+function hydrateCity(
+  seed: Omit<
+    City,
+    | "costMetric"
+    | "costMetricLabel"
+    | "dataProvenance"
+    | "sourceBackedScoreKeys"
+    | "recommendationCoverage"
+  >,
+): City {
+  const metric = syncedMetricsBySlug.get(seed.slug);
+
+  if (!metric || !syncedMetrics.generatedAt || !syncedMetrics.datasetYear) {
+    return {
+      ...seed,
+      costMetric: "estimated-monthly-cost",
+      costMetricLabel: "Estimated monthly cost",
+      sourceBackedScoreKeys: [],
+      recommendationCoverage: 0,
+      dataProvenance: {
+        status: "demo",
+        methodologyVersion: "prototype",
+        notice:
+          "No official snapshot has been synced yet. Numbers, scores, experiences, and rankings on this city are prototype content and must not be treated as factual.",
+        sources: [],
+      },
+    };
+  }
+
+  const rentScore = clampScore(10 - (metric.medianGrossRent - 700) / 230);
+  const communityScore = clampScore((metric.foreignBornShare - 5) / 3.5);
+  const transitScore = clampScore(metric.noCarCommuteShare / 4);
+  const jobScore = clampScore(10 - (metric.unemploymentRate - 2) * 1.3);
+  const rentToIncome =
+    metric.medianGrossRent / (metric.medianHouseholdIncome / 12);
+  const costOfLivingScore = clampScore((0.5 - rentToIncome) * 40);
+  const scores = {
+    ...seed.scores,
+    community: communityScore,
+    transit: transitScore,
+    rent: rentScore,
+    job: jobScore,
+    costOfLiving: costOfLivingScore,
+  };
+  const sourceBackedScoreKeys: SignalKey[] = [
+    "community",
+    "transit",
+    "rent",
+    "job",
+    "costOfLiving",
+  ];
+  const availableFit =
+    sourceBackedScoreKeys.reduce((total, key) => total + scores[key], 0) /
+    sourceBackedScoreKeys.length;
+  const source: CityDataSource = {
+    name: syncedMetrics.dataset,
+    url:
+      syncedMetrics.sourceUrl ??
+      "https://www.census.gov/data/developers/data-sets/acs-5year.html",
+    period: `${syncedMetrics.datasetYear} 5-year estimates`,
+    retrievedAt: syncedMetrics.generatedAt,
+    metrics: [
+      "Population",
+      "Foreign-born share",
+      "Median gross rent",
+      "Median household income",
+      "Unemployment rate",
+      "Commute mode share",
+    ],
+  };
+
+  return {
+    ...seed,
+    population: formatCompactNumber(metric.population),
+    monthlyCost: formatCurrency(metric.medianGrossRent),
+    costMetric: "median-gross-rent",
+    costMetricLabel: "Median gross rent",
+    foreignBornShare: `${metric.foreignBornShare}%`,
+    overallScore: Number(availableFit.toFixed(1)),
+    matchScore: Math.round(availableFit * 10),
+    migrationFit: Number(availableFit.toFixed(1)),
+    scores,
+    sourceBackedScoreKeys,
+    recommendationCoverage: sourceBackedScoreKeys.length / 14,
+    migrationSignals: hydrateSignals(seed.migrationSignals, scores, metric).filter(
+      (signal) => sourceBackedScoreKeys.includes(signal.key),
+    ),
+    signals: hydrateSignals(seed.signals, scores, metric).filter((signal) =>
+      sourceBackedScoreKeys.includes(signal.key),
+    ),
+    dataConfidence: "Medium High",
+    dataProvenance: {
+      status: "mixed",
+      methodologyVersion: "lp-acs-v1",
+      notice:
+        "Population, rent, income, foreign-born share, unemployment, and commute metrics use official ACS estimates. Unsupported sponsor, safety, weather, internet, and other scores are excluded from recommendations.",
+      sources: [source],
+    },
+  };
+}
+
+type MetricObservation = {
+  value: number;
+  year: string;
+  indicatorCode: string;
+};
+
+type GlobalCityMetric = {
+  slug: string;
+  name: string;
+  subdivision: string;
+  country: string;
+  heroImage?: CityHeroImage;
+  wikidataId: string;
+  population: number;
+  populationAsOf: string | null;
+  populationReview: {
+    confidence: string;
+    selectionReason: string;
+    comparison: {
+      source: string;
+      value: number;
+      differencePercent: number;
+    } | null;
+  };
+  climate: {
+    annualMeanC: number;
+    warmestMonth: { month: string; value: number };
+    coldestMonth: { month: string; value: number };
+    period: string;
+  };
+  countryContext: {
+    unemploymentRate: MetricObservation;
+    internetUseShare: MetricObservation;
+    migrantStockShare: MetricObservation;
+    homicideRate: MetricObservation;
+    gdpPerCapitaPpp: MetricObservation;
+    tertiaryEnrollmentRate: MetricObservation;
+    priceLevelRatio: MetricObservation;
+  };
+  policy: {
+    workPathScore: number;
+    visaBreadthScore: number;
+    label: string;
+    sourceUrl: string;
+    geography: string;
+    reviewedAt: string;
+    disclaimer: string;
+  };
+  osm: {
+    amenityRadiusKm: number;
+    transitCoreRadiusKm: number;
+    transitMetroRadiusKm: number;
+    universityCount: number;
+    foodVenueCount: number;
+    socialVenueCount: number;
+    transitCoreLocationCount: number;
+    transitMetroLocationCount: number;
+    sourceTimestamp: string;
+  };
+  sources: Array<{
+    name: string;
+    sourceUrl: string;
+    period: string;
+    metrics: string[];
+    license?: string;
+  }>;
+};
+
+type CityImageAsset = CityHeroImage & {
+  attributionRequired: boolean;
+};
+
+const cityImagesBySlug = new Map(
+  Object.entries(cityImageAssets as Record<string, CityImageAsset>).map(
+    ([slug, image]) => [slug, image] as const,
+  ),
+);
+
+type GlobalMetricsSnapshot = {
+  generatedAt: string | null;
+  cities: GlobalCityMetric[];
+};
+
+const globalMetrics = globalMetricsSnapshot as GlobalMetricsSnapshot;
+const monthNames: Record<string, string> = {
+  JAN: "January",
+  FEB: "February",
+  MAR: "March",
+  APR: "April",
+  MAY: "May",
+  JUN: "June",
+  JUL: "July",
+  AUG: "August",
+  SEP: "September",
+  OCT: "October",
+  NOV: "November",
+  DEC: "December",
+};
+
+function weatherComfortScore(metric: GlobalCityMetric) {
+  const coldPenalty = Math.max(0, 8 - metric.climate.coldestMonth.value) * 0.22;
+  const heatPenalty = Math.max(0, metric.climate.warmestMonth.value - 26) * 0.28;
+  return clampScore(10 - coldPenalty - heatPenalty);
+}
+
+function normalizedScore(
+  value: number,
+  values: number[],
+  direction: "higher" | "lower" = "higher",
+  logarithmic = false,
+) {
+  const transform = (item: number) => logarithmic ? Math.log1p(item) : item;
+  const transformed = values.map(transform);
+  const minimum = Math.min(...transformed);
+  const maximum = Math.max(...transformed);
+  const position = maximum === minimum
+    ? 0.5
+    : (transform(value) - minimum) / (maximum - minimum);
+  return clampScore(2 + (direction === "higher" ? position : 1 - position) * 8);
+}
+
+const globalMetricValues = {
+  unemployment: globalMetrics.cities.map((city) => city.countryContext.unemploymentRate.value),
+  internet: globalMetrics.cities.map((city) => city.countryContext.internetUseShare.value),
+  migrantStock: globalMetrics.cities.map((city) => city.countryContext.migrantStockShare.value),
+  homicide: globalMetrics.cities.map((city) => city.countryContext.homicideRate.value),
+  gdp: globalMetrics.cities.map((city) => city.countryContext.gdpPerCapitaPpp.value),
+  tertiary: globalMetrics.cities.map((city) => city.countryContext.tertiaryEnrollmentRate.value),
+  priceLevel: globalMetrics.cities.map((city) => city.countryContext.priceLevelRatio.value),
+  universities: globalMetrics.cities.map((city) => city.osm.universityCount),
+  food: globalMetrics.cities.map((city) => city.osm.foodVenueCount),
+  social: globalMetrics.cities.map((city) => city.osm.socialVenueCount),
+  transitCoreDensity: globalMetrics.cities.map((city) =>
+    city.osm.transitCoreLocationCount / (Math.PI * city.osm.transitCoreRadiusKm ** 2)),
+  transitMetroDensity: globalMetrics.cities.map((city) =>
+    city.osm.transitMetroLocationCount / (Math.PI * city.osm.transitMetroRadiusKm ** 2)),
+};
+
+function scoreLabel(score: number) {
+  if (score >= 8.5) return "Very broad";
+  if (score >= 7) return "Broad";
+  if (score >= 5.5) return "Moderate";
+  if (score >= 4) return "Limited";
+  return "Very limited";
+}
+
+function metricSignal(
+  key: SignalKey,
+  score: number,
+  detailRows: SignalMetric["detailRows"],
+): SignalMetric {
+  return { key, label: signalLabels[key], score, detailRows };
+}
+
+function createGlobalCity(metric: GlobalCityMetric): City {
+  const weatherScore = weatherComfortScore(metric);
+  const context = metric.countryContext;
+  const unemploymentScore = normalizedScore(context.unemploymentRate.value, globalMetricValues.unemployment, "lower");
+  const gdpScore = normalizedScore(context.gdpPerCapitaPpp.value, globalMetricValues.gdp, "higher", true);
+  const costScore = normalizedScore(context.priceLevelRatio.value, globalMetricValues.priceLevel, "lower");
+  const cityPressure = normalizedScore(metric.population, globalMetrics.cities.map((city) => city.population), "lower", true);
+  const jobScore = clampScore(unemploymentScore * 0.7 + gdpScore * 0.3);
+  const schoolScore = clampScore(
+    normalizedScore(metric.osm.universityCount, globalMetricValues.universities, "higher", true) * 0.65 +
+    normalizedScore(context.tertiaryEnrollmentRate.value, globalMetricValues.tertiary) * 0.35,
+  );
+  const coreTransitDensity = metric.osm.transitCoreLocationCount /
+    (Math.PI * metric.osm.transitCoreRadiusKm ** 2);
+  const metroTransitDensity = metric.osm.transitMetroLocationCount /
+    (Math.PI * metric.osm.transitMetroRadiusKm ** 2);
+  const amenityAreaKm2 = Math.PI * metric.osm.amenityRadiusKm ** 2;
+  const universityDensity = metric.osm.universityCount / amenityAreaKm2;
+  const foodDensity = metric.osm.foodVenueCount / amenityAreaKm2;
+  const socialDensity = metric.osm.socialVenueCount / amenityAreaKm2;
+  const transitScore = clampScore(
+    normalizedScore(coreTransitDensity, globalMetricValues.transitCoreDensity, "higher", true) * 0.6 +
+    normalizedScore(metroTransitDensity, globalMetricValues.transitMetroDensity, "higher", true) * 0.4,
+  );
+  const scores: Record<SignalKey, number> = {
+    sponsor: clampScore(metric.policy.workPathScore),
+    visa: clampScore(metric.policy.visaBreadthScore),
+    job: jobScore,
+    community: normalizedScore(context.migrantStockShare.value, globalMetricValues.migrantStock),
+    transit: transitScore,
+    rent: clampScore(costScore * 0.7 + cityPressure * 0.3),
+    schools: schoolScore,
+    food: normalizedScore(metric.osm.foodVenueCount, globalMetricValues.food, "higher", true),
+    social: normalizedScore(metric.osm.socialVenueCount, globalMetricValues.social, "higher", true),
+    safety: normalizedScore(context.homicideRate.value, globalMetricValues.homicide, "lower", true),
+    career: clampScore(jobScore * 0.55 + gdpScore * 0.45),
+    weather: weatherScore,
+    internet: normalizedScore(context.internetUseShare.value, globalMetricValues.internet),
+    costOfLiving: costScore,
+  };
+  const sourceBackedScoreKeys = Object.keys(signalLabels) as SignalKey[];
+  const comparison = metric.populationReview.comparison;
+  const overallScore = clampScore(
+    sourceBackedScoreKeys.reduce((total, key) => total + scores[key], 0) /
+      sourceBackedScoreKeys.length,
+  );
+  const indexValue = Math.round(context.priceLevelRatio.value * 100);
+  const nationalRow = (label: string, observation: MetricObservation) => ({
+    label,
+    value: `${observation.value.toLocaleString("en-US", { maximumFractionDigits: 1 })} · ${observation.year}`,
+  });
+  const cityRadius = `${metric.osm.amenityRadiusKm} km around city center`;
+  const migrationSignals = [
+    metricSignal("sponsor", scores.sponsor, [
+      { label: "Official pathway review", value: metric.policy.label },
+      { label: "Geography", value: metric.policy.geography },
+      { label: "Reviewed", value: metric.policy.reviewedAt },
+    ]),
+    metricSignal("visa", scores.visa, [
+      { label: "Comparative breadth", value: scoreLabel(scores.visa) },
+      { label: "Official pathway review", value: metric.policy.label },
+      { label: "Important", value: "Not an eligibility decision" },
+    ]),
+    metricSignal("community", scores.community, [
+      nationalRow("National migrant stock (%)", context.migrantStockShare),
+      { label: "Geography", value: metric.policy.geography },
+      { label: "Source", value: "World Bank WDI" },
+    ]),
+    metricSignal("job", scores.job, [
+      nationalRow("National unemployment (%)", context.unemploymentRate),
+      nationalRow("GDP per capita, PPP (US$)", context.gdpPerCapitaPpp),
+      { label: "Method", value: "70% unemployment + 30% GDP PPP" },
+    ]),
+  ];
+  const signals = [
+    metricSignal("transit", scores.transit, [
+      { label: "Core-area map records", value: `${metric.osm.transitCoreLocationCount.toLocaleString("en-US")} within ${metric.osm.transitCoreRadiusKm} km` },
+      { label: "Wider-area map records", value: `${metric.osm.transitMetroLocationCount.toLocaleString("en-US")} within ${metric.osm.transitMetroRadiusKm} km` },
+      { label: "Core density", value: `${coreTransitDensity.toFixed(1)} records/km²` },
+      { label: "Wider-area density", value: `${metroTransitDensity.toFixed(1)} records/km²` },
+      { label: "Includes", value: "Stops, stations, platforms, and entrances" },
+      { label: "Score method", value: "60% core density + 40% wider-area density" },
+      { label: "How to read this", value: "Map records, not unique stations or a service-quality rating" },
+      { label: "Source", value: "OpenStreetMap" },
+    ]),
+    metricSignal("rent", scores.rent, [
+      { label: "National price-level index", value: `${indexValue} (US = 100)` },
+      { label: "City pressure input", value: `${formatCompactNumber(metric.population)} population` },
+      { label: "Method", value: "70% price level + 30% population pressure" },
+    ]),
+    metricSignal("schools", scores.schools, [
+      { label: "Mapped higher-education locations", value: metric.osm.universityCount.toLocaleString("en-US") },
+      { label: "Map-record density", value: `${universityDensity.toFixed(2)} records/km²` },
+      nationalRow("National tertiary enrollment (%)", context.tertiaryEnrollmentRate),
+      { label: "Area measured", value: cityRadius },
+      { label: "How to read this", value: "Map records, not independent institutions or a quality ranking" },
+      { label: "Source", value: "OpenStreetMap + World Bank WDI" },
+    ]),
+    metricSignal("food", scores.food, [
+      { label: "Mapped places to eat", value: metric.osm.foodVenueCount.toLocaleString("en-US") },
+      { label: "Map-record density", value: `${foodDensity.toFixed(1)} records/km²` },
+      { label: "Area measured", value: cityRadius },
+      { label: "Includes", value: "Restaurants, cafés, fast food, and food courts" },
+      { label: "Score method", value: "Catalog-relative log scale within the same fixed area" },
+      { label: "How to read this", value: "Dining availability proxy, not food price or quality" },
+      { label: "Source", value: "OpenStreetMap" },
+    ]),
+    metricSignal("social", scores.social, [
+      { label: "Mapped social & cultural venues", value: metric.osm.socialVenueCount.toLocaleString("en-US") },
+      { label: "Map-record density", value: `${socialDensity.toFixed(1)} records/km²` },
+      { label: "Area measured", value: cityRadius },
+      { label: "Includes", value: "Bars, pubs, nightclubs, cinemas, and theatres" },
+      { label: "Score method", value: "Catalog-relative log scale within the same fixed area" },
+      { label: "How to read this", value: "Venue-access proxy, not a rating of social experience" },
+      { label: "Source", value: "OpenStreetMap" },
+    ]),
+    metricSignal("safety", scores.safety, [
+      nationalRow("National homicide rate / 100k", context.homicideRate),
+      { label: "Geography", value: metric.policy.geography },
+      { label: "Caution", value: "Not a neighborhood crime score" },
+    ]),
+    metricSignal("career", scores.career, [
+      nationalRow("GDP per capita, PPP (US$)", context.gdpPerCapitaPpp),
+      nationalRow("National unemployment (%)", context.unemploymentRate),
+      { label: "Method", value: "Job context + GDP PPP" },
+    ]),
+    metricSignal("weather", scores.weather, [
+      { label: "Annual mean", value: `${metric.climate.annualMeanC} C` },
+      { label: "Warmest monthly mean", value: `${monthNames[metric.climate.warmestMonth.month]} · ${metric.climate.warmestMonth.value} C` },
+      { label: "Coldest monthly mean", value: `${monthNames[metric.climate.coldestMonth.month]} · ${metric.climate.coldestMonth.value} C` },
+      { label: "Climate period", value: metric.climate.period },
+    ]),
+    metricSignal("internet", scores.internet, [
+      nationalRow("Population using internet (%)", context.internetUseShare),
+      { label: "Geography", value: metric.policy.geography },
+      { label: "Source", value: "World Bank WDI" },
+    ]),
+    metricSignal("costOfLiving", scores.costOfLiving, [
+      { label: "National price-level index", value: `${indexValue} (US = 100)` },
+      { label: "Indicator year", value: context.priceLevelRatio.year },
+      { label: "Method", value: "PPP conversion factor / exchange rate" },
+    ]),
+  ];
+
+  return {
+    slug: metric.slug,
+    name: metric.name,
+    state: metric.subdivision,
+    country: metric.country,
+    heroImage: cityImagesBySlug.get(metric.slug) ?? metric.heroImage,
+    population: formatCompactNumber(metric.population),
+    monthlyCost: "City data unavailable",
+    costMetric: "not-available",
+    costMetricLabel: "Monthly living costs",
+    internetQuality: `${context.internetUseShare.value}% national internet use`,
+    overallScore,
+    matchScore: Math.round(overallScore * 10),
+    migrationFit: overallScore,
+    sponsorDensity: `${scoreLabel(scores.sponsor)} · ${metric.policy.label}`,
+    foreignBornShare: "City data unavailable",
+    dataConfidence:
+      metric.populationReview.confidence === "boundary-review-needed"
+        ? "Boundary review needed"
+        : "Multi-source, model-derived",
+    summary:
+      `${metric.name} is part of LandingPoint's reviewed global catalog. ` +
+      "All comparison signals use traceable public observations. City-level map and climate data are combined with national context; cost and migration fit are transparent model-derived proxies, not quoted rent or legal advice.",
+    bestFor: ["Global comparison", "Public-data context", "Reviewed pathways"],
+    scores,
+    sourceBackedScoreKeys,
+    recommendationCoverage: sourceBackedScoreKeys.length / 14,
+    migrationSignals,
+    signals,
+    dataProvenance: {
+      status: "mixed",
+      methodologyVersion: "lp-global-catalog-v1",
+      notice:
+        `Population uses the reviewed Wikidata city entity (${metric.wikidataId}) and is checked against GeoNames when the geography is comparable. ` +
+        `${comparison ? `The comparison differs by ${comparison.differencePercent}%. ` : "No same-boundary GeoNames comparison was available. "}` +
+        "Climate uses NASA POWER; local map counts use OpenStreetMap. World Bank indicators provide national context. Scores are LandingPoint calculations, not official ratings. Only eligible metrics contribute to rankings; immigration guidance is not scored. Each observation has its own date and geographic scope. Local rent references are not guaranteed prices, and scores do not establish neighborhood safety or personal visa eligibility.",
+      sources: metric.sources.map((source) => ({
+        name: source.name,
+        url: source.sourceUrl,
+        period: source.period,
+        retrievedAt: globalMetrics.generatedAt ?? "Not synced",
+        metrics: source.metrics,
+        license: source.license,
+      })),
+    },
+    experiences: [],
+    localSignals: {
+      rentTrend: "Not available",
+      safetyTrend: "Not available",
+      trafficTrend: "Not available",
+      costOfLivingTrend: "Not available",
+      submittedBy: 0,
+    },
+    peopleLikeYou: {
+      segment: "No verified cohort yet",
+      averageBudget: "Not available",
+      topChoices: [],
+    },
+  };
+}
+
+const reviewedGlobalCities = globalMetrics.generatedAt
+  ? globalMetrics.cities.map(createGlobalCity)
+  : [];
+
+const seedBySlug = new Map(citySeedData.map((city) => [city.slug, city]));
+const globalBySlug = new Map(reviewedGlobalCities.map((city) => [city.slug, city]));
+const usCities = citySeedData.map((seed) => {
+  const acsCity = hydrateCity(seed);
+  const globalCity = globalBySlug.get(seed.slug);
+  if (!globalCity || acsCity.dataProvenance.status === "demo") return acsCity;
+  const acsMetric = syncedMetricsBySlug.get(seed.slug)!;
+
+  // Keep transit scoring and explanation on the same OSM-density basis for every city.
+  const acsKeys: SignalKey[] = ["community", "rent", "job", "costOfLiving"];
+  const scores = { ...globalCity.scores };
+  acsKeys.forEach((key) => { scores[key] = acsCity.scores[key]; });
+  const signalsByKey = new Map(
+    [...globalCity.migrationSignals, ...globalCity.signals].map((signal) => [
+      signal.key,
+      signal,
+    ]),
+  );
+  hydrateSignals(
+    [...globalCity.migrationSignals, ...globalCity.signals],
+    scores,
+    acsMetric,
+  )
+    .filter((signal) => acsKeys.includes(signal.key))
+    .forEach((signal) => signalsByKey.set(signal.key, signal));
+  const transitSignal = signalsByKey.get("transit");
+  if (transitSignal) {
+    signalsByKey.set("transit", {
+      ...transitSignal,
+      detailRows: [
+        ...transitSignal.detailRows,
+        { label: "Commute by transit", value: `${acsMetric.publicTransitShare}%` },
+        { label: "Transit, bike, or walk", value: `${acsMetric.noCarCommuteShare}%` },
+        { label: "Commute data", value: "Supplementary context; not used in this score" },
+      ],
+    });
+  }
+  const overallScore = clampScore(
+    (Object.keys(signalLabels) as SignalKey[]).reduce((sum, key) => sum + scores[key], 0) / 14,
+  );
+
+  return {
+    ...globalCity,
+    population: acsCity.population,
+    monthlyCost: acsCity.monthlyCost,
+    costMetric: acsCity.costMetric,
+    costMetricLabel: acsCity.costMetricLabel,
+    foreignBornShare: acsCity.foreignBornShare,
+    scores,
+    overallScore,
+    matchScore: Math.round(overallScore * 10),
+    migrationFit: overallScore,
+    migrationSignals: ["sponsor", "visa", "community", "job"].map((key) => signalsByKey.get(key as SignalKey)!),
+    signals: ["transit", "rent", "schools", "food", "social", "safety", "career", "weather", "internet", "costOfLiving"].map((key) => signalsByKey.get(key as SignalKey)!),
+    dataConfidence: "Multi-source; OSM transit density + ACS city metrics where available",
+    dataProvenance: {
+      ...globalCity.dataProvenance,
+      methodologyVersion: "lp-global-model-v2+acs-v1",
+      notice: `${globalCity.dataProvenance.notice} For this U.S. city, ACS city-level population, rent, migration, and employment observations replace the corresponding national or proxy values. Commute percentages are supplementary context; No-car Transit scoring remains OSM density-based for every city.`,
+      sources: [...acsCity.dataProvenance.sources, ...globalCity.dataProvenance.sources],
+    },
+  };
+});
+
+function attachLocalFacts(city: City): City {
+  const reviewed = (localFactsSnapshot.cities as Record<string, { rent: LocalFact; migration: LocalFact }>)[city.slug];
+  if (reviewed) {
+    return {
+      ...city,
+      localFacts: reviewed,
+      monthlyCost: reviewed.rent.value,
+      costMetric: "local-rent-reference",
+      costMetricLabel: reviewed.rent.label,
+      foreignBornShare: reviewed.migration.value,
+      dataProvenance: {
+        ...city.dataProvenance,
+        sources: [...Object.values(reviewed).map((fact) => ({
+          name: `${fact.label} — ${new URL(fact.sourceUrl).hostname}`,
+          url: fact.sourceUrl,
+          period: fact.period,
+          retrievedAt: localFactsSnapshot.reviewedAt,
+          metrics: [fact.label, fact.geography],
+        })), ...city.dataProvenance.sources],
+      },
+    };
+  }
+  const source = city.dataProvenance.sources.find((item) => item.metrics.includes("Median gross rent"));
+  if (!source) return city;
+  return {
+    ...city,
+    localFacts: {
+      rent: { label: "Median monthly rent", value: `USD ${city.monthlyCost.replace(/^\$/, "")}`, geography: `${city.name} city boundaries`, note: "Median household gross rent including utilities. Not a total living budget or current asking rent.", sourceUrl: source.url, period: source.period },
+      migration: { label: "Residents born abroad", value: city.foreignBornShare, geography: `${city.name} city boundaries`, note: "Residents born outside the country, under the ACS foreign-born definition.", sourceUrl: source.url, period: source.period },
+    },
+  };
+}
+
+// These observations do not establish individual eligibility, community support,
+// or occupational fit. Career also reuses the unsupported job/GDP calculation.
+const unscoredRelocationKeys = new Set<SignalKey>(["sponsor", "visa", "community", "job", "career"]);
+
+function removeRelocationScores(city: City): City {
+  const sourceBackedScoreKeys = city.sourceBackedScoreKeys.filter((key) => !unscoredRelocationKeys.has(key) && key !== "rent");
+  const localCommunityScore = communityScore(city.localFacts?.migration);
+  const scores = { ...city.scores };
+  const burden = rentBurdenByCity[city.slug];
+  const rentScore = burden ? rentAffordabilityScore(burden.share) : undefined;
+  scores.rent = rentScore ?? 0;
+  if (rentScore !== undefined) sourceBackedScoreKeys.push("rent");
+  const careerScore = employmentScore(employmentByCity[city.slug]);
+  if (careerScore !== undefined) {
+    sourceBackedScoreKeys.push("career");
+    scores.career = careerScore;
+  }
+  if (localCommunityScore !== undefined) {
+    sourceBackedScoreKeys.push("community");
+    scores.community = localCommunityScore;
+  }
+  const overallScore = sourceBackedScoreKeys.length
+    ? Number((sourceBackedScoreKeys.reduce((sum, key) => sum + scores[key], 0) / sourceBackedScoreKeys.length).toFixed(1))
+    : 0;
+  return {
+    ...city,
+    scores,
+    sponsorDensity: "Eligibility check required",
+    dataProvenance: {
+      ...city.dataProvenance,
+      sources: burden ? [...city.dataProvenance.sources, { name: "Census ACS — rent as a share of household income", url: burden.sourceUrl, period: burden.period, retrievedAt: "2026-09-07", metrics: ["Median gross rent as a percentage of household income", burden.geography] }] : city.dataProvenance.sources,
+    },
+    sourceBackedScoreKeys,
+    overallScore,
+    migrationFit: overallScore,
+    matchScore: Math.round(overallScore * 10),
+    recommendationCoverage: sourceBackedScoreKeys.length / 14,
+    signals: city.signals.filter((signal) => !unscoredRelocationKeys.has(signal.key) && signal.key !== "rent").concat(burden && rentScore !== undefined ? [{
+      key: "rent", label: "Rent affordability", score: rentScore,
+      detailRows: [
+        { label: "Median rent share of household income", value: `${burden.share}%` },
+        { label: "Geography & period", value: `${burden.geography} · ${burden.period}` },
+        { label: "What this measures", value: "Official median of renter household gross-rent-to-income ratios. Includes utilities; household income is before tax. Not a ratio of separate medians or your personal budget." },
+        { label: "Score method", value: "Lower burden means a higher score. 20% or less = 10; 50% or more = 0; linear between. LandingPoint scale, not an official rating." },
+        { label: "Source", value: burden.sourceUrl },
+      ],
+    }] : []),
+  };
+}
+
+export const cities: City[] = ([
+  ...usCities,
+  ...reviewedGlobalCities.filter((city) => !seedBySlug.has(city.slug)),
+] as City[]).map(attachLocalFacts).map((city) => {
+  const definition = (rentDefinitions as Record<string, { primary: boolean; category: string; evidence: string }>)[city.slug];
+  if (!city.localFacts) return city;
+  return { ...city, localFacts: { ...city.localFacts, rent: { ...city.localFacts.rent, rentDefinition: definition ?? { primary: false, category: "Unreviewed housing reference", evidence: "Housing definition has not been verified" } } } };
+}).map(removeRelocationScores).map((city) => {
+  const fact = populationByCity[city.slug];
+  if (!fact) return city;
+  return {
+    ...city,
+    population: populationLabel(fact),
+    populationObservation: fact,
+    dataProvenance: {
+      ...city.dataProvenance,
+      notice: `Headline population uses the separately reviewed population source, date and boundary shown above. Historical snapshots underpin other indicators; their denominators retain their original dates. ${city.dataProvenance.notice.replace(/Population uses[\s\S]*?Climate uses/, "Climate uses")}`,
+      sources: [{
+        name: "Population — " + new URL(fact.sourceUrl).hostname,
+        url: fact.sourceUrl,
+        period: fact.period,
+        retrievedAt: fact.reviewedAt,
+        metrics: ["Headline population", fact.geography, fact.kind],
+      }, ...city.dataProvenance.sources],
+    },
+  };
+});
+
+export const topMatches = ["toronto", "london", "singapore"]
+  .map((slug) => cities.find((city) => city.slug === slug))
+  .filter((city): city is City => Boolean(city));
 
 export const compareMetricKeys: SignalKey[] = [
-  "sponsor",
-  "visa",
-  "job",
-  "community",
   "transit",
   "rent",
   "costOfLiving",
   "safety",
   "schools",
+  "weather",
 ];
 
 export function getCity(slug: string) {
