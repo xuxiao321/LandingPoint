@@ -13,36 +13,19 @@ export const lifestyleOptionGroups = [
     label: "Budget & Daily Costs",
     options: [
       "Lower Living Costs",
-      "Roommate Friendly",
-      "High Savings Potential",
-      "Predictable Utilities",
     ],
   },
   {
-    label: "Career & Study",
+    label: "Education",
     options: [
-      "Career Growth",
       "University Access",
-      "Internship Access",
-      "Networking Events",
-    ],
-  },
-  {
-    label: "Community & Daily Life",
-    options: [
-      "Immigrant Community",
-      "Food Diversity",
-      "Family Friendly",
-      "Quiet Neighborhoods",
     ],
   },
   {
     label: "Mobility & Climate",
     options: [
       "No-car Lifestyle",
-      "Short Commute",
       "Mild Weather",
-      "Outdoor Access",
     ],
   },
 ] as const;

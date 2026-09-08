@@ -177,8 +177,8 @@ export function HomeSearch() {
   const [needsSponsorship, setNeedsSponsorship] = useState("Yes");
   const [workType, setWorkType] = useState("Work / Career");
   const [lifestyles, setLifestyles] = useState<string[]>([
-    "Career Growth",
-    "Immigrant Community",
+    "Lower Living Costs",
+    "No-car Lifestyle",
   ]);
   const [isNavigating, setIsNavigating] = useState(false);
   useEffect(() => {
@@ -290,7 +290,7 @@ export function HomeSearch() {
           catch (error) { setSaveMessage(error instanceof Error ? error.message : "Could not save preferences."); }
           finally { setSavingPreferences(false); }
         }}>{savingPreferences ? "Saving…" : "Save preferences"}</Button>
-        {account.data?.preferences && <Button type="button" variant="ghost" size="sm" onClick={() => { const p = account.data!.preferences!; setBudget(String(p.budget)); setPassportQuery(p.passport); setWorkType(p.workType); setNeedsSponsorship(p.needsSponsorship); setLifestyles(p.lifestyles); setPriorities(normalizePriorities(p.priorities, p.lifestyles)); setPassportError(""); setSaveMessage("Saved preferences restored."); }}>Restore saved preferences</Button>}
+        {account.data?.preferences && <Button type="button" variant="ghost" size="sm" onClick={() => { const p = account.data!.preferences!; setBudget(String(p.budget)); setPassportQuery(p.passport); setWorkType(p.workType); setNeedsSponsorship(p.needsSponsorship); const selected = p.lifestyles.filter(v => (lifestyleOptions as readonly string[]).includes(v)); setLifestyles(selected); setPriorities(normalizePriorities(p.priorities, selected)); setPassportError(""); setSaveMessage("Saved preferences restored."); }}>Restore saved preferences</Button>}
         {saveMessage && <p role="status" className="text-xs">{saveMessage}</p>}
       </div>}
       <Field>
@@ -461,7 +461,7 @@ export function HomeSearch() {
                       >
                         <Check className="h-3 w-3" strokeWidth={3} />
                       </span>
-                      <span>{option}{option === "Career Growth" && <span className="block text-xs font-normal text-[var(--muted)]">Local jobs · limited coverage</span>}{option === "Immigrant Community" && <span className="block text-xs font-normal text-[var(--muted)]">Foreign-born population · where comparable</span>}</span>
+                      <span>{option}<span className="block text-xs font-normal text-[var(--muted)]">{({ "Lower Living Costs": "Monthly estimate · includes housing", "University Access": "Mapped higher-education locations", "No-car Lifestyle": "Mapped transit density · not journey times", "Mild Weather": "Long-term temperature averages" } as Record<string, string>)[option]}</span></span>
                     </label>
                   );
                 })}
@@ -471,7 +471,7 @@ export function HomeSearch() {
         </div>
       </fieldset>
       </details>
-      {lifestyles.length > 0 && <fieldset className="grid gap-3 rounded-xl border border-[var(--border)] p-4 sm:col-span-2"><legend className="px-1 text-sm font-semibold">Put your priorities in order</legend><p className="text-xs text-[var(--muted)]">Choose the importance of each preference. Higher importance gives it more influence, not a guaranteed match.</p>{lifestyles.map(option => <div key={option} className="flex flex-wrap items-center justify-between gap-2"><Label htmlFor={`importance-${option}`}>{option}</Label><Select id={`importance-${option}`} className="h-9 w-auto max-w-full text-xs" value={priorityWeight(priorities, option)} onChange={event => setPriorities(current => ({ ...current, [option]: Number(event.target.value) }))}>{[1, 2, 3].map(weight => <option key={weight} value={weight}>{priorityLabels[weight]}</option>)}</Select></div>)}</fieldset>}
+      {lifestyles.length > 0 && <fieldset className="grid gap-3 rounded-xl border border-[var(--border)] p-4 sm:col-span-2"><legend className="px-1 text-sm font-semibold">Set weights for your selections</legend><p className="text-xs text-[var(--muted)]">Only choices selected above appear here. Set each weight: 1×, 2×, or 3×. Higher weights have more influence on your matches.</p>{lifestyles.map(option => <div key={option} className="flex flex-wrap items-center justify-between gap-2"><Label htmlFor={`importance-${option}`}>{option}</Label><Select id={`importance-${option}`} className="h-9 w-auto max-w-full text-xs" value={priorityWeight(priorities, option)} onChange={event => setPriorities(current => ({ ...current, [option]: Number(event.target.value) }))}>{[1, 2, 3].map(weight => <option key={weight} value={weight}>{priorityLabels[weight]} · {weight}×</option>)}</Select></div>)}</fieldset>}
 
       <div className="sm:col-span-2">
         <p className="text-xs font-medium text-[#6d7872]">

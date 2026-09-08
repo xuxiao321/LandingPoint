@@ -1,4 +1,4 @@
-import type { City, SignalKey } from "@/lib/data";
+import { lifestyleOptions, type City, type SignalKey } from "@/lib/data";
 import { priorityWeight, type PriorityWeights } from "@/lib/priority-weights";
 
 export type RecommendationProfile = {
@@ -11,22 +11,9 @@ export type RecommendationProfile = {
 
 const lifestyleKeys = new Map<string, SignalKey[]>([
   ["Lower Living Costs", ["costOfLiving"]],
-  ["Lower Rent", ["costOfLiving"]],
-  ["Roommate Friendly", ["costOfLiving", "social"]],
-  ["High Savings Potential", ["career", "costOfLiving"]],
-  ["Predictable Utilities", ["costOfLiving", "internet"]],
-  ["Career Growth", ["career"]],
   ["University Access", ["schools"]],
-  ["Internship Access", ["career", "schools"]],
-  ["Networking Events", ["career", "social"]],
-  ["Immigrant Community", ["community"]],
-  ["Food Diversity", ["food", "community"]],
-  ["Family Friendly", ["schools", "safety"]],
-  ["Quiet Neighborhoods", ["safety"]],
   ["No-car Lifestyle", ["transit"]],
-  ["Short Commute", ["transit"]],
   ["Mild Weather", ["weather"]],
-  ["Outdoor Access", ["weather"]],
 ]);
 
 const goalKeys = new Map<string, SignalKey[]>([
@@ -80,13 +67,16 @@ export function getRecommendations(
   cities: City[],
   profile: RecommendationProfile,
 ) {
+  const selectedLifestyles = [...new Set(profile.lifestyles)].filter(option =>
+    (lifestyleOptions as readonly string[]).includes(option),
+  );
   const weights = new Map<SignalKey, number>();
 
   baselineKeys.forEach((key) => addWeight(weights, key, 1));
   (goalKeys.get(profile.workType) ?? []).forEach((key) =>
     addWeight(weights, key, 2.2),
   );
-  [...new Set(profile.lifestyles)].forEach((lifestyle) => {
+  selectedLifestyles.forEach((lifestyle) => {
     const keys = lifestyleKeys.get(lifestyle) ?? [];
     keys.forEach((key) =>
       addWeight(weights, key, 1.8 * priorityWeight(profile.priorities, lifestyle) / keys.length),
@@ -130,7 +120,7 @@ export function getRecommendations(
         migrationFit: Number(fit.toFixed(1)),
         recommendationCoverage,
         rankingValue: fit * recommendationCoverage,
-        preferenceMatches: [...new Set(profile.lifestyles)].map(option => {
+        preferenceMatches: selectedLifestyles.map(option => {
           const keys = lifestyleKeys.get(option) ?? [];
           const available = keys.filter(key => city.sourceBackedScoreKeys.includes(key));
           return { option, importance: priorityWeight(profile.priorities, option), score: available.length ? available.reduce((sum, key) => sum + city.scores[key], 0) / available.length : null, partial: available.length < keys.length };

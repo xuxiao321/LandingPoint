@@ -14,7 +14,7 @@ function load(name) {
   cache.set(file, loaded.exports);
   return loaded.exports;
 }
-const { cities } = load('@/lib/data');
+const { cities, lifestyleOptions } = load('@/lib/data');
 const { populationByCity, populationLabel } = load('@/lib/population');
 assert.deepEqual(Object.keys(populationByCity).sort(), cities.map(c => c.slug).sort());
 for (const city of cities) {
@@ -29,6 +29,11 @@ assert.equal(cities.find(c => c.slug === 'new-york-city').populationObservation.
 assert.equal(populationByCity.dublin.geography, 'Dublin City · local authority');
 console.log('All city population displays have reviewed sources, dates and boundaries.');
 const { getRecommendations } = load('@/lib/recommendations');
+const supportedSignals = { "Lower Living Costs": "costOfLiving", "University Access": "schools", "No-car Lifestyle": "transit", "Mild Weather": "weather" };
+for (const option of lifestyleOptions) {
+  assert.ok(cities.every(city => city.sourceBackedScoreKeys.includes(supportedSignals[option]) && city.signals.some(signal => signal.key === supportedSignals[option] && signal.detailRows.length > 0)), option + " needs evidence in every city");
+}
+assert.ok(getRecommendations(cities, { lifestyles: ["Career Growth"], workType: "Unspecified" }).every(city => city.preferenceMatches.length === 0));
 const { communityScore } = load('@/lib/community-score');
 const { employmentScore, employmentByCity } = load('@/lib/employment-score');
 assert.equal(communityScore({ label: 'Residents with foreign citizenship', value: '92.2%' }), undefined);
@@ -37,7 +42,7 @@ assert.equal(employmentScore(undefined), undefined);
 assert.ok(employmentScore(employmentByCity.manchester) > employmentScore(employmentByCity.birmingham));
 // Isolate preference impact from unrelated baseline city differences.
 const base = cities.find(c => c.slug === 'london');
-for (const [preference, key] of [['Career Growth', 'career'], ['Immigrant Community', 'community']]) {
+for (const [preference, key] of [['University Access', 'schools'], ['Mild Weather', 'weather']]) {
   const a = { ...base, slug: 'a', sourceBackedScoreKeys: ['transit', key], scores: { ...base.scores, transit: 8, [key]: 2 } };
   const b = { ...a, slug: 'b', scores: { ...a.scores, transit: 6, [key]: 10 } };
   const profile = { lifestyles: [], workType: 'Unspecified' };
@@ -74,8 +79,8 @@ const { parsePreferences, parseDraft } = load('@/lib/account-validation');
 const { parseReview } = load('@/lib/review-validation');
 const { isUpcoming, safeEventUrl } = load('@/lib/event-types');
 assert.deepEqual(normalizePriorities({ a: 100, b: 3, other: 1 }, ['a', 'b']), { a: 2, b: 3 });
-const preferences = { budget: 3000, passport: 'United States', workType: 'Study', needsSponsorship: 'No', lifestyles: ['Career Growth'], priorities: { 'Career Growth': 3 } };
-assert.equal(parsePreferences(preferences).priorities['Career Growth'], 3);
+const preferences = { budget: 3000, passport: 'United States', workType: 'Study', needsSponsorship: 'No', lifestyles: ['University Access'], priorities: { 'University Access': 3 } };
+assert.equal(parsePreferences(preferences).priorities['University Access'], 3);
 assert.throws(() => parsePreferences({ ...preferences, budget: -1 }));
 assert.throws(() => parsePreferences({ ...preferences, lifestyles: ['injected'] }));
 assert.throws(() => parseDraft({ citySlug: 'unknown', kind: 'experience', content: { notes: 'hi' } }));
@@ -84,10 +89,10 @@ assert.equal(parseReview({ displayName: 'Resident', body: 'A useful detailed rev
 assert.equal(isUpcoming({ startDate: '2026-01-01' }, '2026-09-07'), false);
 assert.equal(safeEventUrl('javascript:alert(1)'), false);
 assert.equal(safeEventUrl('https://example.com'), true);
-const jobCity = { ...base, slug: 'jobs', costMetric: 'not-available', sourceBackedScoreKeys: ['career', 'community'], scores: { ...base.scores, career: 9, community: 2 } };
-const communityCity = { ...jobCity, slug: 'community', scores: { ...jobCity.scores, career: 2, community: 9 } };
-const priorityProfile = { workType: 'Unspecified', lifestyles: ['Career Growth', 'Immigrant Community'] };
-assert.equal(getRecommendations([jobCity, communityCity], { ...priorityProfile, priorities: { 'Career Growth': 3, 'Immigrant Community': 1 } })[0].slug, 'jobs');
-assert.equal(getRecommendations([jobCity, communityCity], { ...priorityProfile, priorities: { 'Career Growth': 1, 'Immigrant Community': 3 } })[0].slug, 'community');
-assert.deepEqual(getRecommendations([jobCity], { ...priorityProfile, lifestyles: ['Career Growth', 'Career Growth'] }), getRecommendations([jobCity], { ...priorityProfile, lifestyles: ['Career Growth'] }));
+const jobCity = { ...base, slug: 'jobs', costMetric: 'not-available', sourceBackedScoreKeys: ['schools', 'weather'], scores: { ...base.scores, schools: 9, weather: 2 } };
+const communityCity = { ...jobCity, slug: 'weather', scores: { ...jobCity.scores, schools: 2, weather: 9 } };
+const priorityProfile = { workType: 'Unspecified', lifestyles: ['University Access', 'Mild Weather'] };
+assert.equal(getRecommendations([jobCity, communityCity], { ...priorityProfile, priorities: { 'University Access': 3, 'Mild Weather': 1 } })[0].slug, 'jobs');
+assert.equal(getRecommendations([jobCity, communityCity], { ...priorityProfile, priorities: { 'University Access': 1, 'Mild Weather': 3 } })[0].slug, 'weather');
+assert.deepEqual(getRecommendations([jobCity], { ...priorityProfile, lifestyles: ['University Access', 'University Access'] }), getRecommendations([jobCity], { ...priorityProfile, lifestyles: ['University Access'] }));
 console.log('Priority rank reversal, validation, event expiry and unsafe-link checks passed.');

@@ -114,10 +114,7 @@ export default async function RecommendationsPage({
       </section>
 
       <div className="rounded-lg border border-[#b9ddd3] bg-[#eef9f5] p-4 text-sm leading-6 text-[#075e54]">
-        Your priorities change the weights; they do not change the underlying city data.
-        Open a city for the sources, calculation method, and known limitations.
-        {(lifestyles.includes("Career Growth") || workType === "Work / Career") && <p className="mt-2">Career Growth currently uses existing jobs and jobs per 1,000 working-age residents for {cities.filter(c => c.sourceBackedScoreKeys.includes("career")).length} of {cities.length} cities. It is an employment-scale proxy, not current vacancies or measured growth. Missing evidence lowers profile coverage; it does not mean fewer jobs.</p>}
-        {lifestyles.includes("Immigrant Community") && <p className="mt-2">Immigrant Community uses local foreign-born population share for {cities.filter(c => c.sourceBackedScoreKeys.includes("community")).length} of {cities.length} cities. Other population definitions remain context only. Visa policies are not part of this score.</p>}
+        Your selected priorities influence your city matches. View each city’s profile for the data and sources.
       </div>
 
       <section aria-label="City matches" className="grid items-stretch gap-6 sm:grid-cols-2 xl:grid-cols-3">
