@@ -1,0 +1,290 @@
+{
+  "new-york-city": {
+    "value": 8584629,
+    "period": "2025-07-01",
+    "geography": "New York City · five boroughs",
+    "kind": "Population estimate",
+    "sourceUrl": "https://www.census.gov/quickfacts/fact/table/newyorkcitynewyork/PST045225",
+    "note": "Population applies to the named boundary and reference date.",
+    "reviewedAt": "2026-09-07"
+  },
+  "seattle": {
+    "value": 784777,
+    "period": "2025-07-01",
+    "geography": "Seattle city",
+    "kind": "Population estimate",
+    "sourceUrl": "https://www.census.gov/quickfacts/seattlecitywashington",
+    "note": "Population applies to the named boundary and reference date.",
+    "reviewedAt": "2026-09-07"
+  },
+  "boston": {
+    "value": 672973,
+    "period": "2025-07-01",
+    "geography": "Boston city",
+    "kind": "Population estimate",
+    "sourceUrl": "https://www.census.gov/quickfacts/fact/table/bostoncitymassachusetts/BZA210223",
+    "note": "Population applies to the named boundary and reference date.",
+    "reviewedAt": "2026-09-07"
+  },
+  "austin": {
+    "value": 1002632,
+    "period": "2025-07-01",
+    "geography": "Austin city",
+    "kind": "Population estimate",
+    "sourceUrl": "https://www.census.gov/quickfacts/austincitytexas",
+    "note": "Population applies to the named boundary and reference date.",
+    "reviewedAt": "2026-09-07"
+  },
+  "atlanta": {
+    "value": 529110,
+    "period": "2025-07-01",
+    "geography": "Atlanta city",
+    "kind": "Population estimate",
+    "sourceUrl": "https://www.census.gov/quickfacts/atlantacitygeorgia",
+    "note": "Population applies to the named boundary and reference date.",
+    "reviewedAt": "2026-09-07"
+  },
+  "toronto": {
+    "value": 3240000,
+    "period": "2025 year-end",
+    "geography": "City of Toronto",
+    "kind": "Rounded estimate",
+    "sourceUrl": "https://www.toronto.ca/wp-content/uploads/2026/03/967f-2026-Public-Book-TPS-V1.pdf",
+    "note": "Population applies to the named boundary and reference date.",
+    "reviewedAt": "2026-09-07"
+  },
+  "vancouver": {
+    "value": 662248,
+    "period": "2021",
+    "geography": "City of Vancouver · municipality",
+    "kind": "Census count",
+    "sourceUrl": "https://vancouver.ca/news-calendar/our-city.aspx",
+    "note": "Historical census count; a newer comparable municipal estimate has not been verified in this review.",
+    "reviewedAt": "2026-09-07"
+  },
+  "mexico-city": {
+    "value": 9209944,
+    "period": "2020",
+    "geography": "Ciudad de México · federal entity",
+    "kind": "Census count",
+    "sourceUrl": "https://cuentame.inegi.org.mx/descubre/conoce_tu_estado/tarjeta.html?estado=09",
+    "note": "Excludes the wider Valley of Mexico metropolitan area. Historical census count, not a current estimate.",
+    "reviewedAt": "2026-09-07"
+  },
+  "sao-paulo": {
+    "value": 11904961,
+    "period": "2025",
+    "geography": "São Paulo municipality",
+    "kind": "Population estimate",
+    "sourceUrl": "https://ftp.ibge.gov.br/Estimativas_de_Populacao/Estimativas_2025/estimativa_dou_2025.pdf",
+    "note": "Population applies to the named boundary and reference date.",
+    "reviewedAt": "2026-09-07"
+  },
+  "london": {
+    "value": 9100000,
+    "period": "2024 mid-year",
+    "geography": "Greater London · 32 boroughs and City of London",
+    "kind": "Rounded estimate",
+    "sourceUrl": "https://apps.london.gov.uk/state-of-london/report/london-in-figures",
+    "note": "GLA publishes 9.1 million, citing ONS 2024 estimates. Rounded to the precision of the source; excludes the wider commuter region.",
+    "reviewedAt": "2026-09-07"
+  },
+  "paris": {
+    "value": 2103778,
+    "period": "2023-01-01",
+    "geography": "Paris commune",
+    "kind": "Census count",
+    "sourceUrl": "https://www.insee.fr/fr/statistiques/1405599?geo=COM-75056",
+    "note": "2023 reference population published in 2026. Excludes the surrounding metropolitan area.",
+    "reviewedAt": "2026-09-07"
+  },
+  "berlin": {
+    "value": 3700577,
+    "period": "2025-12-31",
+    "geography": "Berlin city-state",
+    "kind": "Population estimate",
+    "sourceUrl": "https://www.statistik-berlin-brandenburg.de/presse/2026/73-bevoelkerungsfortschreibung-2025-berlin/",
+    "note": "Official population estimate based on Census 2022. Differs from the resident register; the dated release is used rather than the inconsistent summary table.",
+    "reviewedAt": "2026-09-07"
+  },
+  "amsterdam": {
+    "value": 941927,
+    "period": "2026-01-01",
+    "geography": "Amsterdam municipality",
+    "kind": "Population estimate",
+    "sourceUrl": "https://business.gov.nl/facts-and-figures/amsterdam/facts-and-figures-about-amsterdam/",
+    "note": "Population applies to the named boundary and reference date.",
+    "reviewedAt": "2026-09-07"
+  },
+  "dublin": {
+    "value": 592713,
+    "period": "2022-04-03",
+    "geography": "Dublin City · local authority",
+    "kind": "Census count",
+    "sourceUrl": "https://www-cloud.cso.ie/en/releasesandpublications/ep/p-cpp2/censusofpopulation2022profile2-housinginireland/housingstock/",
+    "note": "Excludes the other Dublin local authorities. Historical census count, not a current estimate.",
+    "reviewedAt": "2026-09-07"
+  },
+  "singapore": {
+    "value": 6111200,
+    "period": "2025-06",
+    "geography": "Singapore · city-state",
+    "kind": "Population estimate",
+    "sourceUrl": "https://www.singstat.gov.sg/find-data/search-by-theme/population/population-and-population-structure/latest-data",
+    "note": "Total population includes citizens, permanent residents and non-residents.",
+    "reviewedAt": "2026-09-07"
+  },
+  "tokyo": {
+    "value": 14273000,
+    "period": "2025-10-01",
+    "geography": "Tokyo Metropolis · prefecture",
+    "kind": "Rounded estimate",
+    "sourceUrl": "https://www.english.metro.tokyo.lg.jp/w/000-101-007591",
+    "note": "Includes all Tokyo Metropolis, not only the 23 wards and not the wider Greater Tokyo region.",
+    "reviewedAt": "2026-09-07"
+  },
+  "seoul": {
+    "value": 9579449,
+    "period": "2026 Q1",
+    "geography": "Seoul Special City",
+    "kind": "Registered population",
+    "sourceUrl": "https://english.seoul.go.kr/seoul-views/meaning-of-seoul/4-population/",
+    "note": "City headline total includes foreign residents. Excludes the wider capital region.",
+    "reviewedAt": "2026-09-07"
+  },
+  "sydney": {
+    "value": 5638830,
+    "period": "2025-06-30",
+    "geography": "Greater Sydney · GCCSA",
+    "kind": "Population estimate",
+    "sourceUrl": "https://www.abs.gov.au/statistics/people/population/regional-population/latest-release",
+    "note": "Population applies to the named boundary and reference date.",
+    "reviewedAt": "2026-09-07"
+  },
+  "melbourne": {
+    "value": 5435590,
+    "period": "2025-06-30",
+    "geography": "Greater Melbourne · GCCSA",
+    "kind": "Population estimate",
+    "sourceUrl": "https://www.abs.gov.au/statistics/people/population/regional-population/latest-release",
+    "note": "Population applies to the named boundary and reference date.",
+    "reviewedAt": "2026-09-07"
+  },
+  "dubai": {
+    "value": 4580000,
+    "period": "2025 year-end",
+    "geography": "Emirate of Dubai",
+    "kind": "Rounded estimate",
+    "sourceUrl": "https://dubaisurveys.dsc.gov.ae/",
+    "note": "Official July 2026 announcement reports more than 4.580 million. Rounded; emirate population, not daytime visitors.",
+    "reviewedAt": "2026-09-07"
+  },
+  "montreal": {
+    "value": 1762949,
+    "period": "2021",
+    "geography": "Ville de Montréal · municipality",
+    "kind": "Census count",
+    "sourceUrl": "https://council.vancouver.ca/20241022/documents/r3.pdf",
+    "note": "Retained the independently verifiable municipal census count. The prior 1,895,211 appears in a 2023 financial report; its population reference date was not established, so it is not labelled 2024.",
+    "reviewedAt": "2026-09-07"
+  },
+  "munich": {
+    "value": 1612429,
+    "period": "2025-12-31",
+    "geography": "Munich municipality",
+    "kind": "Registered population",
+    "sourceUrl": "https://stadt.muenchen.de/infos/bevoelkerungsprognose.html",
+    "note": "Main-residence register population; differs from census-based official population estimates.",
+    "reviewedAt": "2026-09-07"
+  },
+  "brisbane": {
+    "value": 2833524,
+    "period": "2025-06-30",
+    "geography": "Greater Brisbane · GCCSA",
+    "kind": "Population estimate",
+    "sourceUrl": "https://www.abs.gov.au/statistics/people/population/regional-population/latest-release",
+    "note": "Population applies to the named boundary and reference date.",
+    "reviewedAt": "2026-09-07"
+  },
+  "calgary": {
+    "value": 1558700,
+    "period": "2025-04",
+    "geography": "City of Calgary",
+    "kind": "Rounded estimate",
+    "sourceUrl": "https://www.calgary.ca/content/dam/www/cfod/finance/documents/corporate-economics/calgary-and-region-economic-outlook/Calgary-and-Region-Economic-Outlook-2026-Spring.pdf",
+    "note": "City estimate without a civic census, reported in thousands. Future forecast columns were not used.",
+    "reviewedAt": "2026-09-07"
+  },
+  "ottawa": {
+    "value": 1017449,
+    "period": "2021",
+    "geography": "City of Ottawa · municipality",
+    "kind": "Census count",
+    "sourceUrl": "https://council.vancouver.ca/20241022/documents/r3.pdf",
+    "note": "Historical census count. The 2025 figure in the 2018–2046 plan is a projection and was not substituted for an observed estimate.",
+    "reviewedAt": "2026-09-07"
+  },
+  "edmonton": {
+    "value": 1010899,
+    "period": "2021",
+    "geography": "City of Edmonton · municipality",
+    "kind": "Census count",
+    "sourceUrl": "https://council.vancouver.ca/20241022/documents/r3.pdf",
+    "note": "Historical census count; newer same-boundary estimate not verified in this review.",
+    "reviewedAt": "2026-09-07"
+  },
+  "manchester": {
+    "value": 627709,
+    "period": "2024 mid-year",
+    "geography": "City of Manchester · local authority",
+    "kind": "Council model estimate",
+    "sourceUrl": "https://www.manchester.gov.uk/download/downloads/id/29543/amr_2024_appendices.pdf",
+    "note": "Council MCCFM estimate, not the wider Greater Manchester population. May differ from the ONS estimate.",
+    "reviewedAt": "2026-09-07"
+  },
+  "hamburg": {
+    "value": 1869473,
+    "period": "2025-12-31",
+    "geography": "Hamburg city-state",
+    "kind": "Population estimate",
+    "sourceUrl": "https://www.statistik-nord.de/presse-veroeffentlichungen/presseinformationen/dokumentenansicht/bevoelkerung-in-hamburg-2025-67900",
+    "note": "Census 2022-based estimate; not the higher resident-register count.",
+    "reviewedAt": "2026-09-07"
+  },
+  "halifax": {
+    "value": 439819,
+    "period": "2021",
+    "geography": "Halifax Regional Municipality",
+    "kind": "Census count",
+    "sourceUrl": "https://www12.statcan.gc.ca/census-recensement/2021/as-sa/fogs-spg/page.cfm?dguid=2021A00051209034&lang=E&topic=1",
+    "note": "Historical census count; Statistics Canada flags the count for use with caution. Excludes the wider CMA.",
+    "reviewedAt": "2026-09-07"
+  },
+  "edinburgh": {
+    "value": 530680,
+    "period": "2024-06-30",
+    "geography": "City of Edinburgh · council area",
+    "kind": "Population estimate",
+    "sourceUrl": "https://www.nrscotland.gov.uk/statistics-and-data/council-area-profiles/edinburgh-city/",
+    "note": "Population applies to the named boundary and reference date.",
+    "reviewedAt": "2026-09-07"
+  },
+  "birmingham": {
+    "value": 1183618,
+    "period": "2024 mid-year",
+    "geography": "Birmingham · local authority",
+    "kind": "Population estimate",
+    "sourceUrl": "https://www.birmingham.gov.uk/download/downloads/id/31269/authority_monitoring_report_2024_to_2025.pdf",
+    "note": "Population applies to the named boundary and reference date.",
+    "reviewedAt": "2026-09-07"
+  },
+  "bristol": {
+    "value": 495300,
+    "period": "2025 mid-year",
+    "geography": "Bristol · local authority",
+    "kind": "Rounded estimate",
+    "sourceUrl": "https://www.bristol.gov.uk/council/statistics-census-information/population-of-bristol",
+    "note": "Population applies to the named boundary and reference date.",
+    "reviewedAt": "2026-09-07"
+  }
+}

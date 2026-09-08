@@ -1,0 +1,12 @@
+import { readFile, writeFile } from 'node:fs/promises';
+const [slug, title] = process.argv.slice(2);
+const candidates = JSON.parse(await readFile(new URL('../src/data/city-image-candidates.json', import.meta.url), 'utf8'));
+const photo = candidates.find(city => city.slug === slug)?.candidates.find(photo => photo.title === title);
+if (!photo || photo.license !== 'CC0' || photo.attributionRequired !== false) throw Error('Select an exact reviewed CC0 candidate title');
+const target = new URL('../src/data/city-images.json', import.meta.url);
+const manifest = JSON.parse(await readFile(target, 'utf8'));
+if (manifest[slug] && manifest[slug].title !== title && !process.argv.includes('--replace')) throw Error('Existing photo requires --replace');
+const { description, url, ...metadata } = photo;
+manifest[slug] = { ...metadata, url: `/cities/${slug}.jpg`, remoteUrl: url, reviewedAt: new Date().toISOString().slice(0, 10) };
+await writeFile(target, JSON.stringify(manifest, null, 2) + '\n');
+console.log(`${slug}: selected ${title}`);

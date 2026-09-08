@@ -1,0 +1,7 @@
+{
+  "london": { "totalJobs": 6659000, "jobsPerThousand": 1060, "geography": "Greater London", "period": "2024", "sourceUrl": "https://www.nomisweb.co.uk/reports/lmp/gor/2013265927/report.aspx" },
+  "edinburgh": { "totalJobs": 411000, "jobsPerThousand": 1110, "geography": "City of Edinburgh", "period": "2024", "sourceUrl": "https://www.nomisweb.co.uk/reports/lmp/lad/1778385236/report.aspx" },
+  "bristol": { "totalJobs": 352000, "jobsPerThousand": 1010, "geography": "Bristol local authority", "period": "2024", "sourceUrl": "https://www.nomisweb.co.uk/reports/lmp/lad/1778384919/report.aspx" },
+  "manchester": { "totalJobs": 504000, "jobsPerThousand": 1210, "geography": "Manchester local authority", "period": "2024", "sourceUrl": "https://www.nomisweb.co.uk/reports/lmp/lad/1778385126/report.aspx" },
+  "birmingham": { "totalJobs": 627000, "jobsPerThousand": 810, "geography": "Birmingham local authority", "period": "2024", "sourceUrl": "https://www.nomisweb.co.uk/reports/lmp/lad/1778385147/report.aspx" }
+}

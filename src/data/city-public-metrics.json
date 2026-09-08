@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-03T18:03:56.306Z",
+  "dataset": "Census ACS 5-Year",
+  "datasetYear": "2024",
+  "sourceUrl": "https://api.census.gov/data/2024/acs/acs5",
+  "termsUrl": "https://www.census.gov/data/developers/about/terms-of-service.html",
+  "variables": {
+    "population": "B01003_001E",
+    "foreignBorn": "B05002_013E",
+    "medianGrossRent": "B25064_001E",
+    "commuters": "B08301_001E",
+    "publicTransitCommuters": "B08301_010E",
+    "bicycleCommuters": "B08301_018E",
+    "walkingCommuters": "B08301_019E",
+    "civilianLaborForce": "B23025_003E",
+    "unemployed": "B23025_005E",
+    "medianHouseholdIncome": "B19013_001E"
+  },
+  "cities": [
+    {
+      "slug": "new-york-city",
+      "geographyName": "New York city, New York",
+      "geography": {
+        "type": "place",
+        "stateFips": "36",
+        "placeFips": "51000"
+      },
+      "population": 8483844,
+      "foreignBornShare": 36.6,
+      "medianGrossRent": 1821,
+      "medianHouseholdIncome": 80483,
+      "unemploymentRate": 8,
+      "publicTransitShare": 44,
+      "noCarCommuteShare": 54.8
+    },
+    {
+      "slug": "seattle",
+      "geographyName": "Seattle city, Washington",
+      "geography": {
+        "type": "place",
+        "stateFips": "53",
+        "placeFips": "63000"
+      },
+      "population": 754195,
+      "foreignBornShare": 20.2,
+      "medianGrossRent": 2030,
+      "medianHouseholdIncome": 123860,
+      "unemploymentRate": 4.6,
+      "publicTransitShare": 11.9,
+      "noCarCommuteShare": 22.5
+    },
+    {
+      "slug": "boston",
+      "geographyName": "Boston city, Massachusetts",
+      "geography": {
+        "type": "place",
+        "stateFips": "25",
+        "placeFips": "07000"
+      },
+      "population": 666442,
+      "foreignBornShare": 27.8,
+      "medianGrossRent": 2147,
+      "medianHouseholdIncome": 97344,
+      "unemploymentRate": 6.1,
+      "publicTransitShare": 22.6,
+      "noCarCommuteShare": 38.2
+    },
+    {
+      "slug": "austin",
+      "geographyName": "Austin city, Texas",
+      "geography": {
+        "type": "place",
+        "stateFips": "48",
+        "placeFips": "05000"
+      },
+      "population": 979539,
+      "foreignBornShare": 18.7,
+      "medianGrossRent": 1729,
+      "medianHouseholdIncome": 93658,
+      "unemploymentRate": 4.7,
+      "publicTransitShare": 2,
+      "noCarCommuteShare": 5.3
+    },
+    {
+      "slug": "atlanta",
+      "geographyName": "Atlanta city, Georgia",
+      "geography": {
+        "type": "place",
+        "stateFips": "13",
+        "placeFips": "04000"
+      },
+      "population": 505268,
+      "foreignBornShare": 9,
+      "medianGrossRent": 1711,
+      "medianHouseholdIncome": 85652,
+      "unemploymentRate": 5.9,
+      "publicTransitShare": 5.7,
+      "noCarCommuteShare": 10.4
+    }
+  ]
+}

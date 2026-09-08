@@ -1,0 +1,32 @@
+{
+  "new-york-city": {
+    "share": 31.3,
+    "geography": "New York city, New York",
+    "period": "2024 ACS 5-year",
+    "sourceUrl": "https://api.census.gov/data/2024/acs/acs5/groups/B25071.html"
+  },
+  "seattle": {
+    "share": 27.4,
+    "geography": "Seattle city, Washington",
+    "period": "2024 ACS 5-year",
+    "sourceUrl": "https://api.census.gov/data/2024/acs/acs5/groups/B25071.html"
+  },
+  "boston": {
+    "share": 30.6,
+    "geography": "Boston city, Massachusetts",
+    "period": "2024 ACS 5-year",
+    "sourceUrl": "https://api.census.gov/data/2024/acs/acs5/groups/B25071.html"
+  },
+  "austin": {
+    "share": 29.1,
+    "geography": "Austin city, Texas",
+    "period": "2024 ACS 5-year",
+    "sourceUrl": "https://api.census.gov/data/2024/acs/acs5/groups/B25071.html"
+  },
+  "atlanta": {
+    "share": 30.9,
+    "geography": "Atlanta city, Georgia",
+    "period": "2024 ACS 5-year",
+    "sourceUrl": "https://api.census.gov/data/2024/acs/acs5/groups/B25071.html"
+  }
+}

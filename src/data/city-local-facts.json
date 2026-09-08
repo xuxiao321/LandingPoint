@@ -1,0 +1,491 @@
+{
+  "reviewedAt": "2026-09-05",
+  "cities": {
+    "edinburgh": {
+      "rent": {
+        "label": "One-bedroom rent reference",
+        "value": "GBP 1,095",
+        "geography": "City of Edinburgh",
+        "note": "Average monthly one-bedroom flat rent reported by the council's Invest in Edinburgh service, citing Citylets. Market reference; other living expenses are extra. This city figure differs from the broader Lothian rental area used in ONS data.",
+        "sourceUrl": "https://www.investinedinburgh.com/edinburgh/housing?categoryId=1&documentId=36",
+        "period": "Mid-2026"
+      },
+      "migration": {
+        "label": "Residents born abroad",
+        "value": "23.5%",
+        "geography": "City of Edinburgh council area",
+        "note": "Share born outside the UK in Scotland's 2022 Census, reported in the council's equality framework. Includes residents regardless of citizenship; not a measure of migration background across generations.",
+        "sourceUrl": "https://www.edinburgh.gov.uk/downloads/file/39259/equality-diversity-and-inclusion-framework",
+        "period": "2022 Census"
+      }
+    },
+    "birmingham": {
+      "rent": {
+        "label": "Average one-bedroom rent",
+        "value": "GBP 825",
+        "geography": "Birmingham local authority",
+        "note": "ONS average monthly private rent for a one-bedroom property, covering existing tenancies and new lets. Local-authority area, not the whole West Midlands. Other living expenses are extra.",
+        "sourceUrl": "https://www.ons.gov.uk/visualisations/housingpriceslocal/E08000025/",
+        "period": "2026-07"
+      },
+      "migration": {
+        "label": "Residents born abroad",
+        "value": "26.7%",
+        "geography": "Birmingham local authority",
+        "note": "2021 overseas-born population share reported by Birmingham's Director of Public Health. Country of birth, not citizenship or ethnicity.",
+        "sourceUrl": "https://www.birmingham.gov.uk/download/downloads/id/31183/director_of_public_health_annual_report_2023_to_2024.pdf",
+        "period": "2021"
+      }
+    },
+    "bristol": {
+      "rent": {
+        "label": "Average one-bedroom rent",
+        "value": "GBP 1,223",
+        "geography": "Bristol local authority",
+        "note": "ONS average monthly private rent for a one-bedroom property, covering existing tenancies and new lets. Covers the local authority rather than the wider urban area. Other living expenses are extra.",
+        "sourceUrl": "https://www.ons.gov.uk/visualisations/housingpriceslocal/E06000023/",
+        "period": "2026-07"
+      },
+      "migration": {
+        "label": "Residents born abroad",
+        "value": "18.8%",
+        "geography": "Bristol local authority",
+        "note": "Share of usual residents born outside the UK from Bristol City Council's 2021 Census dashboard. Country of birth, not citizenship or ethnicity.",
+        "sourceUrl": "https://services.bristol.gov.uk/files/documents/6297-bristol-census-dashboard/file",
+        "period": "2021 Census"
+      }
+    },
+    "manchester": {
+      "rent": {
+        "label": "Average one-bedroom rent",
+        "value": "GBP 998",
+        "geography": "Manchester local authority",
+        "note": "ONS average monthly private rent for a one-bedroom property. Covers the Manchester local authority, not Greater Manchester. This rent measure includes existing tenancies and new lets; other living expenses are extra.",
+        "sourceUrl": "https://www.ons.gov.uk/visualisations/housingpriceslocal/E08000003/",
+        "period": "2026-07"
+      },
+      "migration": {
+        "label": "Residents born abroad",
+        "value": "31.4%",
+        "geography": "Manchester local authority",
+        "note": "Derived as 100% minus the council's Manchester-wide UK-born share of 68.6% in Census 2021. The source is a ward profile that explicitly supplies the city benchmark; this is the city value, not Brooklands' ward value.",
+        "sourceUrl": "https://www.manchester.gov.uk/online-directories/the-council-and-democracy-directories/statistics-and-intelligence-directories/ward-statistics/search-by-ward/brooklands/brooklands",
+        "period": "2021 Census"
+      }
+    },
+    "hamburg": {
+      "rent": {
+        "label": "Rent per square metre",
+        "value": "EUR 9.94 / m²",
+        "geography": "Hamburg city-state",
+        "note": "Average monthly net cold rent in the relevant housing stock covered by Hamburg's 2025 rent index, with reference date 1 April 2025. Excludes operating and heating charges. A comparison-rent benchmark, not a whole-apartment price or current advertised rent.",
+        "sourceUrl": "https://www.hamburg.de/politik-und-verwaltung/behoerden/behoerde-fuer-stadtentwicklung-und-wohnen/aktuelles/pressemeldungen/mietenspiegel-2025-kaum-veraenderung-der-durchschnittsmiete-1126100",
+        "period": "2025 rent index"
+      },
+      "migration": {
+        "label": "Residents with a migration background",
+        "value": "41.9%",
+        "geography": "Hamburg city-state",
+        "note": "Registered residents with a migration background under Statistik Nord's definition, including foreign citizens, immigrants and qualifying German-born children. Broader than the foreign-born share; about 828,000 residents at year-end 2025.",
+        "sourceUrl": "https://www.statistik-nord.de/fileadmin/Dokumente/SI26_075.pdf",
+        "period": "2025-12-31"
+      }
+    },
+    "halifax": {
+      "rent": {
+        "label": "Two-bedroom asking rent",
+        "value": "CAD 2,350",
+        "geography": "Halifax metropolitan area",
+        "note": "Statistics Canada average advertised monthly rent for a two-bedroom apartment. Experimental estimates of available listings; existing tenants may pay different rents. Other living expenses are extra.",
+        "sourceUrl": "https://www150.statcan.gc.ca/n1/daily-quotidien/260609/dq260609c-eng.htm",
+        "period": "2026 Q1"
+      },
+      "migration": {
+        "label": "Immigrant residents",
+        "value": "11.2%",
+        "geography": "Halifax metropolitan area",
+        "note": "2021 Census immigrant share in private households, including people who are or have been landed immigrants or permanent residents. Excludes non-permanent residents. Covers the metropolitan area, not only the regional municipality.",
+        "sourceUrl": "https://www150.statcan.gc.ca/n1/daily-quotidien/221026/g-a006-eng.htm",
+        "period": "2021 Census"
+      }
+    },
+    "calgary": {
+      "rent": {
+        "label": "Two-bedroom asking rent",
+        "value": "CAD 1,900",
+        "geography": "Calgary metropolitan area",
+        "note": "Average advertised monthly rent for a two-bedroom apartment in Statistics Canada's quarterly rental statistics. Covers available listings; existing tenants may pay different rents. Other living expenses are extra.",
+        "sourceUrl": "https://www150.statcan.gc.ca/n1/daily-quotidien/260609/dq260609c-eng.htm",
+        "period": "2026 Q1"
+      },
+      "migration": {
+        "label": "Immigrant residents",
+        "value": "31.5%",
+        "geography": "Calgary metropolitan area",
+        "note": "2021 Census share of people in private households who are or have been landed immigrants or permanent residents. Excludes non-permanent residents. Metropolitan area, not city limits.",
+        "sourceUrl": "https://www150.statcan.gc.ca/n1/daily-quotidien/221026/g-a006-eng.htm",
+        "period": "2021 Census"
+      }
+    },
+    "ottawa": {
+      "rent": {
+        "label": "Two-bedroom asking rent",
+        "value": "CAD 2,350",
+        "geography": "Ottawa–Gatineau metro, Ontario part",
+        "note": "Average advertised monthly rent for a two-bedroom apartment in Statistics Canada's quarterly rental statistics. Excludes the Quebec part of the metropolitan area. Available listings, not rents paid by all existing tenants; other living expenses are extra.",
+        "sourceUrl": "https://www150.statcan.gc.ca/n1/daily-quotidien/260609/dq260609c-eng.htm",
+        "period": "2026 Q1"
+      },
+      "migration": {
+        "label": "Immigrant residents",
+        "value": "21.4%",
+        "geography": "Ottawa–Gatineau metropolitan area",
+        "note": "2021 Census immigrant share in private households, including people who are or have been permanent residents. Excludes non-permanent residents. Covers both Ontario and Quebec, a wider boundary than the housing reference.",
+        "sourceUrl": "https://www150.statcan.gc.ca/n1/daily-quotidien/221026/g-a006-eng.htm",
+        "period": "2021 Census"
+      }
+    },
+    "edmonton": {
+      "rent": {
+        "label": "Two-bedroom asking rent",
+        "value": "CAD 1,580",
+        "geography": "Edmonton metropolitan area",
+        "note": "Average advertised monthly rent for a two-bedroom apartment in Statistics Canada's quarterly rental statistics. Covers available listings; existing tenants may pay different rents. Other living expenses are extra.",
+        "sourceUrl": "https://www150.statcan.gc.ca/n1/daily-quotidien/260609/dq260609c-eng.htm",
+        "period": "2026 Q1"
+      },
+      "migration": {
+        "label": "Immigrant residents",
+        "value": "26.0%",
+        "geography": "Edmonton metropolitan area",
+        "note": "2021 Census share of people in private households who are or have been landed immigrants or permanent residents. Excludes non-permanent residents. Metropolitan area, not city limits.",
+        "sourceUrl": "https://www150.statcan.gc.ca/n1/daily-quotidien/221026/g-a006-eng.htm",
+        "period": "2021 Census"
+      }
+    },
+    "toronto": {
+      "rent": {
+        "label": "Monthly rent reference",
+        "value": "CAD 1,220–2,700",
+        "geography": "Greater Toronto Area",
+        "note": "University housing guide; varies from shared to private housing. Electricity and other living expenses are extra.",
+        "sourceUrl": "https://www.studentlife.utoronto.ca/task/living-costs-in-toronto/",
+        "period": "Undated guide; checked 2026-09-05"
+      },
+      "migration": {
+        "label": "Immigrant residents",
+        "value": "46.6%",
+        "geography": "City of Toronto",
+        "note": "Census immigrant status: people who are or have been landed immigrants/permanent residents. Excludes non-permanent residents.",
+        "sourceUrl": "https://www12.statcan.gc.ca/census-recensement/2021/as-sa/fogs-spg/page.cfm?dguid=2021A00053520005&lang=E&topic=9",
+        "period": "2021 Census"
+      }
+    },
+    "vancouver": {
+      "rent": {
+        "label": "Monthly rent reference",
+        "value": "CAD 2,200+",
+        "geography": "Vancouver / UBC area",
+        "note": "University guide to private off-campus housing; a starting estimate, not a citywide median. Other living expenses are extra.",
+        "sourceUrl": "https://goglobal.ubc.ca/go-global/coming-ubc/coming-ubc-exchange-old/budgeting-exchange",
+        "period": "Undated guide; checked 2026-09-05"
+      },
+      "migration": {
+        "label": "Immigrant residents",
+        "value": "41.8%",
+        "geography": "Vancouver metropolitan area (CMA)",
+        "note": "Census immigrant status; excludes non-permanent residents. Metropolitan area, not City of Vancouver boundaries.",
+        "sourceUrl": "https://www12.statcan.gc.ca/census-recensement/2021/as-sa/fogs-spg/Page.cfm?dguid=2021S0503933&lang=e&topic=9",
+        "period": "2021 Census"
+      }
+    },
+    "mexico-city": {
+      "rent": {
+        "label": "Monthly rent reference",
+        "value": "MXN 7,000–10,000",
+        "geography": "Mexico City / La Salle area",
+        "note": "Student homestay reference. Confirm included services with the host; not a private-apartment average.",
+        "sourceUrl": "https://academia.lasalle.mx/wp-content/uploads/2025/02/Fact-sheet-incoming-25-26.pdf",
+        "period": "2025–26"
+      },
+      "migration": {
+        "label": "Residents born abroad",
+        "value": "1.1%",
+        "geography": "Mexico City (CDMX)",
+        "note": "Calculated from 104,629 foreign-born residents / 9,209,944 residents × 100, rounded to one decimal.",
+        "sourceUrl": "https://www.inegi.org.mx/contenidos/programas/ccpv/2020/doc/cpv2020_pres_res_cdmx.pdf",
+        "period": "2020 Census"
+      }
+    },
+    "sao-paulo": {
+      "rent": {
+        "label": "Monthly rent reference",
+        "value": "BRL 2,750",
+        "geography": "São Paulo / USP area",
+        "note": "University guide's single accommodation estimate; shared accommodation is BRL 2,150. Other living expenses are extra.",
+        "sourceUrl": "https://fea.usp.br/internacional/estudantes-estrangeiros/informacoes-importantes/acomodacao",
+        "period": "Undated guide; checked 2026-09-05"
+      },
+      "migration": {
+        "label": "Immigrant residents (estimate)",
+        "value": "3.4%",
+        "geography": "Municipality of São Paulo",
+        "note": "Municipal publication estimates about 400,000 immigrant residents and reports a 3.4% share. This is a municipal estimate, not a census birthplace measure.",
+        "sourceUrl": "https://prefeitura.sp.gov.br/w/noticia/conselho-municipal-de-imigrantes-e-reconhecido-pela-associacao-internacional-de-cidades-educadora-aice",
+        "period": "2022 municipal publication"
+      }
+    },
+    "london": {
+      "rent": {
+        "label": "Average one-bedroom rent",
+        "value": "GBP 1,752",
+        "geography": "Greater London (ONS region)",
+        "note": "Average monthly rent for an entire one-bedroom property, covering new and existing private tenancies. ONS July 2026 PIPR figure reproduced in Harvey W James's report dated 27 August 2026; this value was verified in that secondary report, not directly in the ONS workbook. Not a current asking-rent median. Bills and furnishing are not specified in the reported figure. Covers Greater London, not only the City of London district.",
+        "sourceUrl": "https://www.harveywjames.com/news-london-average-rent-july-2026-ons",
+        "period": "2026-07"
+      },
+      "migration": {
+        "label": "Residents born abroad",
+        "value": "40.6%",
+        "geography": "Greater London",
+        "note": "Usual residents born outside the UK; not the much smaller City of London district.",
+        "sourceUrl": "https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/internationalmigration/bulletins/internationalmigrationenglandandwales/census2021",
+        "period": "2021 Census"
+      }
+    },
+    "paris": {
+      "rent": {
+        "label": "Monthly rent reference",
+        "value": "EUR 500–1,100",
+        "geography": "Paris and Île-de-France",
+        "note": "Private studio reference in a student planning guide. Includes the surrounding region; not a Paris-only median. Other expenses are extra.",
+        "sourceUrl": "https://www.campusfrance.org/system/files/medias/documents/2025-01/Cout_vie_etudiante_EN.pdf",
+        "period": "2024 guide, hosted 2025"
+      },
+      "migration": {
+        "label": "Immigrant residents",
+        "value": "20.1%",
+        "geography": "Paris department / city",
+        "note": "INSEE immigrant definition: born abroad with foreign nationality at birth, including people subsequently naturalised.",
+        "sourceUrl": "https://www.insee.fr/fr/statistiques/6793282",
+        "period": "2020–21"
+      }
+    },
+    "berlin": {
+      "rent": {
+        "label": "Monthly rent reference",
+        "value": "EUR 1,000",
+        "geography": "Berlin",
+        "note": "Approximate one-room apartment rent from university guidance. Check whether utilities are included; other expenses are extra.",
+        "sourceUrl": "https://www.fu-berlin.de/en/studium/international/degree_seeking/housing/_inhaltselemente/faq_costs/index.html",
+        "period": "Undated guide; checked 2026-09-05"
+      },
+      "migration": {
+        "label": "Residents with foreign citizenship",
+        "value": "22.5%",
+        "geography": "Berlin",
+        "note": "Residents without German citizenship. Citizenship differs from birthplace and excludes naturalised German citizens.",
+        "sourceUrl": "https://www.statistik-berlin-brandenburg.de/094-2025/",
+        "period": "2024"
+      }
+    },
+    "amsterdam": {
+      "rent": {
+        "label": "Monthly rent reference",
+        "value": "EUR 650–1,200",
+        "geography": "Amsterdam",
+        "note": "Student accommodation planning range; not a whole-apartment median or full living budget.",
+        "sourceUrl": "https://www.uva.nl/en/education/practical-information/living-in-amsterdam/living-expenses/living-expenses-uva.html",
+        "period": "Undated guide; checked 2026-09-05"
+      },
+      "migration": {
+        "label": "Residents born abroad",
+        "value": "38.0%",
+        "geography": "Amsterdam municipality",
+        "note": "Born outside the Netherlands. Excludes Netherlands-born residents with foreign-born parents.",
+        "sourceUrl": "https://www.cbs.nl/en-gb/dossier/asylum-migration-and-integration/how-many-residents-of-the-netherlands-have-a-non-dutch-background-",
+        "period": "2024-01-01"
+      }
+    },
+    "dublin": {
+      "rent": {
+        "label": "Monthly rent reference",
+        "value": "EUR 750–917",
+        "geography": "Dublin",
+        "note": "Postgraduate private-rental guide: EUR 9,000–11,000 per year divided by 12 and rounded. Student housing budget; not a whole-apartment median.",
+        "sourceUrl": "https://www.tcd.ie/study/international/welcome/cost-of-living/",
+        "period": "Guide updated 2026-07-16"
+      },
+      "migration": {
+        "label": "Residents born abroad",
+        "value": "27%",
+        "geography": "Dublin City Council area",
+        "note": "Residents born outside Ireland. City council's population summary, not the wider County Dublin.",
+        "sourceUrl": "https://www.dublincity.ie/corporate-plan-2025-2029/background/dublin-city-2025",
+        "period": "2022 Census / 2025 plan"
+      }
+    },
+    "singapore": {
+      "rent": {
+        "label": "Monthly rent reference",
+        "value": "SGD 650–1,800",
+        "geography": "Singapore",
+        "note": "Off-campus student accommodation planning range; sharing and utilities vary. Other living expenses are extra.",
+        "sourceUrl": "https://nusgs.nus.edu.sg/cost-of-living/",
+        "period": "Undated guide; checked 2026-09-05"
+      },
+      "migration": {
+        "label": "Residents with foreign citizenship",
+        "value": "40.1%",
+        "geography": "Singapore city-state",
+        "note": "Permanent residents plus non-residents as a share of total population: (543,800 + 1,906,700) / 6,110,200. Not a foreign-born measure.",
+        "sourceUrl": "https://www.singstat.gov.sg/find-data/search-by-theme/population/population-and-population-structure/latest-data",
+        "period": "2025-06"
+      }
+    },
+    "tokyo": {
+      "rent": {
+        "label": "Monthly rent reference",
+        "value": "JPY 80,000–100,000",
+        "geography": "Tokyo",
+        "note": "Small one-room apartment for a single person, per University of Tokyo guidance. Other expenses and move-in charges are extra.",
+        "sourceUrl": "https://www.u-tokyo.ac.jp/adm/inbound/en/finance-living.html",
+        "period": "Undated guide; checked 2026-09-05"
+      },
+      "migration": {
+        "label": "Registered foreign residents",
+        "value": "About 772,000",
+        "geography": "Tokyo Metropolis",
+        "note": "Foreign nationals in the resident register. Headcount, not birthplace share; includes the wider Tokyo Metropolis.",
+        "sourceUrl": "https://www.english.metro.tokyo.lg.jp/w/000-101-007591",
+        "period": "2025-10-01"
+      }
+    },
+    "seoul": {
+      "rent": {
+        "label": "Monthly rent reference",
+        "value": "KRW 400,000–800,000",
+        "geography": "Seoul / SNU area",
+        "note": "Off-campus student housing reference; refundable deposit excluded. Other expenses are extra.",
+        "sourceUrl": "https://cba.snu.ac.kr/download/e43zf9bz819z32ezda3z39az3fdz3f1z9d0zcd1z38",
+        "period": "2025–26"
+      },
+      "migration": {
+        "label": "International residents",
+        "value": "4.8%",
+        "geography": "Seoul",
+        "note": "City-defined international residents: 449,014 in a population of 9,384,512. Definition differs from foreign-born population.",
+        "sourceUrl": "https://english.seoul.go.kr/seoul-amplifies-diverse-voices-through-seoul-life-monitoring-team/",
+        "period": "2023"
+      }
+    },
+    "sydney": {
+      "rent": {
+        "label": "Monthly rent reference",
+        "value": "AUD 2,383",
+        "geography": "City of Sydney council area",
+        "note": "2021 census median household rent: AUD 550 per week × 52 / 12, rounded. Historical rent, not current asking rent; other expenses are extra.",
+        "sourceUrl": "https://www.cityofsydney.nsw.gov.au/guides/city-at-a-glance",
+        "period": "2021 Census"
+      },
+      "migration": {
+        "label": "Residents born abroad",
+        "value": "52.1%",
+        "geography": "City of Sydney council area",
+        "note": "Overseas-born residents of the local council area, not Greater Sydney.",
+        "sourceUrl": "https://www.cityofsydney.nsw.gov.au/-/media/corporate/files/projects/policy-planning-changes/have-your-say-updated-community-strategic-plan/refreshed-draft-community-strategic-plan-2025.pdf",
+        "period": "2021 Census"
+      }
+    },
+    "melbourne": {
+      "rent": {
+        "label": "Monthly rent reference",
+        "value": "AUD 2,058",
+        "geography": "Metropolitan Melbourne",
+        "note": "Median one-bedroom flat rent in university guidance citing Victorian Government: AUD 475/week × 52/12, rounded. Other expenses are extra.",
+        "sourceUrl": "https://study.unimelb.edu.au/student-life/cost-of-living",
+        "period": "Undated guide; checked 2026-09-05"
+      },
+      "migration": {
+        "label": "Residents born abroad",
+        "value": "35.7%",
+        "geography": "Greater Melbourne",
+        "note": "2021 Census overseas-born share, reported by Boroondara Council for Greater Melbourne, not Boroondara alone.",
+        "sourceUrl": "https://www.boroondara.vic.gov.au/your-council/history-and-demographics/diversity-statistics/cultural-diversity",
+        "period": "2021 Census"
+      }
+    },
+    "montreal": {
+      "rent": {
+        "label": "Two-bedroom asking rent",
+        "value": "CAD 1,930",
+        "geography": "Montreal metropolitan area",
+        "note": "Average advertised monthly rent for a two-bedroom apartment, from Statistics Canada and CMHC experimental rental statistics. Not a total living budget or the average paid by existing tenants.",
+        "sourceUrl": "https://www150.statcan.gc.ca/n1/daily-quotidien/250625/dq250625b-eng.htm",
+        "period": "2025 Q1"
+      },
+      "migration": {
+        "label": "Immigrant residents",
+        "value": "33.3%",
+        "geography": "Montreal census division (island)",
+        "note": "2021 Census immigrant share: people who are or have been landed immigrants or permanent residents. Excludes non-permanent residents; covers the island census division, not just the municipality.",
+        "sourceUrl": "https://www12.statcan.gc.ca/census-recensement/2021/as-sa/fogs-spg/page.cfm?lang=E&topic=9&dguid=2021A00032466",
+        "period": "2021 Census"
+      }
+    },
+    "munich": {
+      "rent": {
+        "label": "Rent per square metre",
+        "value": "EUR 15.38 / m²",
+        "geography": "City of Munich",
+        "note": "Average monthly net cold rent per square metre in the city's 2025 rent index. Excludes heating and operating charges. A comparison-rent benchmark, not current asking rent or a whole-apartment price.",
+        "sourceUrl": "https://stadt.muenchen.de/infos/mietspiegel.html",
+        "period": "2025 rent index"
+      },
+      "migration": {
+        "label": "Residents without German citizenship",
+        "value": "30.6%",
+        "geography": "City of Munich",
+        "note": "Share of registered main-residence population without German citizenship. Not the foreign-born share; naturalized German residents are excluded.",
+        "sourceUrl": "https://stadt.muenchen.de/infos/statistik-bevoelkerung.html",
+        "period": "2025-10"
+      }
+    },
+    "brisbane": {
+      "rent": {
+        "label": "One-bedroom rent reference",
+        "value": "AUD 2,444+",
+        "geography": "Inner Brisbane / near UQ",
+        "note": "UQ guidance starts at AUD 564/week for an entire one-bedroom private apartment near UQ and the inner city. Converted to monthly at 52/12. Starting reference, not a citywide average; other living expenses are extra.",
+        "sourceUrl": "https://study.uq.edu.au/university-life/living-in-queensland/cost-living",
+        "period": "Undated guide; checked 2026-09-05"
+      },
+      "migration": {
+        "label": "Residents born abroad",
+        "value": "32%",
+        "geography": "Brisbane City Council area",
+        "note": "Overseas-born residents in the 2021 Census, reported in Council's 2023 Voluntary Local Review. Council area, not Greater Brisbane.",
+        "sourceUrl": "https://www.brisbane.qld.gov.au/content/dam/brisbanecitycouncil/corpwebsite/about-council/documents/voluntary-local-review-2023.pdf.coredownload.pdf",
+        "period": "2021 Census"
+      }
+    },
+    "dubai": {
+      "rent": {
+        "label": "Monthly rent reference",
+        "value": "AED 4,400",
+        "geography": "Dubai / Yugo student residence",
+        "note": "Single-room example listed by UOW Dubai. Accommodation-specific quote, not citywide average; confirm contract period and included services.",
+        "sourceUrl": "https://www.uowdubai.ac.ae/students/student-accommodation",
+        "period": "Undated guide; checked 2026-09-05"
+      },
+      "migration": {
+        "label": "Residents with foreign citizenship",
+        "value": "92.2%",
+        "geography": "Emirate of Dubai",
+        "note": "Non-Emirati share calculated from 3,564,000 / 3,863,600 residents. Emirate-wide, not a foreign-born measure.",
+        "sourceUrl": "https://www.emirates247.com/uae/dubai-s-peak-time-population-hits-5-13-million-59-600-new-households-added-in-2024-2025-05-01-1.739043",
+        "period": "2024"
+      }
+    }
+  }
+}

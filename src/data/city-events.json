@@ -1,0 +1,6 @@
+[
+  { "id": "sg-gp-music-jjlin-2026", "citySlug": "singapore", "name": "JJ Lin at the Singapore Grand Prix", "category": "Music", "startDate": "2026-10-09", "venue": "Padang Stage, Zone 4 — valid race-day access required", "url": "https://singaporegp.sg/en/news/26/singapore-gp-unveils-more-global-icons-for-the-formula-1-singapore-airlines-singapore-grand-prix-2026/", "source": "Singapore GP organizer", "checkedAt": "2026-09-07" },
+  { "id": "sg-grand-prix-2026", "citySlug": "singapore", "name": "Formula 1 Singapore Airlines Singapore Grand Prix 2026", "category": "Sports", "startDate": "2026-10-09", "endDate": "2026-10-11", "venue": "Marina Bay Street Circuit", "url": "https://singaporegp.sg/", "source": "Singapore GP organizer", "checkedAt": "2026-09-07" },
+  { "id": "sff-2026", "citySlug": "singapore", "name": "Singapore FinTech Festival 2026", "category": "Business", "startDate": "2026-11-18", "endDate": "2026-11-20", "venue": "Singapore EXPO", "url": "https://www.fintechfestival.sg/", "source": "Event organizer", "checkedAt": "2026-09-07" },
+  { "id": "ltw-2027", "citySlug": "london", "name": "London Tech Week — Expo & Content Stages", "category": "Business", "startDate": "2027-06-07", "endDate": "2027-06-09", "venue": "Olympia London", "url": "https://londontechweek.com/", "source": "Event organizer", "checkedAt": "2026-09-07" }
+]
