@@ -8,13 +8,12 @@ export function LivingCostFact({
   city: City;
   compact?: boolean;
 }) {
-  const signal = city.signals.find((item) => item.key === "costOfLiving");
-  const available = city.sourceBackedScoreKeys.includes("costOfLiving");
+  const observation = city.livingCost;
 
-  if (!signal || !available) {
+  if (!observation) {
     return (
       <div className="min-w-0">
-        <p className="text-sm text-[var(--muted)]">Living cost affordability</p>
+        <p className="text-sm text-[var(--muted)]">Monthly living cost</p>
         <p className="mt-2 text-sm font-medium">Comparable data not yet available</p>
       </div>
     );
@@ -22,25 +21,23 @@ export function LivingCostFact({
 
   return (
     <div className="min-w-0">
-      <p className="text-sm text-[var(--muted)]">Living cost affordability</p>
+      <p className="text-sm text-[var(--muted)]">Estimated monthly living cost</p>
       <p className="mt-2 text-2xl font-semibold text-[var(--foreground)]">
-        {signal.score.toFixed(1)}<span className="text-sm font-normal text-[var(--muted)]"> / 10</span>
+        USD {observation.monthlyUsd.toLocaleString("en-US")}<span className="text-sm font-normal text-[var(--muted)]"> / month</span>
       </p>
-      <p className="mt-1 text-xs leading-5 text-[var(--muted)]">Higher means more affordable relative to the cities in this catalog.</p>
+      <p className="mt-1 text-xs leading-5 text-[var(--muted)]">One person · includes housing and everyday expenses</p>
       {!compact ? (
         <details className="mt-3 text-sm leading-6 text-[var(--muted)]">
           <summary className="flex cursor-pointer items-center gap-1.5 text-[var(--accent)]">
             <CircleHelp className="h-4 w-4" aria-hidden="true" />How this is calculated
           </summary>
           <dl className="mt-2 grid gap-2">
-            {signal.detailRows.map((row) => (
-              <div key={`${row.label}-${row.value}`}>
-                <dt className="font-medium text-[var(--foreground)]">{row.label}</dt>
-                <dd>{row.value}</dd>
-              </div>
-            ))}
+            <div><dt className="font-medium text-[var(--foreground)]">Includes</dt><dd>Rent and utilities, food, and local transport</dd></div>
+            <div><dt className="font-medium text-[var(--foreground)]">Data date</dt><dd>{observation.period}</dd></div>
+            <div><dt className="font-medium text-[var(--foreground)]">Method</dt><dd>{observation.methodology}</dd></div>
           </dl>
-          <p className="mt-3 text-xs">This is a comparative affordability signal, not a personal monthly budget or a quoted rent.</p>
+          <a href={observation.sourceUrl} target="_blank" rel="noreferrer" className="mt-3 inline-block underline underline-offset-4">View source</a>
+          <p className="mt-3 text-xs">This is a directional estimate for a moderate lifestyle, not a guaranteed personal budget.</p>
         </details>
       ) : null}
     </div>

@@ -9,13 +9,14 @@ The catalog currently covers **32 cities** across North America, South America, 
 - choose a passport, goal, budget, and lifestyle priorities;
 - assign each selected priority a personal importance level;
 - receive a ranked shortlist with per-city match explanations and coverage;
-- browse city-card-style profiles with population, living-cost affordability, connectivity, relocation context, events, and resident reviews;
+- search a specific city directly from the homepage;
+- browse city-card-style profiles with population, a concrete monthly living-cost estimate, connectivity, relocation context, events, and resident reviews;
 - compare two cities using the same displayed signals;
 - register or sign in, save cities, manage preferences, and contribute local reviews.
 
 ## Data policy
 
-The primary cost indicator is **Living Cost Affordability (0–10)**. A higher score means relatively more affordable within the LandingPoint catalog. It is a comparative model signal—not a quoted rent, guaranteed monthly budget, or personal affordability decision.
+The primary cost indicator is a **one-person estimated monthly living cost in USD**. All 32 cities use the same dated source and scope: a moderate-lifestyle basket including rent and utilities, food, and local transport. It is a directional estimate—not a guaranteed personal budget.
 
 Unmatched housing references are not promoted as comparable one-bedroom rents and do not contribute a hidden rent score. Source, period, geography, calculation notes, and known limitations remain available in the data layer and source panels.
 

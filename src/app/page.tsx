@@ -3,6 +3,7 @@ import { PhotoCredit } from "@/components/city/photo-credit";
 import Link from "next/link";
 import { ArrowRight, BriefcaseBusiness, Database, Heart, Landmark, Users } from "lucide-react";
 import { HomeSearch } from "@/components/home-search";
+import { CityQuickSearch } from "@/components/city-quick-search";
 import { Badge } from "@/components/ui/badge";
 import { cities, topMatches } from "@/lib/data";
 
@@ -36,6 +37,7 @@ export default function Home() {
               Find a city that fits your budget, ambitions, and everyday life.
               Compare {cities.length} destinations with public data you can explore.
             </p>
+            <CityQuickSearch cities={cities.map(({ slug, name, state, country }) => ({ slug, name, state, country }))} />
           </div>
         </div>
         <HomeSearch />

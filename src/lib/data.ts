@@ -4,6 +4,7 @@ import globalMetricsSnapshot from "@/data/global-city-metrics.json";
 import cityImageAssets from "@/data/city-images.json";
 import localFactsSnapshot from "@/data/city-local-facts.json";
 import rentDefinitions from "@/data/rent-definitions.json";
+import livingCostSnapshot from "@/data/city-living-costs.json";
 import { communityScore } from "@/lib/community-score";
 import { employmentByCity, employmentScore } from "@/lib/employment-score";
 
@@ -467,7 +468,19 @@ export type LocalFact = {
   period: string;
 };
 
+export type LivingCostObservation = {
+  monthlyUsd: number;
+  currency: "USD";
+  scope: string;
+  methodology: string;
+  source: string;
+  sourceUrl: string;
+  period: string;
+  reviewedAt: string;
+};
+
 export type City = {
+  livingCost?: LivingCostObservation;
   populationObservation?: PopulationObservation;
   localFacts?: { rent: LocalFact; migration: LocalFact };
   slug: string;
@@ -1914,6 +1927,58 @@ function attachLocalFacts(city: City): City {
   };
 }
 
+const livingCostEntries = livingCostSnapshot.cities as Record<string, { monthlyUsd: number; sourceUrl: string }>;
+const livingCostValues = Object.values(livingCostEntries).map((item) => item.monthlyUsd);
+
+function attachLivingCost(city: City): City {
+  const item = livingCostEntries[city.slug];
+  if (!item) return city;
+  const observation: LivingCostObservation = {
+    ...item,
+    currency: "USD",
+    scope: livingCostSnapshot.scope,
+    methodology: livingCostSnapshot.methodology,
+    source: livingCostSnapshot.source,
+    period: livingCostSnapshot.period,
+    reviewedAt: livingCostSnapshot.reviewedAt,
+  };
+  const score = normalizedScore(item.monthlyUsd, livingCostValues, "lower", true);
+  const scores = { ...city.scores, costOfLiving: score };
+  const sourceBackedScoreKeys = [...new Set([...city.sourceBackedScoreKeys, "costOfLiving" as SignalKey])];
+  const overallScore = Number((sourceBackedScoreKeys.reduce((sum, key) => sum + scores[key], 0) / sourceBackedScoreKeys.length).toFixed(1));
+  const costSignal = metricSignal("costOfLiving", score, [
+    { label: "Estimated monthly total", value: `USD ${item.monthlyUsd.toLocaleString("en-US")}` },
+    { label: "Household", value: "One person" },
+    { label: "Includes", value: "Rent and utilities, food, and local transport" },
+    { label: "Observation date", value: livingCostSnapshot.period },
+    { label: "Method", value: livingCostSnapshot.methodology },
+    { label: "Source", value: item.sourceUrl },
+  ]);
+  return {
+    ...city,
+    livingCost: observation,
+    monthlyCost: `$${item.monthlyUsd.toLocaleString("en-US")}`,
+    costMetric: "estimated-monthly-cost",
+    costMetricLabel: "Estimated monthly living cost",
+    scores,
+    overallScore,
+    migrationFit: overallScore,
+    matchScore: Math.round(overallScore * 10),
+    signals: city.signals.filter((signal) => signal.key !== "costOfLiving").concat(costSignal),
+    sourceBackedScoreKeys,
+    dataProvenance: {
+      ...city.dataProvenance,
+      sources: [{
+        name: `${livingCostSnapshot.source} — one-person monthly estimate`,
+        url: item.sourceUrl,
+        period: livingCostSnapshot.period,
+        retrievedAt: livingCostSnapshot.reviewedAt,
+        metrics: ["Estimated monthly living cost", livingCostSnapshot.scope],
+      }, ...city.dataProvenance.sources],
+    },
+  };
+}
+
 // These observations do not establish individual eligibility, community support,
 // or occupational fit. Career also reuses the unsupported job/GDP calculation.
 const unscoredRelocationKeys = new Set<SignalKey>(["sponsor", "visa", "community", "job", "career"]);
@@ -1958,7 +2023,7 @@ export const cities: City[] = ([
   const definition = (rentDefinitions as Record<string, { primary: boolean; category: string; evidence: string }>)[city.slug];
   if (!city.localFacts) return city;
   return { ...city, localFacts: { ...city.localFacts, rent: { ...city.localFacts.rent, rentDefinition: definition ?? { primary: false, category: "Unreviewed housing reference", evidence: "Housing definition has not been verified" } } } };
-}).map(removeRelocationScores).map((city) => {
+}).map(removeRelocationScores).map(attachLivingCost).map((city) => {
   const fact = populationByCity[city.slug];
   if (!fact) return city;
   return {

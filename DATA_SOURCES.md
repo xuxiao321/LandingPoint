@@ -1,17 +1,17 @@
 # LandingPoint data policy
 
-## Living-cost affordability (supersedes the headline rent display)
+## Monthly living-cost estimate (supersedes the headline rent display)
 
-Every catalog city exposes a Living Cost Affordability signal on a 0–10 product
-scale; higher means relatively more affordable in this catalog. The interface no
-longer promotes incomplete or differently defined housing observations as a
-comparable one-bedroom rent, and rent is excluded from recommendation scoring.
+Every catalog city displays a concrete USD monthly estimate for one person. The
+32 observations use Livingcost.org's June 21, 2026 city pages and the same scope:
+rent and utilities, food, and local transport for a moderate lifestyle. The
+source describes its prices as partly crowdsourced and its total as a modeled
+consumer basket, so the product labels these values as estimates rather than bills.
 
-For global cities, the signal is normalized from the World Bank national price-
-level ratio shown in the calculation details. For the five US cities, it uses the
-ACS rent-and-income affordability context shown in those details. These inputs are
-not identical city-level consumer baskets, so the result is a directional product
-signal rather than a quoted monthly budget, a rent listing, or an official rating.
+LandingPoint normalizes those same-scope amounts into an internal affordability
+signal for matching and uses the concrete amount for budget compatibility. The
+score is not the headline fact. The amount remains a directional estimate rather
+than a guaranteed personal budget, a quoted rent, or an official statistic.
 
 Legacy local housing observations and `src/data/rent-definitions.json` remain in
 the data layer for traceability and future methodology work, but are no longer a
@@ -76,8 +76,8 @@ When an ACS snapshot is present, the first source-backed normalizations are:
 - transit: transit, bicycle, and walking commute share scaled from 0% to 40%;
 - job: unemployment rate transformed from approximately 2% (score 10)
   downward by 1.3 points per percentage point;
-- living-cost affordability: a source-labelled comparative input; global cities
-  use the national price-level ratio and US cities use ACS rent-and-income context;
+- living-cost affordability: the 32 same-scope USD monthly estimates are
+  normalized on a logarithmic lower-cost-is-better scale within this catalog;
 - rent: excluded from recommendations because the catalog does not yet have a
   comparable city-level housing observation for every destination.
 
@@ -151,25 +151,17 @@ observations and official immigration links alongside eligibility questions.
 Occupation-specific vacancies, pay and employer sponsorship remain unverified;
 national unemployment is available only as labelled background context.
 
-The catalog now includes 32 cities. Manchester uses ONS July 2026 one-bedroom
-private rents and the council's Census 2021 UK-born benchmark. Hamburg uses the
-2025 rent index and Statistik Nord's year-end 2025 migration-background share;
-that measure includes some German-born residents. Halifax uses 2026 Q1 asking
-rent and the 2021 metropolitan immigrant share from Statistics Canada.
-The catalog also includes Calgary, Ottawa and Edmonton, plus Edinburgh,
-Birmingham, and Bristol. UK rent observations use ONS local housing-price
-visualisations (or city-specific council housing guidance where available),
-while migration context uses each council's Census reporting. These are local
-authority measures and should not be compared directly with national shares.
-These three additions use Statistics Canada's 2026 Q1 two-bedroom asking rents
-and 2021 Census metropolitan immigrant shares. Ottawa housing covers the Ontario
-part of Ottawa–Gatineau; its migration observation covers the full metro area.
-Montreal, Munich and Brisbane are also included.
-Their housing and migration references are in `src/data/city-local-facts.json`,
-with source links, observation periods and geographic boundaries. Montreal uses
-two-bedroom advertised rent; Munich uses net cold rent per square metre; Brisbane
-uses a university guide's starting price for an inner-city one-bedroom apartment.
-These are not equivalent total living budgets and are excluded from USD budget scoring.
+The catalog now includes 32 cities. Same-scope one-person monthly cost estimates
+are stored in `src/data/city-living-costs.json`; this file is the source for the
+headline cost amount, internal living-cost normalization, and budget compatibility.
+
+Local migration and legacy housing references remain in
+`src/data/city-local-facts.json` with their original source links, observation
+periods and geographic boundaries. Housing definitions vary—examples include
+two-bedroom advertised rent, net cold rent per square metre, and student guides—
+so these legacy observations are not displayed as the monthly living-cost total
+and do not enter budget matching. Migration geography can also differ between
+local-authority and metropolitan measures and is labelled in the interface.
 City photos are recorded separately in `src/data/city-images.json` under CC0.
 
 To refresh selected existing catalog entries, run
@@ -192,9 +184,10 @@ prefix.
 ## Rental definition audit (2026-09-07)
 
 `src/data/rent-definitions.json` explicitly classifies all 32 cities. Only five
-currently have dated whole-property one-bedroom references suitable for the main
-rent display. Other housing prices remain available in collapsed reference details;
-the main figure is marked unavailable, not estimated from unrelated housing types.
+currently have dated whole-property one-bedroom references. The public interface
+does not use these as its headline cost because comparable one-bedroom evidence is
+not available across the full catalog. The audit remains for provenance and future
+housing research rather than current display or ranking.
 These five are not all methodologically interchangeable: Edinburgh uses council
 guidance citing Citylets, while the four English entries use ONS averages covering
 new and existing tenancies.
