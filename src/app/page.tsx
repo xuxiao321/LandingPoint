@@ -1,41 +1,24 @@
 import Image from "next/image";
 import { PhotoCredit } from "@/components/city/photo-credit";
 import Link from "next/link";
-import { ArrowRight, BriefcaseBusiness, Database, Heart, Landmark, Users } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { HomeSearch } from "@/components/home-search";
 import { CityQuickSearch } from "@/components/city-quick-search";
-import { Badge } from "@/components/ui/badge";
 import { cities, topMatches } from "@/lib/data";
-
-const valueProps = [
-  { label: "Work & visa pathways", icon: Landmark },
-  { label: "Job market signals", icon: BriefcaseBusiness },
-  { label: "Public data sources", icon: Database },
-  { label: "Global cities", icon: Users },
-  { label: "Save your favorites", icon: Heart },
-];
 
 export default function Home() {
   return (
     <main className="home-backdrop">
       <div className="home-backdrop-grid" aria-hidden="true" />
       <section className="relative mx-auto grid min-h-[calc(100vh-4rem)] w-full max-w-7xl content-start items-start gap-8 px-4 py-10 sm:px-6 sm:py-14 lg:grid-cols-[0.92fr_1.08fr] lg:gap-12 lg:px-8">
-        <div className="grid gap-6 lg:col-span-2">
-          <div className="flex flex-wrap gap-2">
-            {valueProps.slice(0, 3).map(({ label, icon: Icon }) => (
-              <Badge key={label} className="gap-1.5 border-white/80 bg-white/85 text-[var(--ink)]">
-                <Icon className="h-3.5 w-3.5" aria-hidden="true" />
-                {label}
-              </Badge>
-            ))}
-          </div>
+        <div className="home-intro grid gap-6 lg:col-span-2">
+          <div className="home-kicker"><span className="home-kicker-dot" />A clearer way to choose your next city</div>
           <div className="grid gap-4">
             <h1 className="max-w-3xl text-4xl font-semibold leading-[1.12] tracking-[-0.035em] text-[#17201d] sm:text-5xl">
-              Where Should You Live Next?
+              Find the place that feels <em>right.</em>
             </h1>
             <p className="max-w-2xl text-lg leading-8 text-[#57635d]">
-              Find a city that fits your budget, ambitions, and everyday life.
-              Compare {cities.length} destinations with public data you can explore.
+              A calm, evidence-led way to compare cities by budget, opportunity, and the details that shape everyday life.
             </p>
             <CityQuickSearch cities={cities.map(({ slug, name, state, country }) => ({ slug, name, state, country }))} />
           </div>

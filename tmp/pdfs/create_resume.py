@@ -66,7 +66,7 @@ story = []
 story += [
     Paragraph("Xu Xiao", styles["name"]),
     Paragraph("Full-Stack Software Engineer", styles["headline"]),
-    Paragraph("(646) 858-8165  |  xiaoxu0630@gmail.com", styles["contact"]),
+    Paragraph("(646) 858-8165  |  xiaoxu0630@gmail.com<br/>U.S. Permanent Resident | No visa sponsorship required", styles["contact"]),
     HRFlowable(width="100%", thickness=1, color=colors.HexColor("#BBD8CD"), spaceAfter=8),
     Paragraph("EDUCATION", styles["section"]),
     Paragraph("Boston University", styles["role"]),

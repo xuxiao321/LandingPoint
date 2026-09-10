@@ -44,7 +44,7 @@ html {
     radial-gradient(ellipse 55% 42% at 94% 18%, #a1d1bf 0%, transparent 100%),
     radial-gradient(ellipse 45% 40% at 75% 57%, #c0ddd9 0%, transparent 100%),
     radial-gradient(ellipse 55% 30% at 0% 0%, #e3f1e9 0%, transparent 100%),
-    linear-gradient(150deg, #f9fbfa 10%, #edf5f0 55%, #f4f7f6 100%);
+    linear-gradient(145deg, #fbfaf7 0%, #eef4ef 58%, #e6f0eb 100%);
 }
 
 .home-backdrop-grid {
@@ -55,9 +55,21 @@ html {
   background-image:
     linear-gradient(rgba(18, 62, 52, 0.055) 1px, transparent 1px),
     linear-gradient(90deg, rgba(18, 62, 52, 0.055) 1px, transparent 1px);
-  background-size: 64px 64px;
-  mask-image: linear-gradient(110deg, transparent 25%, #000 80%);
+  background-size: 72px 72px;
+  mask-image: linear-gradient(110deg, transparent 38%, #000 78%);
 }
+
+.brand-mark { color: var(--ink); }
+.brand-symbol { display: grid; width: 38px; height: 38px; place-items: center; color: #e06f4f; }
+.brand-symbol svg { width: 100%; height: 100%; }
+.brand-word { display: inline-flex; align-items: baseline; gap: 0; color: #17201d; font-size: 1.16rem; font-weight: 500; letter-spacing: -0.055em; }
+.brand-word b { color: #e06f4f; font-weight: 800; }
+.home-intro { padding-top: 0.5rem; }
+.home-kicker { display: inline-flex; align-items: center; gap: 0.55rem; width: fit-content; color: #567066; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; }
+.home-kicker-dot { width: 0.48rem; height: 0.48rem; border-radius: 999px; background: #e06f4f; box-shadow: 0 0 0 0.28rem rgba(224,111,79,.12); }
+.home-intro h1 { font-size: clamp(3.1rem, 6vw, 5.7rem); letter-spacing: -0.075em; line-height: .98; max-width: 11ch; }
+.home-intro h1 em { color: #e06f4f; font-family: Georgia, serif; font-weight: 400; letter-spacing: -0.07em; }
+.home-intro > div:last-child > p { max-width: 37rem; color: #52665d; font-size: 1.06rem; line-height: 1.75; }
 
 @media (max-width: 639px) {
   .home-backdrop {
@@ -66,6 +78,8 @@ html {
       linear-gradient(#f7faf8, #edf5f0 70%, #f4f7f6);
   }
   .home-backdrop-grid { background-size: 48px 48px; opacity: 0.5; }
+  .brand-symbol { width: 32px; height: 32px; }
+  .brand-word { font-size: 1rem; }
 }
 
 :focus-visible {
