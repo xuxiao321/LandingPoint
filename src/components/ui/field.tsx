@@ -14,7 +14,7 @@ export function Label({
 }: React.LabelHTMLAttributes<HTMLLabelElement>) {
   return (
     <label
-      className={cn("text-sm font-semibold text-[#2d3934]", className)}
+      className={cn("text-sm font-semibold text-[#33445a]", className)}
       {...props}
     />
   );
@@ -27,7 +27,7 @@ export const Input = React.forwardRef<
   <input
     ref={ref}
     className={cn(
-      "h-11 w-full rounded-md border border-[#cfd7cd] bg-white px-3 text-sm text-[#17201d] outline-none transition focus:border-[#008a7a] focus:ring-2 focus:ring-[#008a7a]/20",
+      "h-11 w-full rounded-md border border-[#d4dbe5] bg-white px-3 text-sm text-[#263548] outline-none transition focus:border-[#d2664f] focus:ring-2 focus:ring-[#d2664f]/20",
       className,
     )}
     {...props}
@@ -42,7 +42,7 @@ export const Select = React.forwardRef<
   <select
     ref={ref}
     className={cn(
-      "h-11 w-full rounded-md border border-[#cfd7cd] bg-white px-3 text-sm font-medium text-[#17201d] outline-none transition focus:border-[#008a7a] focus:ring-2 focus:ring-[#008a7a]/20",
+      "h-11 w-full rounded-md border border-[#d4dbe5] bg-white px-3 text-sm font-medium text-[#263548] outline-none transition focus:border-[#d2664f] focus:ring-2 focus:ring-[#d2664f]/20",
       className,
     )}
     {...props}
@@ -59,7 +59,7 @@ export const Textarea = React.forwardRef<
   <textarea
     ref={ref}
     className={cn(
-      "min-h-24 w-full resize-y rounded-md border border-[#cfd7cd] bg-white px-3 py-2 text-sm text-[#17201d] outline-none transition focus:border-[#008a7a] focus:ring-2 focus:ring-[#008a7a]/20",
+      "min-h-24 w-full resize-y rounded-md border border-[#d4dbe5] bg-white px-3 py-2 text-sm text-[#263548] outline-none transition focus:border-[#d2664f] focus:ring-2 focus:ring-[#d2664f]/20",
       className,
     )}
     {...props}

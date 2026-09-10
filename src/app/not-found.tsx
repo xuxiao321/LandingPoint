@@ -5,7 +5,7 @@ export default function NotFound() {
   return (
     <main className="mx-auto grid min-h-[calc(100vh-4rem)] w-full max-w-3xl place-items-center px-4 py-12 text-center">
       <div>
-        <p className="text-sm font-black uppercase text-[#008a7a]">
+        <p className="text-sm font-black uppercase text-[#d2664f]">
           City not found
         </p>
         <h1 className="mt-2 text-4xl font-black text-[#17201d]">

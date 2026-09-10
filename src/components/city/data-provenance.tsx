@@ -16,7 +16,7 @@ export function DataProvenance({
   const Icon = isDemo ? CircleAlert : ShieldCheck;
 
   if (compact) {
-    return <p className="flex items-center gap-2 text-xs leading-5 text-[#52685d]"><Icon size={15} className="shrink-0" aria-hidden="true" />{isDemo ? "Prototype estimates" : "Public data · model-derived scores"}</p>;
+    return <p className="flex items-center gap-2 text-xs leading-5 text-[#617080]"><Icon size={15} className="shrink-0" aria-hidden="true" />{isDemo ? "Prototype estimates" : "Public data · model-derived scores"}</p>;
   }
 
   return (

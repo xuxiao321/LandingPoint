@@ -9,11 +9,11 @@ type InternetObservation = {
 export function InternetFact({ slug, context }: { slug: string; context: string }) {
   const fact = (snapshot.cities as Record<string, InternetObservation>)[slug];
   return (
-    <div className="min-w-0 bg-white p-5 sm:p-6">
+    <div className="city-detail-metric min-w-0 bg-white p-5 sm:p-6">
       <Wifi className="mb-3 h-5 w-5 text-[var(--accent)]" aria-hidden="true" />
       <p className="text-sm text-[var(--muted)]">City internet speeds</p>
       {fact ? <>
-        {fact.historical && <p className="mt-2 text-xs font-semibold text-amber-800">Historical measurements · {fact.period}</p>}
+        {fact.historical && <p className="mt-2 text-xs font-semibold text-[var(--accent)]">Historical measurements · {fact.period}</p>}
         {slug === "singapore" && <p className="mt-1 text-xs text-[var(--muted)]">Singapore-wide · city-state</p>}
         <p className="mt-2 text-lg font-bold">{fact.download.toFixed(1)} Mbps download</p>
         <p className="mt-1 text-sm text-[var(--muted)]">{fact.upload.toFixed(1)} Mbps upload · {fact.latency.toFixed(0)} ms latency</p>

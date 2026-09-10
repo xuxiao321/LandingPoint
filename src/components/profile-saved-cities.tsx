@@ -26,7 +26,7 @@ export function ProfileSavedCities() {
   if (savedCities.length === 0) {
     return (
       <div className="rounded-lg border border-dashed border-[#cfd7cd] bg-white p-5 text-[#57635d]">
-        <Bookmark className="mb-3 h-5 w-5 text-[#008a7a]" aria-hidden="true" />
+        <Bookmark className="mb-3 h-5 w-5 text-[#d2664f]" aria-hidden="true" />
         <p className="font-semibold text-[#17201d]">No saved cities yet.</p>
         <p className="mt-1 text-sm">Use Save City on a city page.</p>
       </div>

@@ -1,15 +1,15 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f7f9fa;
-  --foreground: #243632;
-  --surface: #ffffff;
-  --surface-soft: #f2f6f5;
-  --border: #d9e4df;
-  --muted: #526b62;
-  --accent: #167561;
-  --accent-soft: #e4f2eb;
-  --ink: #123e34;
+  --background: #f3f5f8;
+  --foreground: #263548;
+  --surface: #fffdf9;
+  --surface-soft: #eceff4;
+  --border: #d9dfe7;
+  --muted: #617080;
+  --accent: #d2664f;
+  --accent-soft: #fae7df;
+  --ink: #25364a;
 }
 
 @theme inline {
@@ -25,7 +25,7 @@
 
 body {
   background:
-    radial-gradient(ellipse at 15% 0%, rgba(22, 117, 97, 0.055), transparent 38rem),
+    radial-gradient(ellipse at 15% 0%, rgba(91, 115, 153, 0.08), transparent 38rem),
     var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
@@ -41,20 +41,58 @@ html {
   position: relative;
   isolation: isolate;
   background:
-    radial-gradient(ellipse 55% 42% at 94% 18%, #a1d1bf 0%, transparent 100%),
-    radial-gradient(ellipse 45% 40% at 75% 57%, #c0ddd9 0%, transparent 100%),
-    radial-gradient(ellipse 55% 30% at 0% 0%, #e3f1e9 0%, transparent 100%),
-    linear-gradient(145deg, #fbfaf7 0%, #eef4ef 58%, #e6f0eb 100%);
+    radial-gradient(ellipse 55% 42% at 94% 18%, #d9e2f2 0%, transparent 100%),
+    radial-gradient(ellipse 45% 40% at 75% 57%, #e6e9f1 0%, transparent 100%),
+    radial-gradient(ellipse 55% 30% at 0% 0%, #f7e9e2 0%, transparent 100%),
+    linear-gradient(145deg, #fbfaf8 0%, #f0f2f6 58%, #e9edf3 100%);
 }
+
+button, [role="button"], input, select, textarea { border-radius: 0.75rem; }
+button, a { -webkit-tap-highlight-color: transparent; }
+.city-overview { gap: 0; }
+.city-overview article { background: var(--surface); }
+.score-row { background: #fffdf9; }
+
+/* A quieter information-product surface: crisp cards, warm white data blocks, and one clear action color. */
+.city-overview article { border-color: #d9dfe7; box-shadow: 0 1px 2px rgba(38, 53, 72, .05); }
+.city-overview article:hover { border-color: #c1cbd8; box-shadow: 0 14px 30px -24px rgba(38, 53, 72, .35); }
+.score-row { transition: border-color .18s ease, box-shadow .18s ease; }
+.score-row:hover { border-color: #c5cfdb; box-shadow: 0 8px 20px -18px rgba(38, 53, 72, .32); }
+.city-profile-card { position: relative; }
+.city-card-ribbon { display: none; }
+.city-image-wash { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 42%, rgba(15, 28, 24, .62)); pointer-events: none; }
+.city-image-frame { border: 0; border-radius: 1.25rem; }
+.city-image-tag { position: absolute; left: 1.2rem; bottom: 1rem; display: inline-flex; align-items: center; gap: .38rem; border: 1px solid rgba(255,255,255,.45); border-radius: 999px; background: rgba(255,255,255,.16); padding: .35rem .65rem; color: white; font-size: .72rem; font-weight: 750; letter-spacing: .03em; backdrop-filter: blur(10px); }
+.city-color-header { display: flex; align-items: center; gap: .8rem; height: 7.4rem; padding: 1.2rem 1.5rem; background: var(--city-wash); color: var(--city-accent); }
+.city-color-header span { display: grid; width: 3.5rem; height: 3.5rem; place-items: center; border: 1px solid color-mix(in srgb, var(--city-accent), white 55%); border-radius: 1.1rem; background: var(--city-soft); font-size: 1.7rem; font-weight: 850; }
+.city-color-header small { font-size: .74rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.city-fit-badge { border-color: color-mix(in srgb, var(--city-accent), white 67%); background: var(--city-soft); }
+.city-metric-card { border-color: color-mix(in srgb, var(--city-accent), white 76%); background: var(--city-wash); }
+.metric-icon { color: var(--city-accent); }
+.metric-caption { color: var(--city-accent); font-size: .68rem; font-weight: 850; letter-spacing: .1em; }
+.city-explore-button { border-color: color-mix(in srgb, var(--city-accent), white 60%); background: var(--city-soft); color: var(--city-accent); }
+.city-explore-button:hover { border-color: var(--city-accent); background: var(--city-soft); }
+.city-profile-card a, .city-profile-card summary { color: var(--city-accent); }
+.city-profile-card .city-image-tag { color: #fff; }
+.city-profile-card .city-image-frame a { color: inherit; }
+.city-detail-theme { --border: color-mix(in srgb, var(--city-accent), white 78%); --muted: color-mix(in srgb, var(--city-accent), #263548 55%); }
+.city-detail-hero { box-shadow: 0 18px 38px -30px color-mix(in srgb, var(--city-accent), #263548 55%); }
+.city-detail-image { border-bottom: 5px solid var(--city-accent); }
+.city-detail-theme .city-overview { border-color: color-mix(in srgb, var(--city-accent), white 72%); }
+.city-detail-theme .city-detail-metric { background: var(--city-wash); }
+.city-detail-theme .city-detail-metric svg { color: var(--city-accent); }
+.city-detail-theme .city-detail-section-heading { border-color: color-mix(in srgb, var(--city-accent), white 72%); }
+.city-detail-theme .city-detail-section-heading p { color: var(--city-accent); }
+.city-detail-theme .city-detail-hero nav { background: var(--city-soft); color: var(--city-accent); }
 
 .home-backdrop-grid {
   position: absolute;
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  background-image:
-    linear-gradient(rgba(18, 62, 52, 0.055) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(18, 62, 52, 0.055) 1px, transparent 1px);
+    background-image:
+    linear-gradient(rgba(55, 71, 98, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(55, 71, 98, 0.055) 1px, transparent 1px);
   background-size: 72px 72px;
   mask-image: linear-gradient(110deg, transparent 38%, #000 78%);
 }
@@ -74,8 +112,8 @@ html {
 @media (max-width: 639px) {
   .home-backdrop {
     background:
-      radial-gradient(ellipse 100% 28% at 100% 0%, #c1e1d4, transparent),
-      linear-gradient(#f7faf8, #edf5f0 70%, #f4f7f6);
+      radial-gradient(ellipse 100% 28% at 100% 0%, #dbe4f3, transparent),
+      linear-gradient(#faf9f7, #f0f2f6 70%, #e9edf3);
   }
   .home-backdrop-grid { background-size: 48px 48px; opacity: 0.5; }
   .brand-symbol { width: 32px; height: 32px; }
@@ -123,17 +161,17 @@ summary::-webkit-details-marker {
 }
 
 a.edit-preferences {
-  background-color: #e4f2eb;
-  border: 1px solid #b7d6c8;
-  color: #185b48;
+  background-color: #fae7df;
+  border: 1px solid #efc9bd;
+  color: #9e4939;
 }
 
 a.edit-preferences:hover {
-  background-color: #d4eade;
-  border-color: #85b69f;
+  background-color: #f5d9d0;
+  border-color: #d99a8b;
 }
 
 ::selection {
-  background: #cce7db;
-  color: var(--ink);
+  background: #f4cfc4;
+  color: #263548;
 }

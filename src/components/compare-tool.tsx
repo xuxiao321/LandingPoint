@@ -50,7 +50,7 @@ export function CompareTool({
           </Select>
         </div>
 
-        <div className="hidden h-11 w-11 place-items-center rounded-md bg-[#eef3ef] text-[var(--accent)] sm:grid">
+        <div className="hidden h-11 w-11 place-items-center rounded-md bg-[#f0f2f6] text-[var(--accent)] sm:grid">
           <GitCompare className="h-5 w-5" aria-hidden="true" />
         </div>
 

@@ -26,7 +26,7 @@ export default async function ComparePage({
   return (
     <main className="mx-auto grid w-full max-w-7xl gap-8 px-4 py-8 sm:px-6 lg:px-8">
       <section>
-        <p className="text-sm font-black uppercase text-[#008a7a]">
+        <p className="text-sm font-black uppercase text-[#d2664f]">
           City comparison
         </p>
         <h1 className="mt-2 text-4xl font-black text-[#17201d] sm:text-5xl">

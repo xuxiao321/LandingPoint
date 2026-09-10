@@ -365,7 +365,7 @@ export function HomeSearch() {
                     type="button"
                     role="option"
                     aria-selected={country.code === resolvedPassportCountry?.code}
-                    className="flex w-full items-center justify-between gap-3 rounded px-3 py-2 text-left text-sm font-semibold text-[#17201d] hover:bg-[#eef3ef]"
+              className="flex w-full items-center justify-between gap-3 rounded px-3 py-2 text-left text-sm font-semibold text-[#263548] hover:bg-[#f0f2f6]"
                     onMouseDown={(event) => event.preventDefault()}
                     onClick={() => selectPassportCountry(country)}
                   >
@@ -427,7 +427,7 @@ export function HomeSearch() {
               key={group.label}
               className="grid content-start gap-2"
             >
-              <p className="border-b border-[var(--border)] pb-2 text-xs font-semibold text-[#526b62]">
+              <p className="border-b border-[var(--border)] pb-2 text-xs font-semibold text-[#617080]">
                 {group.label}
               </p>
               <div className="grid gap-1">
@@ -440,8 +440,8 @@ export function HomeSearch() {
                       className={cn(
                         "flex min-h-11 cursor-pointer items-center gap-2.5 rounded-lg border px-2.5 py-2 text-sm font-medium transition-colors focus-within:ring-2 focus-within:ring-[var(--accent)] focus-within:ring-offset-2",
                         isSelected
-                          ? "border-[#b8d8cb] bg-[var(--accent-soft)] text-[var(--ink)]"
-                          : "border-transparent text-[#2d3934] hover:bg-[var(--surface-soft)]",
+                          ? "border-[#efc9bd] bg-[var(--accent-soft)] text-[var(--ink)]"
+                          : "border-transparent text-[#33445a] hover:bg-[var(--surface-soft)]",
                       )}
                     >
                       <input
@@ -455,7 +455,7 @@ export function HomeSearch() {
                           "flex h-4 w-4 shrink-0 items-center justify-center rounded border transition",
                           isSelected
                             ? "border-[var(--accent)] bg-[var(--accent)] text-white"
-                            : "border-[#aeb9aa] bg-white text-transparent",
+                            : "border-[#b5bfcc] bg-white text-transparent",
                         )}
                         aria-hidden="true"
                       >
