@@ -7,7 +7,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node scripts/check-preference-ranking.cjs && node scripts/check-account-database.mjs",
+    "test": "npm run test:unit && npm run test:data",
+    "test:unit": "vitest run",
+    "test:watch": "vitest",
+    "test:data": "node scripts/check-preference-ranking.cjs && node scripts/check-account-database.mjs",
+    "test:e2e": "playwright test",
+    "test:all": "npm test && npm run test:e2e",
     "data:sync": "npm run data:sync:us && npm run data:sync:global",
     "data:sync:us": "node scripts/sync-public-data.mjs",
     "data:sync:global": "node scripts/sync-global-city-data.mjs",
@@ -31,13 +36,21 @@
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.8",
+    "@playwright/test": "^1.63.0",
     "@tailwindcss/postcss": "^4",
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.7",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitejs/plugin-react": "^6.1.1",
     "eslint": "^9",
     "eslint-config-next": "^15.5.19",
+    "jsdom": "^29.1.1",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.11"
   }
 }
