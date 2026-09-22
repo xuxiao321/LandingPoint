@@ -461,7 +461,7 @@ export function HomeSearch() {
                       >
                         <Check className="h-3 w-3" strokeWidth={3} />
                       </span>
-                      <span>{option}<span className="block text-xs font-normal text-[var(--muted)]">{({ "Lower Living Costs": "Monthly estimate · includes housing", "University Access": "Mapped higher-education locations", "No-car Lifestyle": "Mapped transit density · not journey times", "Mild Weather": "Long-term temperature averages" } as Record<string, string>)[option]}</span></span>
+                      <span>{option}<span className="block text-xs font-normal text-[var(--muted)]">{({ "Lower Living Costs": "Monthly estimate · includes housing", "University Access": "Mapped higher-education locations", "No-car Lifestyle": "Mapped transit density · not journey times", "Mild Weather": "Long-term temperature averages", "Dining Access": "Restaurants & cafés near the city center", "Social & Cultural Access": "Bars, cinemas & theatres near the city center", "Fast Internet": "City download, upload & latency measurements" } as Record<string, string>)[option]}</span></span>
                     </label>
                   );
                 })}

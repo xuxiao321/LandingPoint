@@ -29,7 +29,13 @@ assert.equal(cities.find(c => c.slug === 'new-york-city').populationObservation.
 assert.equal(populationByCity.dublin.geography, 'Dublin City · local authority');
 console.log('All city population displays have reviewed sources, dates and boundaries.');
 const { getRecommendations } = load('@/lib/recommendations');
-const supportedSignals = { "Lower Living Costs": "costOfLiving", "University Access": "schools", "No-car Lifestyle": "transit", "Mild Weather": "weather" };
+const internetSnapshot = load('@/data/city-internet.json');
+assert.deepEqual(Object.keys(internetSnapshot.cities).sort(), cities.map(city => city.slug).sort());
+assert.equal(new Set(Object.values(internetSnapshot.cities).map(item => item.source)).size, 1);
+assert.equal(new Set(Object.values(internetSnapshot.cities).map(item => item.period)).size, 1);
+assert.equal(new Set(Object.values(internetSnapshot.cities).map(item => item.method)).size, 1);
+assert.match(internetSnapshot.cities['sao-paulo'].geography, /BR-SP\/São Paulo/);
+const supportedSignals = { "Lower Living Costs": "costOfLiving", "University Access": "schools", "No-car Lifestyle": "transit", "Mild Weather": "weather", "Dining Access": "food", "Social & Cultural Access": "social", "Fast Internet": "internet" };
 for (const option of lifestyleOptions) {
   assert.ok(cities.every(city => city.sourceBackedScoreKeys.includes(supportedSignals[option]) && city.signals.some(signal => signal.key === supportedSignals[option] && signal.detailRows.length > 0)), option + " needs evidence in every city");
 }
@@ -42,7 +48,7 @@ assert.equal(employmentScore(undefined), undefined);
 assert.ok(employmentScore(employmentByCity.manchester) > employmentScore(employmentByCity.birmingham));
 // Isolate preference impact from unrelated baseline city differences.
 const base = cities.find(c => c.slug === 'london');
-for (const [preference, key] of [['University Access', 'schools'], ['Mild Weather', 'weather']]) {
+for (const [preference, key] of [['University Access', 'schools'], ['Mild Weather', 'weather'], ['Dining Access', 'food'], ['Social & Cultural Access', 'social'], ['Fast Internet', 'internet']]) {
   const a = { ...base, slug: 'a', sourceBackedScoreKeys: ['transit', key], scores: { ...base.scores, transit: 8, [key]: 2 } };
   const b = { ...a, slug: 'b', scores: { ...a.scores, transit: 6, [key]: 10 } };
   const profile = { lifestyles: [], workType: 'Unspecified' };
@@ -95,4 +101,7 @@ const priorityProfile = { workType: 'Unspecified', lifestyles: ['University Acce
 assert.equal(getRecommendations([jobCity, communityCity], { ...priorityProfile, priorities: { 'University Access': 3, 'Mild Weather': 1 } })[0].slug, 'jobs');
 assert.equal(getRecommendations([jobCity, communityCity], { ...priorityProfile, priorities: { 'University Access': 1, 'Mild Weather': 3 } })[0].slug, 'weather');
 assert.deepEqual(getRecommendations([jobCity], { ...priorityProfile, lifestyles: ['University Access', 'University Access'] }), getRecommendations([jobCity], { ...priorityProfile, lifestyles: ['University Access'] }));
+const higherFitLowerCoverage = { ...base, slug: 'higher-fit', name: 'Higher fit', costMetric: 'not-available', sourceBackedScoreKeys: ['transit'], scores: { ...base.scores, transit: 9 } };
+const lowerFitFullCoverage = { ...base, slug: 'lower-fit', name: 'Lower fit', costMetric: 'not-available', sourceBackedScoreKeys: ['job', 'community', 'costOfLiving', 'safety', 'transit'], scores: { ...base.scores, job: 8, community: 8, costOfLiving: 8, safety: 8, transit: 8 } };
+assert.equal(getRecommendations([lowerFitFullCoverage, higherFitLowerCoverage], { workType: 'Unspecified', lifestyles: [] })[0].slug, 'higher-fit');
 console.log('Priority rank reversal, validation, event expiry and unsafe-link checks passed.');

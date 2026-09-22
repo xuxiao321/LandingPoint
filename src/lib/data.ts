@@ -5,6 +5,7 @@ import cityImageAssets from "@/data/city-images.json";
 import localFactsSnapshot from "@/data/city-local-facts.json";
 import rentDefinitions from "@/data/rent-definitions.json";
 import livingCostSnapshot from "@/data/city-living-costs.json";
+import cityInternetSnapshot from "@/data/city-internet.json";
 import { communityScore } from "@/lib/community-score";
 import { employmentByCity, employmentScore } from "@/lib/employment-score";
 
@@ -19,6 +20,19 @@ export const lifestyleOptionGroups = [
     label: "Education",
     options: [
       "University Access",
+    ],
+  },
+  {
+    label: "Dining & Social Life",
+    options: [
+      "Dining Access",
+      "Social & Cultural Access",
+    ],
+  },
+  {
+    label: "Connectivity",
+    options: [
+      "Fast Internet",
     ],
   },
   {
@@ -1912,6 +1926,68 @@ function attachLocalFacts(city: City): City {
 
 const livingCostEntries = livingCostSnapshot.cities as Record<string, { monthlyUsd: number; sourceUrl: string }>;
 const livingCostValues = Object.values(livingCostEntries).map((item) => item.monthlyUsd);
+type CityInternetObservation = {
+  download: number;
+  upload: number;
+  latency: number;
+  samples: number;
+  uploadSamples: number;
+  measurementDays: number;
+  period: string;
+  sourceUrl: string;
+  source: string;
+  method: string;
+  geography: string;
+  retrievedAt: string;
+};
+const cityInternetEntries = cityInternetSnapshot.cities as Record<string, CityInternetObservation>;
+const internetDownloads = Object.values(cityInternetEntries).map((item) => item.download);
+const internetUploads = Object.values(cityInternetEntries).map((item) => item.upload);
+const internetLatencies = Object.values(cityInternetEntries).map((item) => item.latency);
+
+function attachInternetPerformance(city: City): City {
+  const item = cityInternetEntries[city.slug];
+  if (!item) return city;
+  const score = clampScore(
+    normalizedScore(item.download, internetDownloads, "higher", true) * 0.55 +
+    normalizedScore(item.upload, internetUploads, "higher", true) * 0.25 +
+    normalizedScore(item.latency, internetLatencies, "lower", true) * 0.2,
+  );
+  const scores = { ...city.scores, internet: score };
+  const sourceBackedScoreKeys = [...new Set([...city.sourceBackedScoreKeys, "internet" as SignalKey])];
+  const overallScore = Number((sourceBackedScoreKeys.reduce((sum, key) => sum + scores[key], 0) / sourceBackedScoreKeys.length).toFixed(1));
+  const signal = metricSignal("internet", score, [
+    { label: "Download", value: `${item.download.toFixed(1)} Mbps` },
+    { label: "Upload", value: `${item.upload.toFixed(1)} Mbps` },
+    { label: "Minimum round-trip latency", value: `${item.latency.toFixed(0)} ms` },
+    { label: "Measurement period", value: item.period },
+    { label: "Geography", value: item.geography },
+    { label: "Method", value: "55% download + 25% upload + 20% latency; catalog-relative scale" },
+    { label: "How to read this", value: "Voluntary IP-located tests; not guaranteed speeds at a specific address" },
+    { label: "Source", value: item.sourceUrl },
+  ]);
+  return {
+    ...city,
+    internetQuality: `${item.download.toFixed(1)} Mbps download`,
+    scores,
+    sourceBackedScoreKeys,
+    overallScore,
+    migrationFit: overallScore,
+    matchScore: Math.round(overallScore * 10),
+    recommendationCoverage: sourceBackedScoreKeys.length / 14,
+    signals: city.signals.filter((existing) => existing.key !== "internet").concat(signal),
+    dataProvenance: {
+      ...city.dataProvenance,
+      sources: [{
+        name: `${item.source} — city internet measurements`,
+        url: item.sourceUrl,
+        period: item.period,
+        retrievedAt: item.retrievedAt,
+        metrics: ["Download", "Upload", "Minimum round-trip latency", item.geography],
+      }, ...city.dataProvenance.sources],
+    },
+  };
+}
 
 function attachLivingCost(city: City): City {
   const item = livingCostEntries[city.slug];
@@ -2006,7 +2082,7 @@ export const cities: City[] = ([
   const definition = (rentDefinitions as Record<string, { primary: boolean; category: string; evidence: string }>)[city.slug];
   if (!city.localFacts) return city;
   return { ...city, localFacts: { ...city.localFacts, rent: { ...city.localFacts.rent, rentDefinition: definition ?? { primary: false, category: "Unreviewed housing reference", evidence: "Housing definition has not been verified" } } } };
-}).map(removeRelocationScores).map(attachLivingCost).map((city) => {
+}).map(removeRelocationScores).map(attachInternetPerformance).map(attachLivingCost).map((city) => {
   const fact = populationByCity[city.slug];
   if (!fact) return city;
   return {

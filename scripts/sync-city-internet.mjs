@@ -1,47 +1,55 @@
-import fs from 'node:fs/promises';
-const file = new URL('../src/data/city-internet.json', import.meta.url);
-const snapshot = JSON.parse(await fs.readFile(file, 'utf8'));
-const catalog = JSON.parse(await fs.readFile(new URL('../src/data/global-city-metrics.json', import.meta.url), 'utf8')).cities;
-const country = {CAN:'NA/CA',MEX:'NA/MX',BRA:'SA/BR',GBR:'EU/GB',FRA:'EU/FR',DEU:'EU/DE',NLD:'EU/NL',IRL:'EU/IE',SGP:'AS/SG',JPN:'AS/JP',KOR:'AS/KR',AUS:'OC/AU',ARE:'AS/AE'};
-const aliases = {'mexico-city':['Mexico City','Mexico City City'],'sao-paulo':['São Paulo','Sao Paulo'],montreal:['Montreal','Montréal'],munich:['Munich','München']};
-const root='https://statistics.measurementlab.net/';
-async function listing(prefix) {
- let marker='',result=[];
- do {
- const r=await fetch(root+'?delimiter=/&prefix='+encodeURIComponent(prefix)+'&marker='+encodeURIComponent(marker));
- if(!r.ok) throw new Error(`Listing ${r.status}`);
- const xml=await r.text();
- result.push(...[...xml.matchAll(/<CommonPrefixes><Prefix>(.*?)<\/Prefix><\/CommonPrefixes>/g)].map(x=>x[1]));
- marker=xml.match(/<NextMarker>(.*?)<\/NextMarker>/)?.[1]??'';
- }while(marker);
- return result;
+import fs from "node:fs/promises";
+
+const outputFile = new URL("../src/data/city-internet.json", import.meta.url);
+const root = "https://statistics.measurementlab.net/";
+const periodStart = "2024-01-01";
+const periodEnd = "2024-03-26";
+
+// Reviewed paths avoid matching a different city with the same name.
+const geographyBySlug = {
+  "new-york-city": "v0/NA/US/US-NY/New York/", seattle: "v0/NA/US/US-WA/Seattle/",
+  boston: "v0/NA/US/US-MA/Boston/", austin: "v0/NA/US/US-TX/Austin/", atlanta: "v0/NA/US/US-GA/Atlanta/",
+  vancouver: "v0/NA/CA/CA-BC/Vancouver/", "mexico-city": "v0/NA/MX/MX-CMX/Mexico City/",
+  "sao-paulo": "v0/SA/BR/BR-SP/São Paulo/", paris: "v0/EU/FR/FR-IDF/Paris/", berlin: "v0/EU/DE/DE-BE/Berlin/",
+  amsterdam: "v0/EU/NL/NL-NH/Amsterdam/", dublin: "v0/EU/IE/IE-L/Dublin/", tokyo: "v0/AS/JP/JP-13/Tokyo/",
+  seoul: "v0/AS/KR/KR-11/Seoul/", melbourne: "v0/OC/AU/AU-VIC/Melbourne/", dubai: "v0/AS/AE/AE-DU/Dubai/",
+  montreal: "v0/NA/CA/CA-QC/Montreal/", brisbane: "v0/OC/AU/AU-QLD/Brisbane/", calgary: "v0/NA/CA/CA-AB/Calgary/",
+  ottawa: "v0/NA/CA/CA-ON/Ottawa/", edmonton: "v0/NA/CA/CA-AB/Edmonton/", hamburg: "v0/EU/DE/DE-HH/Hamburg/",
+  halifax: "v0/NA/CA/CA-NS/Halifax/", edinburgh: "v0/EU/GB/GB-SCT/Edinburgh/", birmingham: "v0/EU/GB/GB-ENG/Birmingham/",
+  toronto: "v0/NA/CA/CA-ON/Toronto/", london: "v0/EU/GB/GB-ENG/London/", sydney: "v0/OC/AU/AU-NSW/Sydney/",
+  munich: "v0/EU/DE/DE-BY/Munich/", manchester: "v0/EU/GB/GB-ENG/Manchester/", bristol: "v0/EU/GB/GB-ENG/Bristol/",
+  singapore: "v0/AS/SG/",
+};
+
+function mean(rows, key) {
+  return Math.round((rows.reduce((sum, row) => sum + row[key], 0) / rows.length) * 100) / 100;
 }
-const cache={};
-for(const city of catalog) {
- if(snapshot.cities[city.slug]) continue;
- try {
- const base='v0/'+country[city.worldBankCode]+'/';
- const regions=cache[base]??=await listing(base);
- let found=city.slug==='singapore'?base:undefined;
- for(const region of regions.filter(x=>!x.endsWith('/asn/'))) {
- if(found) break;
- const paths=cache[region]??=await listing(region);
- found=paths.find(p=>(aliases[city.slug]??[city.name]).some(n=>p.split('/').at(-2).toLowerCase()===n.toLowerCase()));
- if(found) break;
- }
- if(!found) throw new Error('City directory missing');
- const years=(await listing(found)).filter(x=>/\/\d{4}\/$/.test(x)).sort().reverse();
- const url=root+years[0]+'histogram_daily_stats.json';
- const r=await fetch(url); if(!r.ok) throw new Error(`Data ${r.status}`);
- const rows=await r.json();
- const daily=[...new Map(rows.map(row=>[row.date,row])).values()].sort((a,b)=>a.date.localeCompare(b.date));
- const valid=daily.filter(x=>x.dl_samples_day>0&&Number.isFinite(x.download_MED));
- const uploads=daily.filter(x=>x.ul_samples_day>0&&Number.isFinite(x.upload_MED));
- if(!valid.length||!uploads.length) throw new Error('No valid samples');
- const mean=(arr,key)=>Math.round(arr.reduce((s,x)=>s+x[key],0)/arr.length*100)/100;
- snapshot.cities[city.slug]={download:mean(valid,'download_MED'),upload:mean(uploads,'upload_MED'),latency:mean(valid,'download_minRTT_MED'),samples:valid.reduce((s,x)=>s+x.dl_samples_day,0),uploadSamples:uploads.reduce((s,x)=>s+x.ul_samples_day,0),period:valid[0].date+' – '+valid.at(-1).date,sourceUrl:url,source:'M-Lab statistics',method:'daily-medians',historical:true,geography:found,retrievedAt:new Date().toISOString().slice(0,10)};
- console.log(city.slug,snapshot.cities[city.slug].download,snapshot.cities[city.slug].period);
- }catch(e){console.error(city.slug,e.message);}
+
+async function loadCity(slug, geography) {
+  const sourceUrl = `${root}${geography}2024/histogram_daily_stats.json`;
+  const response = await fetch(sourceUrl);
+  if (!response.ok) throw new Error(`${slug}: M-Lab returned ${response.status}`);
+  const rawRows = await response.json();
+  const rows = [...new Map(rawRows.map((row) => [row.date, row])).values()]
+    .filter((row) => row.date >= periodStart && row.date <= periodEnd)
+    .sort((left, right) => left.date.localeCompare(right.date));
+  const downloads = rows.filter((row) => row.dl_samples_day > 0 && Number.isFinite(row.download_MED) && Number.isFinite(row.download_minRTT_MED));
+  const uploads = rows.filter((row) => row.ul_samples_day > 0 && Number.isFinite(row.upload_MED));
+  if (!downloads.length || !uploads.length) throw new Error(`${slug}: no measurements in the common period`);
+  return {
+    download: mean(downloads, "download_MED"), upload: mean(uploads, "upload_MED"),
+    latency: mean(downloads, "download_minRTT_MED"), samples: downloads.reduce((sum, row) => sum + row.dl_samples_day, 0),
+    uploadSamples: uploads.reduce((sum, row) => sum + row.ul_samples_day, 0), measurementDays: downloads.length,
+    period: `${periodStart} – ${periodEnd}`, sourceUrl, source: "M-Lab statistics archive", method: "mean of daily medians",
+    geography, historical: true, retrievedAt: new Date().toISOString().slice(0, 10),
+  };
 }
-await fs.writeFile(file,JSON.stringify(snapshot,null,2)+'\n');
-console.log('Coverage',Object.keys(snapshot.cities).length,'/',catalog.length);
+
+const entries = await Promise.all(Object.entries(geographyBySlug).map(async ([slug, geography]) => [slug, await loadCity(slug, geography)]));
+const snapshot = {
+  source: "M-Lab statistics archive", sourceUrl: root, period: `${periodStart} – ${periodEnd}`,
+  methodology: "For every city, take the mean of M-Lab daily median download, upload, and minimum round-trip latency observations within the same fixed period.",
+  retrievedAt: new Date().toISOString().slice(0, 10), cities: Object.fromEntries(entries),
+};
+await fs.writeFile(outputFile, `${JSON.stringify(snapshot, null, 2)}\n`);
+console.log(`Refreshed ${entries.length} cities from one M-Lab source and period.`);

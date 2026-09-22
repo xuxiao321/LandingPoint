@@ -1,48 +1,84 @@
 {
-  "source": "SpeedTown / M-Lab seed archive",
-  "sourceUrl": "https://www.speedtown.net/api",
-  "period": "Jul 13 – Aug 13, 2026",
-  "retrievedAt": "2026-09-06",
+  "source": "M-Lab statistics archive",
+  "sourceUrl": "https://statistics.measurementlab.net/",
+  "period": "2024-01-01 – 2024-03-26",
+  "methodology": "For every city, take the mean of M-Lab daily median download, upload, and minimum round-trip latency observations within the same fixed period.",
+  "retrievedAt": "2026-09-22",
   "cities": {
     "new-york-city": {
-      "download": 113.2,
-      "upload": 32.98,
-      "latency": 15.05,
-      "samples": 645906,
-      "region": "NY",
-      "queryCity": "New York"
+      "download": 66.8,
+      "upload": 11.8,
+      "latency": 6,
+      "samples": 578037,
+      "uploadSamples": 485511,
+      "measurementDays": 86,
+      "period": "2024-01-01 – 2024-03-26",
+      "sourceUrl": "https://statistics.measurementlab.net/v0/NA/US/US-NY/New York/2024/histogram_daily_stats.json",
+      "source": "M-Lab statistics archive",
+      "method": "mean of daily medians",
+      "geography": "v0/NA/US/US-NY/New York/",
+      "historical": true,
+      "retrievedAt": "2026-09-22"
     },
     "seattle": {
-      "download": 100.87,
-      "upload": 24.75,
-      "latency": 17.42,
-      "samples": 357808,
-      "region": "WA",
-      "queryCity": "Seattle"
+      "download": 61.33,
+      "upload": 9.42,
+      "latency": 14.43,
+      "samples": 387512,
+      "uploadSamples": 317360,
+      "measurementDays": 86,
+      "period": "2024-01-01 – 2024-03-26",
+      "sourceUrl": "https://statistics.measurementlab.net/v0/NA/US/US-WA/Seattle/2024/histogram_daily_stats.json",
+      "source": "M-Lab statistics archive",
+      "method": "mean of daily medians",
+      "geography": "v0/NA/US/US-WA/Seattle/",
+      "historical": true,
+      "retrievedAt": "2026-09-22"
     },
     "boston": {
-      "download": 90.6,
-      "upload": 33.52,
-      "latency": 17.45,
-      "samples": 175580,
-      "region": "MA",
-      "queryCity": "Boston"
+      "download": 72.62,
+      "upload": 17.86,
+      "latency": 12.82,
+      "samples": 94524,
+      "uploadSamples": 81480,
+      "measurementDays": 86,
+      "period": "2024-01-01 – 2024-03-26",
+      "sourceUrl": "https://statistics.measurementlab.net/v0/NA/US/US-MA/Boston/2024/histogram_daily_stats.json",
+      "source": "M-Lab statistics archive",
+      "method": "mean of daily medians",
+      "geography": "v0/NA/US/US-MA/Boston/",
+      "historical": true,
+      "retrievedAt": "2026-09-22"
     },
     "austin": {
-      "download": 167.66,
-      "upload": 31.98,
-      "latency": 23,
-      "samples": 94417,
-      "region": "TX",
-      "queryCity": "Austin"
+      "download": 91.13,
+      "upload": 16.12,
+      "latency": 15.05,
+      "samples": 200924,
+      "uploadSamples": 179423,
+      "measurementDays": 86,
+      "period": "2024-01-01 – 2024-03-26",
+      "sourceUrl": "https://statistics.measurementlab.net/v0/NA/US/US-TX/Austin/2024/histogram_daily_stats.json",
+      "source": "M-Lab statistics archive",
+      "method": "mean of daily medians",
+      "geography": "v0/NA/US/US-TX/Austin/",
+      "historical": true,
+      "retrievedAt": "2026-09-22"
     },
     "atlanta": {
-      "download": 99.52,
-      "upload": 32.41,
-      "latency": 32.61,
-      "samples": 67879,
-      "region": "GA",
-      "queryCity": "Atlanta"
+      "download": 58.82,
+      "upload": 8.63,
+      "latency": 31.55,
+      "samples": 407303,
+      "uploadSamples": 338124,
+      "measurementDays": 86,
+      "period": "2024-01-01 – 2024-03-26",
+      "sourceUrl": "https://statistics.measurementlab.net/v0/NA/US/US-GA/Atlanta/2024/histogram_daily_stats.json",
+      "source": "M-Lab statistics archive",
+      "method": "mean of daily medians",
+      "geography": "v0/NA/US/US-GA/Atlanta/",
+      "historical": true,
+      "retrievedAt": "2026-09-22"
     },
     "vancouver": {
       "download": 72.38,
@@ -50,13 +86,14 @@
       "latency": 12.73,
       "samples": 160934,
       "uploadSamples": 133735,
+      "measurementDays": 86,
       "period": "2024-01-01 – 2024-03-26",
       "sourceUrl": "https://statistics.measurementlab.net/v0/NA/CA/CA-BC/Vancouver/2024/histogram_daily_stats.json",
-      "source": "M-Lab statistics",
-      "method": "daily-medians",
-      "historical": true,
+      "source": "M-Lab statistics archive",
+      "method": "mean of daily medians",
       "geography": "v0/NA/CA/CA-BC/Vancouver/",
-      "retrievedAt": "2026-09-07"
+      "historical": true,
+      "retrievedAt": "2026-09-22"
     },
     "mexico-city": {
       "download": 30.06,
@@ -64,27 +101,29 @@
       "latency": 68.3,
       "samples": 246617,
       "uploadSamples": 210904,
+      "measurementDays": 86,
       "period": "2024-01-01 – 2024-03-26",
       "sourceUrl": "https://statistics.measurementlab.net/v0/NA/MX/MX-CMX/Mexico City/2024/histogram_daily_stats.json",
-      "source": "M-Lab statistics",
-      "method": "daily-medians",
-      "historical": true,
+      "source": "M-Lab statistics archive",
+      "method": "mean of daily medians",
       "geography": "v0/NA/MX/MX-CMX/Mexico City/",
-      "retrievedAt": "2026-09-07"
+      "historical": true,
+      "retrievedAt": "2026-09-22"
     },
     "sao-paulo": {
-      "download": 38.53,
-      "upload": 37.46,
-      "latency": 46.69,
-      "samples": 19,
-      "uploadSamples": 20,
-      "period": "2024-01-01 – 2024-03-02",
-      "sourceUrl": "https://statistics.measurementlab.net/v0/SA/BR/BR-AL/Sao Paulo/2024/histogram_daily_stats.json",
-      "source": "M-Lab statistics",
-      "method": "daily-medians",
+      "download": 45.67,
+      "upload": 25.72,
+      "latency": 8.43,
+      "samples": 1175371,
+      "uploadSamples": 1011188,
+      "measurementDays": 86,
+      "period": "2024-01-01 – 2024-03-26",
+      "sourceUrl": "https://statistics.measurementlab.net/v0/SA/BR/BR-SP/São Paulo/2024/histogram_daily_stats.json",
+      "source": "M-Lab statistics archive",
+      "method": "mean of daily medians",
+      "geography": "v0/SA/BR/BR-SP/São Paulo/",
       "historical": true,
-      "geography": "v0/SA/BR/BR-AL/Sao Paulo/",
-      "retrievedAt": "2026-09-07"
+      "retrievedAt": "2026-09-22"
     },
     "paris": {
       "download": 66.01,
@@ -92,13 +131,14 @@
       "latency": 4.04,
       "samples": 476937,
       "uploadSamples": 391727,
+      "measurementDays": 86,
       "period": "2024-01-01 – 2024-03-26",
       "sourceUrl": "https://statistics.measurementlab.net/v0/EU/FR/FR-IDF/Paris/2024/histogram_daily_stats.json",
-      "source": "M-Lab statistics",
-      "method": "daily-medians",
-      "historical": true,
+      "source": "M-Lab statistics archive",
+      "method": "mean of daily medians",
       "geography": "v0/EU/FR/FR-IDF/Paris/",
-      "retrievedAt": "2026-09-07"
+      "historical": true,
+      "retrievedAt": "2026-09-22"
     },
     "berlin": {
       "download": 46.11,
@@ -106,13 +146,14 @@
       "latency": 27.89,
       "samples": 624077,
       "uploadSamples": 486029,
+      "measurementDays": 86,
       "period": "2024-01-01 – 2024-03-26",
       "sourceUrl": "https://statistics.measurementlab.net/v0/EU/DE/DE-BE/Berlin/2024/histogram_daily_stats.json",
-      "source": "M-Lab statistics",
-      "method": "daily-medians",
-      "historical": true,
+      "source": "M-Lab statistics archive",
+      "method": "mean of daily medians",
       "geography": "v0/EU/DE/DE-BE/Berlin/",
-      "retrievedAt": "2026-09-07"
+      "historical": true,
+      "retrievedAt": "2026-09-22"
     },
     "amsterdam": {
       "download": 62.48,
@@ -120,13 +161,14 @@
       "latency": 7.53,
       "samples": 176879,
       "uploadSamples": 145800,
+      "measurementDays": 86,
       "period": "2024-01-01 – 2024-03-26",
       "sourceUrl": "https://statistics.measurementlab.net/v0/EU/NL/NL-NH/Amsterdam/2024/histogram_daily_stats.json",
-      "source": "M-Lab statistics",
-      "method": "daily-medians",
-      "historical": true,
+      "source": "M-Lab statistics archive",
+      "method": "mean of daily medians",
       "geography": "v0/EU/NL/NL-NH/Amsterdam/",
-      "retrievedAt": "2026-09-07"
+      "historical": true,
+      "retrievedAt": "2026-09-22"
     },
     "dublin": {
       "download": 34.89,
@@ -134,13 +176,14 @@
       "latency": 13.52,
       "samples": 547941,
       "uploadSamples": 459339,
+      "measurementDays": 86,
       "period": "2024-01-01 – 2024-03-26",
       "sourceUrl": "https://statistics.measurementlab.net/v0/EU/IE/IE-L/Dublin/2024/histogram_daily_stats.json",
-      "source": "M-Lab statistics",
-      "method": "daily-medians",
-      "historical": true,
+      "source": "M-Lab statistics archive",
+      "method": "mean of daily medians",
       "geography": "v0/EU/IE/IE-L/Dublin/",
-      "retrievedAt": "2026-09-07"
+      "historical": true,
+      "retrievedAt": "2026-09-22"
     },
     "tokyo": {
       "download": 44.81,
@@ -148,13 +191,14 @@
       "latency": 10.68,
       "samples": 939018,
       "uploadSamples": 794610,
+      "measurementDays": 86,
       "period": "2024-01-01 – 2024-03-26",
       "sourceUrl": "https://statistics.measurementlab.net/v0/AS/JP/JP-13/Tokyo/2024/histogram_daily_stats.json",
-      "source": "M-Lab statistics",
-      "method": "daily-medians",
-      "historical": true,
+      "source": "M-Lab statistics archive",
+      "method": "mean of daily medians",
       "geography": "v0/AS/JP/JP-13/Tokyo/",
-      "retrievedAt": "2026-09-07"
+      "historical": true,
+      "retrievedAt": "2026-09-22"
     },
     "seoul": {
       "download": 71.92,
@@ -162,13 +206,14 @@
       "latency": 32.94,
       "samples": 35057,
       "uploadSamples": 31785,
+      "measurementDays": 86,
       "period": "2024-01-01 – 2024-03-26",
       "sourceUrl": "https://statistics.measurementlab.net/v0/AS/KR/KR-11/Seoul/2024/histogram_daily_stats.json",
-      "source": "M-Lab statistics",
-      "method": "daily-medians",
-      "historical": true,
+      "source": "M-Lab statistics archive",
+      "method": "mean of daily medians",
       "geography": "v0/AS/KR/KR-11/Seoul/",
-      "retrievedAt": "2026-09-07"
+      "historical": true,
+      "retrievedAt": "2026-09-22"
     },
     "melbourne": {
       "download": 43.34,
@@ -176,13 +221,14 @@
       "latency": 10.17,
       "samples": 876924,
       "uploadSamples": 701779,
+      "measurementDays": 86,
       "period": "2024-01-01 – 2024-03-26",
       "sourceUrl": "https://statistics.measurementlab.net/v0/OC/AU/AU-VIC/Melbourne/2024/histogram_daily_stats.json",
-      "source": "M-Lab statistics",
-      "method": "daily-medians",
-      "historical": true,
+      "source": "M-Lab statistics archive",
+      "method": "mean of daily medians",
       "geography": "v0/OC/AU/AU-VIC/Melbourne/",
-      "retrievedAt": "2026-09-07"
+      "historical": true,
+      "retrievedAt": "2026-09-22"
     },
     "dubai": {
       "download": 38.01,
@@ -190,13 +236,14 @@
       "latency": 26.97,
       "samples": 40860,
       "uploadSamples": 37733,
+      "measurementDays": 86,
       "period": "2024-01-01 – 2024-03-26",
       "sourceUrl": "https://statistics.measurementlab.net/v0/AS/AE/AE-DU/Dubai/2024/histogram_daily_stats.json",
-      "source": "M-Lab statistics",
-      "method": "daily-medians",
-      "historical": true,
+      "source": "M-Lab statistics archive",
+      "method": "mean of daily medians",
       "geography": "v0/AS/AE/AE-DU/Dubai/",
-      "retrievedAt": "2026-09-07"
+      "historical": true,
+      "retrievedAt": "2026-09-22"
     },
     "montreal": {
       "download": 59.18,
@@ -204,13 +251,14 @@
       "latency": 7.6,
       "samples": 264311,
       "uploadSamples": 221445,
+      "measurementDays": 86,
       "period": "2024-01-01 – 2024-03-26",
       "sourceUrl": "https://statistics.measurementlab.net/v0/NA/CA/CA-QC/Montreal/2024/histogram_daily_stats.json",
-      "source": "M-Lab statistics",
-      "method": "daily-medians",
-      "historical": true,
+      "source": "M-Lab statistics archive",
+      "method": "mean of daily medians",
       "geography": "v0/NA/CA/CA-QC/Montreal/",
-      "retrievedAt": "2026-09-07"
+      "historical": true,
+      "retrievedAt": "2026-09-22"
     },
     "brisbane": {
       "download": 41.41,
@@ -218,13 +266,14 @@
       "latency": 23.5,
       "samples": 499970,
       "uploadSamples": 400788,
+      "measurementDays": 86,
       "period": "2024-01-01 – 2024-03-26",
       "sourceUrl": "https://statistics.measurementlab.net/v0/OC/AU/AU-QLD/Brisbane/2024/histogram_daily_stats.json",
-      "source": "M-Lab statistics",
-      "method": "daily-medians",
-      "historical": true,
+      "source": "M-Lab statistics archive",
+      "method": "mean of daily medians",
       "geography": "v0/OC/AU/AU-QLD/Brisbane/",
-      "retrievedAt": "2026-09-07"
+      "historical": true,
+      "retrievedAt": "2026-09-22"
     },
     "calgary": {
       "download": 72.85,
@@ -232,13 +281,14 @@
       "latency": 34.32,
       "samples": 200574,
       "uploadSamples": 174823,
+      "measurementDays": 86,
       "period": "2024-01-01 – 2024-03-26",
       "sourceUrl": "https://statistics.measurementlab.net/v0/NA/CA/CA-AB/Calgary/2024/histogram_daily_stats.json",
-      "source": "M-Lab statistics",
-      "method": "daily-medians",
-      "historical": true,
+      "source": "M-Lab statistics archive",
+      "method": "mean of daily medians",
       "geography": "v0/NA/CA/CA-AB/Calgary/",
-      "retrievedAt": "2026-09-07"
+      "historical": true,
+      "retrievedAt": "2026-09-22"
     },
     "ottawa": {
       "download": 77.31,
@@ -246,13 +296,14 @@
       "latency": 21,
       "samples": 81688,
       "uploadSamples": 72798,
+      "measurementDays": 86,
       "period": "2024-01-01 – 2024-03-26",
       "sourceUrl": "https://statistics.measurementlab.net/v0/NA/CA/CA-ON/Ottawa/2024/histogram_daily_stats.json",
-      "source": "M-Lab statistics",
-      "method": "daily-medians",
-      "historical": true,
+      "source": "M-Lab statistics archive",
+      "method": "mean of daily medians",
       "geography": "v0/NA/CA/CA-ON/Ottawa/",
-      "retrievedAt": "2026-09-07"
+      "historical": true,
+      "retrievedAt": "2026-09-22"
     },
     "edmonton": {
       "download": 84.94,
@@ -260,13 +311,14 @@
       "latency": 17.95,
       "samples": 97559,
       "uploadSamples": 86540,
+      "measurementDays": 86,
       "period": "2024-01-01 – 2024-03-26",
       "sourceUrl": "https://statistics.measurementlab.net/v0/NA/CA/CA-AB/Edmonton/2024/histogram_daily_stats.json",
-      "source": "M-Lab statistics",
-      "method": "daily-medians",
-      "historical": true,
+      "source": "M-Lab statistics archive",
+      "method": "mean of daily medians",
       "geography": "v0/NA/CA/CA-AB/Edmonton/",
-      "retrievedAt": "2026-09-07"
+      "historical": true,
+      "retrievedAt": "2026-09-22"
     },
     "hamburg": {
       "download": 43.89,
@@ -274,13 +326,14 @@
       "latency": 18.53,
       "samples": 357511,
       "uploadSamples": 269748,
+      "measurementDays": 86,
       "period": "2024-01-01 – 2024-03-26",
       "sourceUrl": "https://statistics.measurementlab.net/v0/EU/DE/DE-HH/Hamburg/2024/histogram_daily_stats.json",
-      "source": "M-Lab statistics",
-      "method": "daily-medians",
-      "historical": true,
+      "source": "M-Lab statistics archive",
+      "method": "mean of daily medians",
       "geography": "v0/EU/DE/DE-HH/Hamburg/",
-      "retrievedAt": "2026-09-07"
+      "historical": true,
+      "retrievedAt": "2026-09-22"
     },
     "halifax": {
       "download": 94.29,
@@ -288,13 +341,14 @@
       "latency": 36.26,
       "samples": 27094,
       "uploadSamples": 23834,
+      "measurementDays": 86,
       "period": "2024-01-01 – 2024-03-26",
       "sourceUrl": "https://statistics.measurementlab.net/v0/NA/CA/CA-NS/Halifax/2024/histogram_daily_stats.json",
-      "source": "M-Lab statistics",
-      "method": "daily-medians",
-      "historical": true,
+      "source": "M-Lab statistics archive",
+      "method": "mean of daily medians",
       "geography": "v0/NA/CA/CA-NS/Halifax/",
-      "retrievedAt": "2026-09-07"
+      "historical": true,
+      "retrievedAt": "2026-09-22"
     },
     "edinburgh": {
       "download": 66.95,
@@ -302,13 +356,14 @@
       "latency": 25.29,
       "samples": 68018,
       "uploadSamples": 55470,
+      "measurementDays": 86,
       "period": "2024-01-01 – 2024-03-26",
       "sourceUrl": "https://statistics.measurementlab.net/v0/EU/GB/GB-SCT/Edinburgh/2024/histogram_daily_stats.json",
-      "source": "M-Lab statistics",
-      "method": "daily-medians",
-      "historical": true,
+      "source": "M-Lab statistics archive",
+      "method": "mean of daily medians",
       "geography": "v0/EU/GB/GB-SCT/Edinburgh/",
-      "retrievedAt": "2026-09-07"
+      "historical": true,
+      "retrievedAt": "2026-09-22"
     },
     "birmingham": {
       "download": 52.16,
@@ -316,13 +371,14 @@
       "latency": 9.49,
       "samples": 240394,
       "uploadSamples": 191742,
+      "measurementDays": 86,
       "period": "2024-01-01 – 2024-03-26",
       "sourceUrl": "https://statistics.measurementlab.net/v0/EU/GB/GB-ENG/Birmingham/2024/histogram_daily_stats.json",
-      "source": "M-Lab statistics",
-      "method": "daily-medians",
-      "historical": true,
+      "source": "M-Lab statistics archive",
+      "method": "mean of daily medians",
       "geography": "v0/EU/GB/GB-ENG/Birmingham/",
-      "retrievedAt": "2026-09-07"
+      "historical": true,
+      "retrievedAt": "2026-09-22"
     },
     "toronto": {
       "download": 68.45,
@@ -330,13 +386,14 @@
       "latency": 12.75,
       "samples": 494632,
       "uploadSamples": 422168,
+      "measurementDays": 86,
       "period": "2024-01-01 – 2024-03-26",
       "sourceUrl": "https://statistics.measurementlab.net/v0/NA/CA/CA-ON/Toronto/2024/histogram_daily_stats.json",
-      "source": "M-Lab statistics",
-      "method": "daily-medians",
-      "historical": true,
+      "source": "M-Lab statistics archive",
+      "method": "mean of daily medians",
       "geography": "v0/NA/CA/CA-ON/Toronto/",
-      "retrievedAt": "2026-09-07"
+      "historical": true,
+      "retrievedAt": "2026-09-22"
     },
     "london": {
       "download": 51.43,
@@ -344,13 +401,14 @@
       "latency": 5.51,
       "samples": 389982,
       "uploadSamples": 309221,
+      "measurementDays": 86,
       "period": "2024-01-01 – 2024-03-26",
       "sourceUrl": "https://statistics.measurementlab.net/v0/EU/GB/GB-ENG/London/2024/histogram_daily_stats.json",
-      "source": "M-Lab statistics",
-      "method": "daily-medians",
-      "historical": true,
+      "source": "M-Lab statistics archive",
+      "method": "mean of daily medians",
       "geography": "v0/EU/GB/GB-ENG/London/",
-      "retrievedAt": "2026-09-07"
+      "historical": true,
+      "retrievedAt": "2026-09-22"
     },
     "sydney": {
       "download": 44.08,
@@ -358,13 +416,14 @@
       "latency": 11.27,
       "samples": 1194373,
       "uploadSamples": 954475,
+      "measurementDays": 86,
       "period": "2024-01-01 – 2024-03-26",
       "sourceUrl": "https://statistics.measurementlab.net/v0/OC/AU/AU-NSW/Sydney/2024/histogram_daily_stats.json",
-      "source": "M-Lab statistics",
-      "method": "daily-medians",
-      "historical": true,
+      "source": "M-Lab statistics archive",
+      "method": "mean of daily medians",
       "geography": "v0/OC/AU/AU-NSW/Sydney/",
-      "retrievedAt": "2026-09-07"
+      "historical": true,
+      "retrievedAt": "2026-09-22"
     },
     "munich": {
       "download": 47.44,
@@ -372,13 +431,14 @@
       "latency": 16.83,
       "samples": 325604,
       "uploadSamples": 249531,
+      "measurementDays": 86,
       "period": "2024-01-01 – 2024-03-26",
       "sourceUrl": "https://statistics.measurementlab.net/v0/EU/DE/DE-BY/Munich/2024/histogram_daily_stats.json",
-      "source": "M-Lab statistics",
-      "method": "daily-medians",
-      "historical": true,
+      "source": "M-Lab statistics archive",
+      "method": "mean of daily medians",
       "geography": "v0/EU/DE/DE-BY/Munich/",
-      "retrievedAt": "2026-09-07"
+      "historical": true,
+      "retrievedAt": "2026-09-22"
     },
     "manchester": {
       "download": 56.48,
@@ -386,13 +446,14 @@
       "latency": 12.8,
       "samples": 304530,
       "uploadSamples": 246724,
+      "measurementDays": 86,
       "period": "2024-01-01 – 2024-03-26",
       "sourceUrl": "https://statistics.measurementlab.net/v0/EU/GB/GB-ENG/Manchester/2024/histogram_daily_stats.json",
-      "source": "M-Lab statistics",
-      "method": "daily-medians",
-      "historical": true,
+      "source": "M-Lab statistics archive",
+      "method": "mean of daily medians",
       "geography": "v0/EU/GB/GB-ENG/Manchester/",
-      "retrievedAt": "2026-09-07"
+      "historical": true,
+      "retrievedAt": "2026-09-22"
     },
     "bristol": {
       "download": 53.39,
@@ -400,13 +461,14 @@
       "latency": 10.53,
       "samples": 138587,
       "uploadSamples": 113553,
+      "measurementDays": 86,
       "period": "2024-01-01 – 2024-03-26",
       "sourceUrl": "https://statistics.measurementlab.net/v0/EU/GB/GB-ENG/Bristol/2024/histogram_daily_stats.json",
-      "source": "M-Lab statistics",
-      "method": "daily-medians",
-      "historical": true,
+      "source": "M-Lab statistics archive",
+      "method": "mean of daily medians",
       "geography": "v0/EU/GB/GB-ENG/Bristol/",
-      "retrievedAt": "2026-09-07"
+      "historical": true,
+      "retrievedAt": "2026-09-22"
     },
     "singapore": {
       "download": 52.3,
@@ -414,13 +476,14 @@
       "latency": 6.21,
       "samples": 586460,
       "uploadSamples": 498535,
+      "measurementDays": 86,
       "period": "2024-01-01 – 2024-03-26",
       "sourceUrl": "https://statistics.measurementlab.net/v0/AS/SG/2024/histogram_daily_stats.json",
-      "source": "M-Lab statistics",
-      "method": "daily-medians",
-      "historical": true,
+      "source": "M-Lab statistics archive",
+      "method": "mean of daily medians",
       "geography": "v0/AS/SG/",
-      "retrievedAt": "2026-09-07"
+      "historical": true,
+      "retrievedAt": "2026-09-22"
     }
   }
 }

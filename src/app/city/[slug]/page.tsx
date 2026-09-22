@@ -83,7 +83,7 @@ export default async function CityPage({
       <section id="overview" className="city-overview scroll-mt-24" aria-label="City at a glance">
         <div className="city-detail-metric min-w-0 bg-white p-5 sm:p-6"><Users className="mb-3 h-5 w-5 text-[var(--accent)]" aria-hidden="true" /><PopulationFact city={city} /></div>
         <div className="city-detail-metric min-w-0 bg-white p-5 sm:p-6"><WalletCards className="mb-3 h-5 w-5 text-[var(--accent)]" aria-hidden="true" /><LivingCostFact city={city} /></div>
-        <InternetFact slug={city.slug} context={city.internetQuality} />
+        <InternetFact slug={city.slug} />
         <Metric icon={Landmark} label="Work permission" value="Check eligibility" note="Depends on your status and route" />
         {city.localFacts ? <div className="city-detail-metric min-w-0 bg-white p-5 sm:p-6"><ShieldCheck className="mb-3 h-5 w-5 text-[var(--accent)]" aria-hidden="true" /><LocalFactContent fact={city.localFacts.migration} /></div> : <Metric icon={ShieldCheck} label="Residents born abroad" value={city.foreignBornShare} note={cityMigrationSource?.period} />}
         <Metric icon={Building2} label="Profile coverage" value={`${Math.round(city.recommendationCoverage * 100)}%`} />

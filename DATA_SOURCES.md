@@ -38,20 +38,20 @@ coverage adjustments still apply, so ranking is not evidence of absent jobs.
 
 ## City internet measurements
 
-`src/data/city-internet.json` covers all 32 catalog destinations. Five US cities
-use SpeedTown's M-Lab seed export for July 13–August 13, 2026 (median throughput,
-mean latency). The other 27 use M-Lab's public statistics archive for the actual
-2024 date ranges shown per city. They are explicitly historical, not live speeds.
-Singapore uses the whole city-state because no separate city directory exists.
+`src/data/city-internet.json` covers all 32 catalog destinations using M-Lab's
+public statistics archive, the same January 1–March 26, 2024 period, and the same
+mean-of-daily-medians method. Singapore uses the whole city-state because no
+separate city directory exists.
 
 Historical values are the arithmetic mean of available daily medians, not a
 pooled median. Daily histogram rows repeat daily statistics: deduplicate by date
 before averaging or summing sample counts. Download and upload counts are separate.
 Historical latency is the average daily median minimum RTT. IP-based geography
 may describe ISP equipment rather than users' physical locations. These voluntary
-tests do not distinguish fixed/mobile connections and are not used in rankings.
-Source files and retrieval dates are retained per observation. Run
-`node scripts/sync-city-internet.mjs` to fill missing catalog entries.
+tests do not distinguish fixed/mobile connections. Fast Internet is a derived
+catalog-relative score: 55% download, 25% upload, and 20% latency. Source files
+and retrieval dates are retained per observation. Run
+`node scripts/sync-city-internet.mjs` to refresh every catalog entry together.
 Official methodology: https://github.com/m-lab/stats-pipeline
 
 LandingPoint separates official observations from product scores. Official

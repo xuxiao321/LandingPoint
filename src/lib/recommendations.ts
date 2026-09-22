@@ -14,6 +14,9 @@ const lifestyleKeys = new Map<string, SignalKey[]>([
   ["University Access", ["schools"]],
   ["No-car Lifestyle", ["transit"]],
   ["Mild Weather", ["weather"]],
+  ["Dining Access", ["food"]],
+  ["Social & Cultural Access", ["social"]],
+  ["Fast Internet", ["internet"]],
 ]);
 
 const goalKeys = new Map<string, SignalKey[]>([
@@ -119,7 +122,7 @@ export function getRecommendations(
         matchScore: Math.round(fit * 10),
         migrationFit: Number(fit.toFixed(1)),
         recommendationCoverage,
-        rankingValue: fit * recommendationCoverage,
+        rankingValue: fit,
         preferenceMatches: selectedLifestyles.map(option => {
           const keys = lifestyleKeys.get(option) ?? [];
           const available = keys.filter(key => city.sourceBackedScoreKeys.includes(key));
@@ -127,5 +130,7 @@ export function getRecommendations(
         }).sort((a, b) => b.importance - a.importance || (b.score ?? -1) - (a.score ?? -1)),
       };
     })
-    .sort((left, right) => right.rankingValue - left.rankingValue);
+    .sort((left, right) =>
+      right.migrationFit - left.migrationFit || left.name.localeCompare(right.name),
+    );
 }
