@@ -1,3 +1,5 @@
+import sys
+
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_LEFT
 from reportlab.lib.pagesizes import letter
@@ -6,7 +8,7 @@ from reportlab.lib.units import inch
 from reportlab.platypus import HRFlowable, Paragraph, SimpleDocTemplate, Spacer
 
 
-OUTPUT = "output/pdf/Xu_Xiao_Resume.pdf"
+OUTPUT = sys.argv[1] if len(sys.argv) > 1 else "output/pdf/Xu_Xiao_Resume.pdf"
 INK = colors.HexColor("#14211D")
 ACCENT = colors.HexColor("#087C68")
 MUTED = colors.HexColor("#4E6259")
@@ -76,14 +78,14 @@ story += [
     Paragraph("Bachelor of Arts in Economics, 2023", styles["meta"]),
     Paragraph("PROJECTS", styles["section"]),
     Paragraph("LandingPoint | Full-stack city discovery and relocation platform", styles["role"]),
-    Paragraph("Next.js, React, TypeScript, Tailwind CSS, Supabase, PostgreSQL, Row Level Security", styles["meta"]),
+    Paragraph("Next.js, React, JavaScript, Tailwind CSS, Supabase, PostgreSQL, Row Level Security", styles["meta"]),
     Paragraph('<b>Live Demo:</b> <link href="https://landing-point.vercel.app/" color="#087C68">landing-point.vercel.app</link> &nbsp;|&nbsp; <b>GitHub:</b> <link href="https://github.com/xuxiao321/LandingPoint" color="#087C68">github.com/xuxiao321/LandingPoint</link>', styles["meta"]),
     bullet("Built and deployed a city-matching web application that ranks destinations from user budget, goals, and weighted lifestyle priorities across a growing city catalog."),
     bullet("Designed source-backed city profiles with population, monthly living-cost estimates, connectivity, events, and resident reviews."),
     bullet("Implemented Supabase authentication, persistent saved cities and preferences, public reviews, and database access policies using Row Level Security."),
     bullet("Created data validation and production checks for city data, ranking behavior, account flows, and deployable Next.js builds."),
     Paragraph("TECHNICAL SKILLS", styles["section"]),
-    Paragraph("<b>Languages:</b> TypeScript, JavaScript, Java, SQL", styles["body"]),
+    Paragraph("<b>Languages:</b> JavaScript, Java, SQL", styles["body"]),
     Paragraph("<b>Frameworks and tools:</b> Next.js, React, Tailwind CSS, Supabase, PostgreSQL, Git, Vercel", styles["body"]),
     Paragraph("<b>Developer productivity:</b> OpenAI Codex; AI-assisted debugging, testing, and documentation", styles["body"]),
     Paragraph("<b>Focus:</b> Full-stack web development, data-informed product design, authentication and database security", styles["body"]),

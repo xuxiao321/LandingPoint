@@ -36,7 +36,7 @@ See [DATA_SOURCES.md](DATA_SOURCES.md) for methodology, licensing, limitations, 
 
 ## Stack
 
-- Next.js 15 App Router, React 19, and TypeScript
+- Next.js 15 App Router, React 19, and JavaScript (JSX for components)
 - Tailwind CSS and local accessible UI components
 - Supabase Auth and PostgreSQL with Row Level Security
 - Ticketmaster Discovery API for upcoming events
@@ -55,6 +55,11 @@ See [DATA_SOURCES.md](DATA_SOURCES.md) for methodology, licensing, limitations, 
 - `/api/cities/[slug]/reviews` — public review reads and authenticated writes
 
 ## Local development
+
+Application code and tests use JavaScript. The `@/` import alias is configured in
+`jsconfig.json`; Next.js, Vitest, and Playwright use JavaScript configuration files.
+Input validation, authentication checks, and database Row Level Security remain
+runtime safeguards independent of the source language.
 
 ```bash
 npm install
