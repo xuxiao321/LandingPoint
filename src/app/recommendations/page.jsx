@@ -17,6 +17,7 @@ import { normalizePriorities, priorityLabels } from "@/lib/priority-weights";
 import { getRecommendations } from "@/lib/recommendations";
 function readParam(params, key) {
   const value = params[key];
+  // Reduce repeated scalar parameters predictably before validation.
   return Array.isArray(value) ? value[0] : value;
 }
 function readParams(params, key) {
@@ -45,6 +46,7 @@ export default async function RecommendationsPage({ searchParams }) {
     ),
     lifestyles,
   );
+  // Rebuild a safe edit URL from validated values instead of reflecting all input.
   const editParams = new URLSearchParams();
   for (const key of ["budget", "passport", "workType", "needsSponsorship"]) {
     const value = readParam(params, key);

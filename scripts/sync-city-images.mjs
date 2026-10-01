@@ -6,6 +6,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const snapshotPath = path.join(root, "src", "data", "global-city-metrics.json");
 
 function plainText(value) {
+  // Commons metadata can contain HTML; the manifest stores display-safe text only.
   return String(value ?? "")
     .replace(/<[^>]*>/g, " ")
     .replace(/&nbsp;/g, " ")
@@ -47,6 +48,7 @@ async function fetchJson(url) {
 async function fetchCityImage(city) {
   const entityUrl = `https://www.wikidata.org/wiki/Special:EntityData/${city.wikidataId}.json`;
   const entityPayload = await fetchJson(entityUrl);
+  // Start from Wikidata's representative image, then verify details in Commons.
   const fileName = entityPayload.entities?.[city.wikidataId]?.claims?.P18?.[0]
     ?.mainsnak?.datavalue?.value;
   if (!fileName) throw new Error(`No Wikidata image for ${city.name}`);

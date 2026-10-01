@@ -22,6 +22,7 @@ const geographyBySlug = {
 };
 
 function mean(rows, key) {
+  // Source values are daily medians; average only after filtering sampled days.
   return Math.round((rows.reduce((sum, row) => sum + row[key], 0) / rows.length) * 100) / 100;
 }
 
@@ -30,6 +31,7 @@ async function loadCity(slug, geography) {
   const response = await fetch(sourceUrl);
   if (!response.ok) throw new Error(`${slug}: M-Lab returned ${response.status}`);
   const rawRows = await response.json();
+  // Deduplicate date records before applying the shared comparison window.
   const rows = [...new Map(rawRows.map((row) => [row.date, row])).values()]
     .filter((row) => row.date >= periodStart && row.date <= periodEnd)
     .sort((left, right) => left.date.localeCompare(right.date));

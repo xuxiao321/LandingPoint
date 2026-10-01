@@ -11,6 +11,7 @@ for(const [slug,index] of Object.entries(choices)){
  if(!Object.hasOwn(manifest,slug))throw Error('Unknown city '+slug);
  const candidates=JSON.parse(await readFile(new URL(slug+'.json',review),'utf8'));
  const {file,description,...photo}=candidates[index];
+ // Apply only reviewer-selected images with a supported Commons license.
  if(!photo.sourcePageUrl.startsWith('https://commons.wikimedia.org/')||!/^CC (BY|BY-SA) [234]/.test(photo.license))throw Error('Unreviewed license');
  const filename=slug+'-editorial.jpg';
  await copyFile(new URL(file,review),new URL('../public/cities/'+filename,import.meta.url));

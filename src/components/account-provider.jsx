@@ -31,6 +31,7 @@ export function AccountProvider({ children }) {
   const refresh = useCallback(async () => {
     const current = identity.current;
     if (!current) return;
+    // Ignore a slower response from an earlier sign-in or refresh request.
     const version = ++revision.current;
     setLoading(true);
     setError("");
@@ -97,6 +98,7 @@ export function AccountProvider({ children }) {
       });
     } else {
       const current = guestSavedCities();
+      // Guest saves stay local until the user explicitly imports them.
       const next = current.includes(slug)
         ? current.filter((s) => s !== slug)
         : [...new Set([...current, slug])];

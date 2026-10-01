@@ -41,6 +41,7 @@ export function CommunityReviews({ slug, name }) {
     [slug, page],
   );
   useEffect(() => {
+    // Cancel an old page request before a city, page, or retry change takes effect.
     const controller = new AbortController();
     void load(controller.signal);
     return () => controller.abort();

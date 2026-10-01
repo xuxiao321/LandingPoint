@@ -32,6 +32,7 @@ const censusVariables = {
   medianHouseholdIncome: "B19013_001E",
 };
 
+// Load only simple KEY=VALUE entries; never execute shell syntax from .env.local.
 function parseEnvFile(contents) {
   return Object.fromEntries(
     contents
@@ -74,6 +75,7 @@ function requiredNumber(row, variable, cityName) {
 }
 
 function percentage(numerator, denominator) {
+  // Preserve a numeric snapshot when a source returns an empty denominator.
   return denominator > 0 ? Number(((numerator / denominator) * 100).toFixed(1)) : 0;
 }
 

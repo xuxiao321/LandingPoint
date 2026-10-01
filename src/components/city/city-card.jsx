@@ -61,6 +61,7 @@ export function CityCard({ city, showFit = true }) {
       icon: "V",
     },
   ];
+  // Match the detail page's stable color selection without duplicating data fields.
   const themeIndex =
     [...city.slug].reduce(
       (sum, character) => sum + character.charCodeAt(0),
@@ -111,6 +112,7 @@ export function CityCard({ city, showFit = true }) {
     { key: "safety", label: "Safety", score: city.scores.safety },
     { key: "weather", label: "Mild Weather", score: city.scores.weather },
   ];
+  // Hide unsupported signals instead of presenting an invented zero-value score.
   const categoryScores = allCategoryScores.filter((category) =>
     city.sourceBackedScoreKeys.includes(category.key),
   );

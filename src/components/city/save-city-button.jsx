@@ -20,7 +20,8 @@ export function SaveCityButton({ citySlug, cityName }) {
           setBusy(true);
           setError("");
           try {
-            await account.toggleCity(citySlug);
+        // Provider selects cloud or browser-only persistence from the auth state.
+        await account.toggleCity(citySlug);
           } catch (e) {
             setError(e instanceof Error ? e.message : "Could not save.");
           } finally {

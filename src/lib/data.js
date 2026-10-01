@@ -1197,6 +1197,8 @@ function hydrateCity(seed) {
       },
     };
   }
+  // These US-only scores are transitional display signals. They are replaced
+  // below by same-scope global observations where those are available.
   const rentScore = clampScore(10 - (metric.medianGrossRent - 700) / 230);
   const communityScore = clampScore((metric.foreignBornShare - 5) / 3.5);
   const transitScore = clampScore(metric.noCarCommuteShare / 4);
@@ -1299,6 +1301,8 @@ function normalizedScore(
   direction = "higher",
   logarithmic = false,
 ) {
+  // Normalize only within the reviewed catalog; this is comparative, not a
+  // universal score reusable against cities outside it.
   const transform = (item) => (logarithmic ? Math.log1p(item) : item);
   const transformed = values.map(transform);
   const minimum = Math.min(...transformed);
@@ -1709,6 +1713,7 @@ const usCities = citySeedData.map((seed) => {
   if (!globalCity || acsCity.dataProvenance.status === "demo") return acsCity;
   const acsMetric = syncedMetricsBySlug.get(seed.slug);
   // Keep transit scoring and explanation on the same OSM-density basis for every city.
+  // Prefer common international methodology, retaining ACS-only facts as context.
   const acsKeys = ["community", "rent", "job", "costOfLiving"];
   const scores = { ...globalCity.scores };
   acsKeys.forEach((key) => {
@@ -1791,6 +1796,7 @@ const usCities = citySeedData.map((seed) => {
   };
 });
 function attachLocalFacts(city) {
+  // Local observations remain narrative evidence unless comparable enough to score.
   const reviewed = localFactsSnapshot.cities[city.slug];
   if (reviewed) {
     return {
@@ -1858,6 +1864,7 @@ const internetLatencies = Object.values(cityInternetEntries).map(
 function attachInternetPerformance(city) {
   const item = cityInternetEntries[city.slug];
   if (!item) return city;
+  // Balance download, upload, and latency so one headline speed cannot dominate.
   const score = clampScore(
     normalizedScore(item.download, internetDownloads, "higher", true) * 0.55 +
       normalizedScore(item.upload, internetUploads, "higher", true) * 0.25 +
@@ -1937,6 +1944,7 @@ function attachLivingCost(city) {
     period: livingCostSnapshot.period,
     reviewedAt: livingCostSnapshot.reviewedAt,
   };
+  // A single provider and scope make this the only cost metric used in ranking.
   const score = normalizedScore(
     item.monthlyUsd,
     livingCostValues,
@@ -2006,6 +2014,7 @@ const unscoredRelocationKeys = new Set([
   "career",
 ]);
 function removeRelocationScores(city) {
+  // Individual eligibility is decision context, not a city recommendation score.
   const sourceBackedScoreKeys = city.sourceBackedScoreKeys.filter(
     (key) => !unscoredRelocationKeys.has(key) && key !== "rent",
   );

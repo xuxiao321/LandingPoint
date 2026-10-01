@@ -5,6 +5,7 @@ const db = new PGlite();
 const userA = '11111111-1111-4111-8111-111111111111';
 const userB = '22222222-2222-4222-8222-222222222222';
 try {
+  // Recreate the minimum Supabase auth context so RLS runs without a remote database.
   await db.exec(`create role anon; create role authenticated;
     create schema auth; create table auth.users(id uuid primary key);
     create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid $$;

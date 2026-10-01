@@ -1,6 +1,7 @@
 import { readFile, writeFile } from 'node:fs/promises';
 const [slug, title] = process.argv.slice(2);
 const candidates = JSON.parse(await readFile(new URL('../src/data/city-image-candidates.json', import.meta.url), 'utf8'));
+// Selection is by reviewed title, not array position, to avoid candidate-order drift.
 const photo = candidates.find(city => city.slug === slug)?.candidates.find(photo => photo.title === title);
 if (!photo || photo.license !== 'CC0' || photo.attributionRequired !== false) throw Error('Select an exact reviewed CC0 candidate title');
 const target = new URL('../src/data/city-images.json', import.meta.url);

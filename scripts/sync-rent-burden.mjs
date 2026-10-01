@@ -5,6 +5,7 @@ const key=process.env.CENSUS_API_KEY;
 if(!key) throw new Error('CENSUS_API_KEY missing');
 const catalog=JSON.parse(await fs.readFile('src/data/city-public-metrics.json','utf8'));
 const result={};
+// Reuse the catalog's geography and ACS vintage to keep this snapshot comparable.
 for(const c of catalog.cities){
  const url=new URL(`https://api.census.gov/data/${catalog.datasetYear}/acs/acs5`);
  url.search=new URLSearchParams({get:'NAME,B25071_001E',for:`place:${c.geography.placeFips}`,in:`state:${c.geography.stateFips}`,key});

@@ -25,6 +25,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cities, getCity } from "@/lib/data";
 export function generateStaticParams() {
+  // Pre-render the curated catalog while keeping route-level 404 handling.
   return cities.map((city) => ({ slug: city.slug }));
 }
 export async function generateMetadata({ params }) {
@@ -210,6 +211,8 @@ function getCityTheme(slug, name) {
     { accent: "#9b5fa7", soft: "#f7edfa", wash: "#fcf7fd" },
     { accent: "#347e9e", soft: "#e8f3f8", wash: "#f4fbfd" },
   ];
+  // A stable slug hash gives unlisted cities a deterministic theme without
+  // presentation-only metadata in the data catalog.
   const index =
     [...slug].reduce((sum, character) => sum + character.charCodeAt(0), 0) %
     themes.length;

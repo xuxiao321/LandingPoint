@@ -16,6 +16,7 @@ const queries = {
  'melbourne':'Melbourne skyline Yarra twilight', 'dubai':'Dubai skyline Burj Khalifa', 'edinburgh':'Edinburgh Calton Hill skyline',
  'birmingham':'Birmingham skyline city centre', 'bristol':'Clifton Suspension Bridge panorama'
 };
+// Candidate metadata is rendered for human review, so strip Commons HTML first.
 const clean = s => String(s ?? '').replace(/<[^>]*>/g,' ').replace(/&amp;/g,'&').replace(/\s+/g,' ').trim();
 const results = {};
 for (const [slug, query] of Object.entries(queries)) {

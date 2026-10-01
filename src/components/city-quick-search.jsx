@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { ArrowRight, MapPin, Search } from "lucide-react";
 import { Input } from "@/components/ui/field";
 function normalize(value) {
+  // Accent-insensitive matching supports plain keyboard input.
   return value
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
@@ -24,6 +25,7 @@ export function CityQuickSearch({ cities }) {
         ),
       )
       .sort((a, b) => {
+        // Prefer city-name matches over matches in state or country fields.
         const aStarts = normalize(a.name).startsWith(needle) ? 0 : 1;
         const bStarts = normalize(b.name).startsWith(needle) ? 0 : 1;
         return aStarts - bStarts || a.name.localeCompare(b.name);

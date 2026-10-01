@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 export function DataProvenance({ provenance, compact = false }) {
+  // Status changes both the visual warning and how strongly source claims are worded.
   const isDemo = provenance.status === "demo";
   const usesCensus = provenance.sources.some((source) =>
     source.name.toLowerCase().includes("census"),

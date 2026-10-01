@@ -7,6 +7,7 @@ export function UpcomingEvents({ slug }) {
   const [error, setError] = useState("");
   const [retry, setRetry] = useState(0);
   useEffect(() => {
+    // Abort stale work so an old response cannot replace the active city's events.
     const controller = new AbortController();
     setError("");
     setData(null);

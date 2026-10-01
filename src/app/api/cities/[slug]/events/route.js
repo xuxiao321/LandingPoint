@@ -134,6 +134,8 @@ export async function GET(_request, { params }) {
       pending.set(slug, work);
     }
     try {
+      // Multiple requests for a city await one provider call rather than each
+      // consuming a Ticketmaster request during a cache miss.
       result = await work;
       cache.set(slug, {
         result,
@@ -147,6 +149,8 @@ export async function GET(_request, { params }) {
   return Response.json(
     {
       ...result,
+      // A cached response can cross midnight, so apply the date check again
+      // immediately before exposing the event list.
       events: result.events.filter((event) => isUpcoming(event, today)),
     },
     { headers: { "Cache-Control": "public, max-age=60" } },

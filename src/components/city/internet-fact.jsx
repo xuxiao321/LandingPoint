@@ -1,6 +1,7 @@
 import { Wifi } from "lucide-react";
 import snapshot from "@/data/city-internet.json";
 export function InternetFact({ slug }) {
+  // Keep collection period and units visible beside the derived score.
   const fact = snapshot.cities[slug];
   return (
     <div className="city-detail-metric min-w-0 bg-white p-5 sm:p-6">

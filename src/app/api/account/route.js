@@ -87,6 +87,8 @@ async function handle(request) {
   let text = "";
   const decoder = new TextDecoder();
   let size = 0;
+  // Enforce the limit while streaming so an oversized JSON body is never fully
+  // buffered in the server process.
   while (true) {
     const { done, value } = await reader.read();
     if (done) break;
@@ -129,6 +131,8 @@ async function handle(request) {
       !body.slugs.every(validCity)
     )
       return json({ error: "Invalid city list." }, 400);
+    // Deduplicate before the write because a repeated slug would violate the
+    // compound user/city uniqueness constraint within a single insert batch.
     result = await db.from("account_saved_cities").upsert(
       [...new Set(body.slugs)].map((city_slug) => ({
         user_id: user.id,

@@ -17,6 +17,7 @@ export function CompareTool({
 }) {
   const [leftSlug, setLeftSlug] = useState(initialLeft);
   const [rightSlug, setRightSlug] = useState(initialRight);
+  // Resolve slugs on the client so changing selectors updates all comparison rows.
   const leftCity = useMemo(
     () => cities.find((city) => city.slug === leftSlug) ?? cities[0],
     [leftSlug],

@@ -38,6 +38,8 @@ export function parsePreferences(value) {
     passport: p.passport,
     workType: p.workType,
     needsSponsorship: p.needsSponsorship,
+    // Persist one canonical copy of each selection, even if an older client
+    // submits duplicate values.
     lifestyles: [...new Set(p.lifestyles)],
     priorities: normalizePriorities(p.priorities, p.lifestyles),
   };
@@ -70,6 +72,7 @@ export function parseDraft(value) {
         ];
   const content = {};
   for (const [key, val] of Object.entries(data.content)) {
+    // Whitelisting prevents arbitrary JSON fields from becoming durable data.
     if (!allowed.includes(key) || typeof val !== "string" || val.length > 2000)
       throw new Error("Draft fields must be at most 2,000 characters.");
     content[key] = val.trim();

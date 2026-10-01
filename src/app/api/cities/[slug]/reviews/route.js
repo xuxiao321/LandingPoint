@@ -42,6 +42,7 @@ async function handle(request, context) {
       .eq("city_slug", slug)
       .order("created_at", { ascending: false })
       .order("id")
+      // Request one extra row to determine whether the next page exists.
       .range(page * 10, page * 10 + 10);
     if (error)
       return json(
@@ -64,6 +65,7 @@ async function handle(request, context) {
   let bytes = 0,
     raw = "";
   const decoder = new TextDecoder();
+  // Reject oversized input before building its full string representation.
   while (true) {
     const { done, value } = await reader.read();
     if (done) break;
@@ -92,6 +94,8 @@ async function handle(request, context) {
       .eq("city_slug", slug)
       .eq("user_id", user.id)
       .select("id");
+    // Include the authenticated user in the delete predicate; this remains a
+    // server-side ownership check even if row-level security is misconfigured.
     if (result.error) return json({ error: "Could not delete review." }, 503);
     return result.data.length
       ? json({ ok: true })

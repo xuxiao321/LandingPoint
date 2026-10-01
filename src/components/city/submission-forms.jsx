@@ -20,6 +20,7 @@ export function PrivateCityDraft({ citySlug }) {
       <p className="mt-2 text-sm text-[var(--muted)]">
         Keep research notes just for yourself. These are not public reviews.
       </p>
+      {/* Drafts are private account data, unlike the public community reviews. */}
       {!account.user ? (
         <Link href="/account" className="mt-3 inline-block text-sm underline">
           Sign in to save notes

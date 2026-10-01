@@ -320,6 +320,7 @@ async function fetchOsmCounts(city, coordinates) {
 }
 
 function extractFirstZipFile(archive) {
+  // GeoNames publishes a single-file ZIP; parse it directly to avoid another dependency.
   const endSignature = 0x06054b50;
   let endOffset = -1;
   for (let offset = archive.length - 22; offset >= Math.max(0, archive.length - 65557); offset -= 1) {
@@ -403,6 +404,7 @@ function selectPopulation(statements, cityName) {
     })
     .filter((candidate) => Number.isFinite(candidate.population) && candidate.population > 0)
     .sort((left, right) => {
+      // Prefer Wikidata's editorial ranking, then the newest dated observation.
       if (left.rank === "preferred" && right.rank !== "preferred") return -1;
       if (right.rank === "preferred" && left.rank !== "preferred") return 1;
       return (right.pointInTime ?? "").localeCompare(left.pointInTime ?? "");
@@ -461,6 +463,7 @@ function reviewPopulation(wikidata, geonames) {
     };
   }
 
+  // GeoNames is a magnitude check only; different boundaries must not be averaged.
   const differencePercent = Number(
     ((Math.abs(wikidata.population - geonames.population) / wikidata.population) * 100).toFixed(1),
   );
@@ -532,6 +535,7 @@ async function fetchNasaClimate(city, coordinates) {
 
 const selectedSlugs = process.argv.find((arg) => arg.startsWith("--only="))?.slice(7).split(",");
 if (selectedSlugs?.some((slug) => !curatedCities.some((city) => city.slug === slug))) throw new Error("Unknown city slug in --only");
+// Partial syncs retain untouched cities from the previous reviewed snapshot.
 const previous = selectedSlugs ? JSON.parse(await readFile(outputPath, "utf8")) : null;
 const selectedCities = selectedSlugs ? curatedCities.filter((city) => selectedSlugs.includes(city.slug)) : curatedCities;
 

@@ -2,6 +2,7 @@ import snapshot from "@/data/global-city-metrics.json";
 import { LocalFactContent } from "@/components/city/local-fact";
 import { employmentByCity } from "@/lib/employment-score";
 export function RelocationContext({ city }) {
+  // These panels deliberately expose context without affecting the fit score.
   const metric = snapshot.cities.find((entry) => entry.slug === city.slug);
   const portal = metric?.policy.sourceUrl;
   const unemployment = metric?.countryContext.unemploymentRate;

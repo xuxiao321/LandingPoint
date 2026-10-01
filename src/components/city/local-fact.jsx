@@ -1,5 +1,6 @@
 import { approximateUsd, exchangeRateDate } from "@/lib/currency";
 export function LocalFactContent({ fact, compact = false }) {
+  // USD is an orientation aid; the original currency remains the primary fact.
   const usd = approximateUsd(fact.value);
   return (
     <div className="min-w-0">

@@ -12,6 +12,7 @@ export const reportReasons = [
   "Misleading content",
 ];
 export function parseReview(value) {
+  // Validate at the server boundary; client-side constraints are only UX aids.
   if (!value || typeof value !== "object") throw new Error("Invalid review.");
   const p = value;
   if (

@@ -37,6 +37,7 @@ function SignalDetails({ signal }) {
   const context = [];
   const notes = [];
   const technical = [];
+  // Group supporting rows by role so context is not mistaken for a score input.
   for (const row of signal.detailRows) {
     const label = row.label.toLowerCase();
     if (hasTransitComparison && transitLabels.includes(row.label)) continue;

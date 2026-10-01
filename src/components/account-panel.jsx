@@ -15,6 +15,7 @@ export function AccountPanel() {
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   async function run(action, success = "") {
+    // Centralize busy/error handling so account actions cannot overlap in the UI.
     setBusy(true);
     setMessage("");
     try {

@@ -18,6 +18,7 @@ for (const city of catalog.cities) {
     }
     assert.match(facts.rent.value, /^(CAD|MXN|BRL|GBP|EUR|SGD|JPY|KRW|AUD|AED) /);
   } else {
+    // US catalog entries use ACS when no local-currency reference is curated.
     const official = acsBySlug.get(city.slug);
     assert.ok(official, `${city.slug}: missing city facts and ACS fallback`);
     assert.ok(official.medianGrossRent > 0);

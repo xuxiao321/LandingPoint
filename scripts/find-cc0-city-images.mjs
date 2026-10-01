@@ -3,6 +3,7 @@ import { readFile, writeFile } from "node:fs/promises";
 const snapshot = JSON.parse(await readFile(new URL('../src/data/global-city-metrics.json', import.meta.url), 'utf8'));
 const output = new URL('../src/data/city-image-candidates.json', import.meta.url);
 const only = process.argv.find(arg => arg.startsWith('--only='))?.slice(7).split(',');
+// An --only run preserves previously collected candidates for untouched cities.
 const results = only ? JSON.parse(await readFile(output, 'utf8')).filter(city => !only.includes(city.slug)) : [];
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 const clean = value => String(value ?? '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();

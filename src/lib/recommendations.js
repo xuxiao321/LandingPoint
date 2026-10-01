@@ -18,6 +18,10 @@ const goalKeys = new Map([
   ["Remote Work Base", ["internet", "costOfLiving", "weather"]],
 ]);
 const baselineKeys = ["job", "community", "costOfLiving", "safety", "transit"];
+
+// City costs come from sources with different scopes. Only like-for-like monthly
+// estimates can be compared with a visitor's budget; the other values remain
+// useful as their existing normalized affordability signal.
 function parseCurrency(value) {
   const parsed = Number(value.replace(/[^0-9.]/g, ""));
   return Number.isFinite(parsed) ? parsed : undefined;
@@ -77,6 +81,8 @@ export function getRecommendations(cities, profile) {
   );
   return cities
     .map((city) => {
+      // Do not treat a missing source as a low score. Re-normalizing against
+      // available signals keeps incomplete city records from being penalized.
       const availableWeights = [...weights.entries()].filter(([key]) =>
         city.sourceBackedScoreKeys.includes(key),
       );

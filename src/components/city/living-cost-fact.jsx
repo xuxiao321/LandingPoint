@@ -1,5 +1,6 @@
 import { CircleHelp } from "lucide-react";
 export function LivingCostFact({ city, compact = false }) {
+  // Use the normalized monthly observation, not an unrelated local rent reference.
   const observation = city.livingCost;
   if (!observation) {
     return (

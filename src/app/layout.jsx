@@ -22,6 +22,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
+      // Font class names are generated during rendering and can differ before hydration.
       suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >

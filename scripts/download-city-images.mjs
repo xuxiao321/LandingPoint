@@ -3,6 +3,7 @@ const manifest = JSON.parse(await readFile(new URL('../src/data/city-images.json
 const directory = new URL('../public/cities/', import.meta.url);
 const refresh = process.argv.find(arg => arg.startsWith('--refresh='))?.slice(10).split(',') ?? [];
 await mkdir(directory, { recursive: true });
+// Space requests so a full catalog refresh remains polite to the Commons API.
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 for (const [slug, photo] of Object.entries(manifest)) {
   if (!/^[a-z0-9-]+$/.test(slug) || photo.license !== 'CC0' || photo.attributionRequired !== false) throw Error('Invalid photo metadata');

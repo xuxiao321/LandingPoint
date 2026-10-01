@@ -11,6 +11,7 @@ export default async function ComparePage({ searchParams }) {
   const params = (await searchParams) ?? {};
   const leftSlug = readParam(params, "left") ?? "new-york-city";
   const rightSlug = readParam(params, "right") ?? "seattle";
+  // Unknown query values fall back to a valid pair so CompareTool always has data.
   const leftCity = cities.find((city) => city.slug === leftSlug) ?? cities[0];
   const rightCity = cities.find((city) => city.slug === rightSlug) ?? cities[1];
   return (

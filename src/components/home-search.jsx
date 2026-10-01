@@ -52,6 +52,7 @@ function compactPassportSearch(value) {
   return normalizePassportSearch(value).replace(/\s+/g, "");
 }
 function levenshteinDistance(left, right) {
+  // Small bounded inputs make this typo-tolerance pass inexpensive in the browser.
   const matrix = Array.from({ length: left.length + 1 }, (_, row) =>
     Array.from({ length: right.length + 1 }, (_, column) =>
       row === 0 ? column : column === 0 ? row : 0,
@@ -72,6 +73,7 @@ function levenshteinDistance(left, right) {
 function scorePassportCountry(country, query) {
   const normalizedQuery = normalizePassportSearch(query);
   const compactQuery = compactPassportSearch(query);
+  // Exact code/name matches outrank token and typo matches in suggestions.
   if (!normalizedQuery) {
     return commonPassportCountryCodes.includes(country.code) ? 0 : null;
   }
@@ -246,6 +248,7 @@ export function HomeSearch() {
       setIsPassportOpen(true);
       return;
     }
+    // Send only canonical profile values to the server-rendered results page.
     const params = new URLSearchParams({
       budget,
       passport: submittedPassportCountry.name,
